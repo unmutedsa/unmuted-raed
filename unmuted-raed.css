@@ -204,6 +204,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .um-share { margin-top: 14px; padding: 6px 0; border: 0; background: none; color: var(--um-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .theme-raed salla-social-share, .theme-raed .main-content .btn--wishlist { display: none !important; }
 .theme-raed .s-comments, .theme-raed .s-comments-product { background: transparent !important; }
+/* an empty reviews box (no reviews yet, no form) takes no space (unmuted-raed.js) */
+.theme-raed salla-comments.um-empty { display: none !important; }
 
 /* ---------- bag (cart page): the store's drawer rows ---------- */
 .theme-raed .cart-item { padding: 16px 0 !important; border-bottom: 1px solid var(--um-line); border-radius: 0 !important; margin-bottom: 0 !important; }

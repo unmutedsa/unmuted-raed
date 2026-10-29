@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
-   each card's voice, the «الأمام / الخلف» photo switch, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's voice, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -408,6 +408,39 @@
     box.appendChild(group);
   }
 
+  /* «منتجات قد تعجبك» under the product: Salla's related list comes back empty for these tees, so the slider shows the
+     rest of the tee's category (VOLUME 01) instead, without the tee itself. When Salla has related products, they stay. */
+  function related() {
+    var old = $('salla-products-slider[source="related"]');
+    if (!old || old.hasAttribute('data-um-checked') || !$('[data-testid="store-product-title"]') || !window.salla || !salla.product || !salla.product.fetch) return;
+    old.setAttribute('data-um-checked', '');
+    var id = old.getAttribute('source-value');
+    salla.product.fetch({ source: 'related', source_value: id }).then(function (r) {
+      if (r && r.data && r.data.length) return;
+      var crumb = $$('.breadcrumbs a').filter(function (a) { return /\/c\d+/.test(a.href); }).pop();
+      var cat = crumb ? crumb.href.match(/\/c(\d+)/)[1] : '598858677';
+      var n = el('salla-products-slider', 's-products-slider-wrapper');
+      n.setAttribute('data-testid', old.getAttribute('data-testid') || 'store-product-related');
+      n.setAttribute('block-title', old.getAttribute('block-title') || t('منتجات قد تعجبك', 'You may also like'));
+      n.setAttribute('source', 'categories');
+      n.setAttribute('source-value', '[' + cat + ']');
+      n.setAttribute('display-all-url', crumb ? crumb.href : volumeUrl());
+      old.parentNode.replaceChild(n, old);
+      // the tee on this page leaves the list (the slider redraws its cards while it settles, so look again for a while)
+      var tries = 0;
+      (function drop() {
+        var own = $('custom-salla-product-card[id="' + id + '"]', n), slide = own && own.closest('.swiper-slide'), box = $('.swiper', n);
+        if (slide) { slide.remove(); if (box && box.swiper) box.swiper.update(); }
+        if (++tries < 48) setTimeout(drop, 250);
+      })();
+    }).catch(function () {});
+  }
+
+  /* reviews: Salla's box is an empty block until a tee has reviews (or a signed-in buyer gets the form), so it steps aside till then */
+  function reviews() {
+    $$('salla-comments').forEach(function (c) { c.classList.toggle('um-empty', !c.textContent.trim() && !$('img, textarea, input, select', c)); });
+  }
+
   /* sizes: a tile per option, kept in step with Salla's own dropdown (it stays in the form and does the work) */
   function tiles() {
     $$('.product-form salla-product-options select.s-form-control').forEach(function (sel) {
@@ -489,9 +522,9 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); sides(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); sides(); related(); reviews(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
-  new MutationObserver(function () { tiles(); addLabel(); cards(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); addLabel(); cards(); reviews(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();

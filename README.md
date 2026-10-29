@@ -20,7 +20,8 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
   «السلة» pill, search button, product cards with the tee on the wall colour, «Wear your voice.» in the footer.
 - **Product page:** «الأمام / الخلف» over the photo (a photo's alt text can name its side; otherwise the first two photos
   are front then back, or back then front for the back-print tees in `BACK_FIRST`), VOL.xx, name, «voice» and tagline
-  read from the description, chip, colour swatch, sizes as tiles
+  read from the description, chip, colour swatch, «منتجات قد تعجبك» filled from the tee's category when Salla's related
+  list is empty (without the tee itself), the empty reviews box hidden until there are reviews, sizes as tiles
   over Salla's own dropdown, «أضف صوتك للسلة», the reassurance line, fold-outs (about / sizes / delivery), share.
 - **VOLUME 01 (any product list):** the name as a poster title in the store's title style (orange, ink shadow, blue
   swoosh), one line under it, the sort as a pill, «عرض المزيد» as a paper pill. The header menu is the store menu
