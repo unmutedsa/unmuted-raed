@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → CSS).
    The look of the UNMUTED store (UNMUTED-Store/) on Raed's own markup: cream page, ink lines, orange pill buttons,
    Alexandria + Bricolage Grotesque, tees on the wall colour. unmuted-raed.js adds what CSS can't (size tiles, the
-   VOL / voice block, folds, footer line, manifesto). build.py puts the logo in as a data URI (the LOGO placeholder). */
+   VOL / voice block, folds, card numbers, list title, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
 /* Salla drops @import from custom CSS: unmuted-raed.js adds the Google Fonts link (Alexandria, Bricolage Grotesque). */
 
 html:root {
@@ -61,6 +61,11 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed salla-cart-summary .s-cart-summary-content { display: none; }
 .theme-raed salla-cart-summary .s-cart-summary-wrapper::after { content: 'السلة'; font-weight: 800; font-size: 15px; }
 .theme-raed .um-hsearch { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--um-ink); font-size: 20px; cursor: pointer; }
+/* phones: the bag pill shows the icon and count only, so the header fits */
+@media (max-width: 639px) {
+  .theme-raed salla-cart-summary .s-cart-summary-wrapper { padding: 5px 8px; gap: 6px; }
+  .theme-raed salla-cart-summary .s-cart-summary-wrapper::after { display: none; }
+}
 @media (min-width: 1024px) {
   .theme-raed #mainnav .container > .flex { position: relative; min-height: 76px; }
   .theme-raed #mainnav custom-main-menu { position: absolute; inset-inline: 0; top: 50%; width: max-content; margin-inline: auto; transform: translateY(-50%); }
@@ -80,7 +85,51 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-promotion-title { border: 2px solid var(--um-ink); border-radius: 10px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; transform: rotate(-4deg); }
 .theme-raed .s-product-card-wishlist-btn button, .theme-raed .s-product-card-wishlist-btn.s-button-element { border: 1.5px solid var(--um-ink); background: var(--um-paper); }
 .theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
+@media (max-width: 639px) { .theme-raed .s-product-card-content-footer .s-button-element { padding-inline: 10px; } }
 .theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
+/* the tee's VOL number, outlined in the photo's corner, and its voice under the name (unmuted-raed.js) */
+.theme-raed .s-product-card-image[data-um-vol]::after {
+  content: attr(data-um-vol); position: absolute; z-index: 2; top: 10px; inset-inline-start: 12px; pointer-events: none;
+  font: 800 clamp(40px, 5vw, 76px)/.8 var(--um-latin); font-stretch: 75%; color: transparent; -webkit-text-stroke: 2px var(--um-ink); transition: color .2s;
+}
+.theme-raed .s-product-card-entry:hover .s-product-card-image[data-um-vol]::after { color: var(--um-orange); }
+.theme-raed .s-product-card-content-title:has(+ .um-cvoice) { margin-bottom: 0; }
+.um-cvoice { margin: 4px 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--um-soft); }
+
+/* ---------- product list (VOLUME 01): the name as a poster title, the sort as a pill ---------- */
+.theme-raed .um-plp-old { display: none !important; }
+.um-plp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
+.um-plp-name { display: contents; }
+.um-plp-title {
+  grid-column: 1 / -1; justify-self: start; position: relative; display: inline-block; margin: 0; padding: .08em 0 .2em; transform: rotate(-2deg); transform-origin: right bottom;
+  font: 900 clamp(44px, 9vw, 110px)/1 var(--um-font); color: var(--um-orange); text-shadow: .035em .045em 0 var(--um-ink);
+}
+.um-plp-title[lang="en"] { font: 800 clamp(64px, 12vw, 156px)/.86 var(--um-latin); font-stretch: 75%; letter-spacing: -.01em; }
+.um-plp-line { position: absolute; inset-inline: 2% 0; bottom: 0; width: 96%; height: .16em; overflow: visible; fill: none; stroke-linecap: round; }
+.um-plp-line path { stroke: var(--um-blue); stroke-width: 15; }
+.um-plp-line .um-plp-line-shadow { stroke: var(--um-ink); }
+.um-plp-sub { max-width: 34ch; margin: 0; font-size: clamp(16px, 1.5vw, 19px); font-weight: 500; line-height: 1.6; color: var(--um-soft); }
+.theme-raed .um-plp-sort { grid-column: 2; }
+.theme-raed .um-plp-sort label { font-weight: 600; color: var(--um-soft); }
+.theme-raed .um-plp-sort select#product-filter {
+  height: 46px; min-width: 200px; padding-top: 0; padding-bottom: 0; padding-inline: 18px 40px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important;
+  background-color: var(--um-paper) !important; color: var(--um-ink); font-weight: 700; font-size: 15px; box-shadow: none; cursor: pointer;
+}
+.theme-raed .um-plp-sort select#product-filter:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+/* «عرض المزيد»: a paper pill under the grid */
+.theme-raed .s-infinite-scroll-wrapper { display: flex; justify-content: center; margin-top: clamp(28px, 4vw, 48px); }
+.theme-raed .s-infinite-scroll-btn {
+  min-width: 220px; min-height: 52px; padding: 0 28px; border: 2.5px solid var(--um-ink) !important; border-radius: 999px !important;
+  background: var(--um-paper) !important; color: var(--um-ink) !important; font-weight: 800; font-size: 16px; box-shadow: var(--um-hard); transition: transform .14s, box-shadow .14s;
+}
+.theme-raed .s-infinite-scroll-btn:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--um-ink); }
+.theme-raed .s-infinite-scroll-btn:active { transform: translate(2px, 3px); box-shadow: none; }
+.theme-raed .s-infinite-scroll-last { margin-top: 28px; text-align: center; color: var(--um-soft); }
+@media (max-width: 639px) {
+  .um-plp-head { grid-template-columns: minmax(0, 1fr); }
+  .theme-raed .um-plp-sort { grid-column: 1; }
+  .theme-raed .um-plp-sort, .theme-raed .um-plp-sort > div, .theme-raed .um-plp-sort select#product-filter { width: 100%; }
+}
 
 /* ---------- home: Raed's hero slider and features (the fallback when the UNMUTED sections don't load) ---------- */
 .theme-raed .s-block--hero-slider .home-slider__content h2 { font-weight: 900; font-size: clamp(32px, 6vw, 72px); line-height: 1.15; }

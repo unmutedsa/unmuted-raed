@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
-   product description, fold-outs, the reassurance line, a search button, the home sections, «Wear your voice.» in the
-   footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
+   each card's VOL number and voice, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -16,6 +16,15 @@
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8' };
   // the size chart and fit note from the store (placeholders until the owner confirms the numbers)
   var CHART = [['S', 54, 70], ['M', 57, 72], ['L', 60, 74], ['XL', 63, 76]];
+  // each tee's VOL number and «voice», as written in its product description (product names in lower case)
+  var VOICES = {
+    'unmuted sticker': ['01', 'صوت البراند'], 'caution': ['02', 'صوت التنبيه'], 'الرياض': ['03', 'صوت المدينة'],
+    'just padel': ['04', 'صوت الملعب'], 'dates season': ['05', 'صوت الموسم'], 'desert club': ['06', 'صوت البر'],
+    'who said kashta?': ['07', 'صوت الكشتة'], 'call me unmuted': ['08', 'صوت المكالمة'], 'the love pop club': ['09', 'صوت الحب'],
+    'unmuted carnival': ['10', 'صوت المهرجان'], 'good mood, fast food': ['11', 'صوت المزاج'], 'cherry market': ['12', 'صوت الكرز'],
+    'play unmuted': ['13', 'صوت الملصقات'], 'vending machine': ['14', 'صوت الاختيار'], 'the original': ['15', 'صوت الأصل'],
+    'megaphone': ['16', 'صوت المكبّر'], 'ice cream': ['17', 'صوت الصيف']
+  };
   var exchangeUrl = function () {
     var a = $$('a').filter(function (x) { return /الاستبدال|exchange/i.test(x.textContent) && x.href; })[0];
     return a ? a.href : '';
@@ -161,6 +170,40 @@
     folds.parentNode.insertBefore(share, folds.nextSibling);
   }
 
+  /* product list pages (VOLUME 01): the name as a poster title with the store's swoosh, the sort beside it as a pill.
+     Raed's own title row (it turns the name into «أكثر من 15 منتج») steps aside. */
+  function listing() {
+    if (!document.body.classList.contains('product-index')) return;
+    var main = $('.container--products-list .main-content');
+    if (!main || $('.um-plp-head', main)) return;
+    var name = document.title.split('|')[0].trim() || (($('#page-main-title') || {}).textContent || '').trim();
+    var head = el('header', 'um-plp-head',
+      '<div class="um-plp-name"><h1 class="um-plp-title"' + (/^[\x00-\x7F]+$/.test(name) ? ' lang="en"' : '') + '>' + esc(name) +
+      '<svg class="um-plp-line" viewBox="0 0 420 44" preserveAspectRatio="none" aria-hidden="true"><path class="um-plp-line-shadow" d="M14 34C120 22 260 16 404 18"/><path d="M10 28C116 16 256 10 400 12"/></svg></h1>' +
+      (/^VOLUME/i.test(name) ? '<p class="um-plp-sub">' + t('كل تيشيرت هنا صوت له شخصيته. اختر اللي يشبهك.', 'Every tee here is a voice of its own. Pick the one that sounds like you.') + '</p>' : '') + '</div>');
+    var old = $('#page-main-title') && $('#page-main-title').parentElement;
+    var sort = $('#product-filter');
+    var tools = sort && sort.parentElement && sort.parentElement.parentElement;
+    if (tools && old && old.contains(tools)) { tools.classList.add('um-plp-sort'); head.appendChild(tools); }
+    if (old) old.classList.add('um-plp-old');
+    main.insertBefore(head, main.firstChild);
+    document.body.classList.add('um-plp');
+  }
+
+  /* product cards: the tee's VOL number on the photo and its voice under the name */
+  function cards() {
+    $$('custom-salla-product-card').forEach(function (c) {
+      if ($('.um-cvoice', c) || c.hasAttribute('data-um-plain')) return;
+      var a = $('.s-product-card-content-title a', c);
+      if (!a) return;
+      var v = VOICES[a.textContent.trim().toLowerCase()];
+      if (!v) { c.setAttribute('data-um-plain', ''); return; }
+      var img = $('.s-product-card-image', c);
+      if (img) img.setAttribute('data-um-vol', v[0]);
+      a.parentElement.insertAdjacentHTML('afterend', '<p class="um-cvoice">' + esc(v[1]) + '</p>');
+    });
+  }
+
   /* sizes: a tile per option, kept in step with Salla's own dropdown (it stays in the form and does the work) */
   function tiles() {
     $$('.product-form salla-product-options select.s-form-control').forEach(function (sel) {
@@ -242,9 +285,9 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { fonts(); header(); sections(); product(); tiles(); addLabel(); cart(); footer(); }
+  function run() { fonts(); header(); sections(); listing(); cards(); product(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
-  new MutationObserver(function () { tiles(); addLabel(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); addLabel(); cards(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
