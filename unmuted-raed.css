@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → CSS).
    The look of the UNMUTED store (UNMUTED-Store/) on Raed's own markup: cream page, ink lines, orange pill buttons,
    Alexandria + Bricolage Grotesque, tees on the wall colour. unmuted-raed.js adds what CSS can't (size tiles, the
-   VOL / voice block, folds, card numbers, list title, info cards, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
+   VOL / voice block, folds, front / back switch, card voices, list title, info cards, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
 /* Salla drops @import from custom CSS: unmuted-raed.js adds the Google Fonts link (Alexandria, Bricolage Grotesque). */
 
 html:root {
@@ -93,12 +93,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
 @media (max-width: 639px) { .theme-raed .s-product-card-content-footer .s-button-element { padding-inline: 10px; } }
 .theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
-/* the tee's VOL number, outlined in the photo's corner, and its voice under the name (unmuted-raed.js) */
-.theme-raed .s-product-card-image[data-um-vol]::after {
-  content: attr(data-um-vol); position: absolute; z-index: 2; top: 10px; inset-inline-start: 12px; pointer-events: none;
-  font: 800 clamp(40px, 5vw, 76px)/.8 var(--um-latin); font-stretch: 75%; color: transparent; -webkit-text-stroke: 2px var(--um-ink); transition: color .2s;
-}
-.theme-raed .s-product-card-entry:hover .s-product-card-image[data-um-vol]::after { color: var(--um-orange); }
+/* the tee's voice under its name (unmuted-raed.js) */
 .theme-raed .s-product-card-content-title:has(+ .um-cvoice) { margin-bottom: 0; }
 .um-cvoice { margin: 4px 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--um-soft); }
 
@@ -160,6 +155,11 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .details-slider .swiper-slide, .theme-raed .details-slider .magnify-wrapper { background: var(--um-wall); }
 .theme-raed .details-slider .magnify-wrapper img { object-fit: contain !important; padding: 6% 6% 2%; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .25)); }
 .theme-raed .details-slider { border-radius: 0 !important; }
+/* «الأمام / الخلف» over the photo (unmuted-raed.js) */
+.um-sides { position: absolute; z-index: 5; top: 14px; inset-inline: 0; display: flex; width: max-content; margin-inline: auto; padding: 3px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-paper); }
+.um-sides button { padding: 6px 18px; border: 0; border-radius: 999px; background: none; color: var(--um-ink); font-weight: 700; font-size: 14px; cursor: pointer; }
+.um-sides button[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
+.um-sides button:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .theme-raed .slide--one-fourth img { background: var(--um-wall) !important; object-fit: contain !important; border-radius: 10px; }
 .theme-raed .main-content h1[data-testid="store-product-title"] { margin-bottom: 4px !important; font-weight: 900 !important; font-size: clamp(26px, 6.6vw, 40px) !important; line-height: 1.15 !important; color: var(--um-ink) !important; }
 .um-pvol { margin: 0; font: 800 clamp(44px, 13vw, 72px)/.9 var(--um-latin); font-stretch: 75%; color: var(--um-ink); }

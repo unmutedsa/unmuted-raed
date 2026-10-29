@@ -18,20 +18,23 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 
 - **Everywhere:** cream page, ink lines, orange pill buttons, the UNMUTED logo in the header, menu in the middle,
   «السلة» pill, search button, product cards with the tee on the wall colour, «Wear your voice.» in the footer.
-- **Product page:** VOL.xx, name, «voice» and tagline read from the description, chip, colour swatch, sizes as tiles
+- **Product page:** «الأمام / الخلف» over the photo (a photo's alt text can name its side; otherwise the first two photos
+  are front then back, or back then front for the back-print tees in `BACK_FIRST`), VOL.xx, name, «voice» and tagline
+  read from the description, chip, colour swatch, sizes as tiles
   over Salla's own dropdown, «أضف صوتك للسلة», the reassurance line, fold-outs (about / sizes / delivery), share.
 - **VOLUME 01 (any product list):** the name as a poster title in the store's title style (orange, ink shadow, blue
   swoosh), one line under it, the sort as a pill, «عرض المزيد» as a paper pill. The header menu is the store menu
   «قائمة رائد UNMUTED» (VOLUME 01 only), picked in this copy's header settings.
-- **Product cards (everywhere):** the tee's VOL number outlined in the photo's corner and its voice under the name,
-  from the `VOICES` list in `unmuted-raed.js` (copied from the product descriptions; add a line there for a new tee).
+- **Product cards (everywhere):** the tee's voice under its name, from the `VOICES` list in `unmuted-raed.js` (copied
+  from the product descriptions; add a line there for a new tee).
 - **Info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية):** the Twilight theme's policies look, built from the
   text written in Salla: big title, the opening line as the lead, one bold card per h2 (orange shipping, blue exchange,
   dark privacy, each with its sticker and icon), a list whose points start in bold as fact tiles, h3 + list pairs as
   yes / no lists, «جاهز تختار صوتك؟» with a button to VOLUME 01.
 - **Bag:** «سلتك», size as words, «احذف», the summary card in ink with the orange button, «سلتك ساكتة.» when empty.
 - **Home:** the Twilight theme's sections, rendered with their default settings by `build_sections.py` (hero poster,
-  rail, tracklist, promises, FAQ; the rest of the Twilight sections are left out of this copy) with their animations. The tees link to
+  rail, tracklist, promises, FAQ; the rest of the Twilight sections, and the hero's top line with its squiggle, are left
+  out of this copy) with their animations. The tees link to
   the real products by name. Raed's own home sections stay underneath as the fallback.
 
 ## Previewing the draft

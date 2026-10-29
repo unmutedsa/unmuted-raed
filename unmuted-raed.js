@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
-   each card's VOL number and voice, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's voice, the «الأمام / الخلف» photo switch, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -92,6 +92,8 @@
     document.head.appendChild(css);
     fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }).then(function (html) {
       var box = el('div', 'um-home', html.split('__BASE__').join(CDN));
+      // this copy leaves out the hero's top line («هذي إشارتك عشان ترفع صوتك.») and the squiggle under it
+      $$('.um-hero__eyebrow, .um-hero .um-fl.is-w', box).forEach(function (n) { n.remove(); });
       main.insertBefore(box, main.firstChild);
       links(box);
       var js = el('script');
@@ -213,7 +215,7 @@
     document.body.classList.add('um-plp');
   }
 
-  /* product cards: the tee's VOL number on the photo and its voice under the name */
+  /* product cards: the tee's voice under its name */
   function cards() {
     $$('custom-salla-product-card').forEach(function (c) {
       if ($('.um-cvoice', c) || c.hasAttribute('data-um-plain')) return;
@@ -221,8 +223,6 @@
       if (!a) return;
       var v = VOICES[a.textContent.trim().toLowerCase()];
       if (!v) { c.setAttribute('data-um-plain', ''); return; }
-      var img = $('.s-product-card-image', c);
-      if (img) img.setAttribute('data-um-vol', v[0]);
       a.parentElement.insertAdjacentHTML('afterend', '<p class="um-cvoice">' + esc(v[1]) + '</p>');
     });
   }
@@ -374,6 +374,40 @@
     if (target && body.contains(target)) target.scrollIntoView({ block: 'start' });
   }
 
+  /* product photo: «الأمام / الخلف» over the slider (the Twilight theme's switch). A photo's alt text can say which side
+     it shows (Salla → product → photo); otherwise the first two photos are front then back, or back then front for the
+     tees whose first photo is the back print (the Twilight theme's um_pdp_back_first list). */
+  var BACK_FIRST = ['03', '04', '07', '09', '10', '11', '13', '14'];
+  function sides() {
+    var slider = $('salla-slider.details-slider');
+    var box = slider && $('.swiper.s-slider-container', slider);
+    if (!box || !box.swiper || $('.um-sides', box)) return;
+    var sw = box.swiper, imgs = $$('.swiper-wrapper > .swiper-slide img', box);
+    if (imgs.length < 2) return;
+    var side = function (img) { var alt = (img.alt || '').toLowerCase(); return /خلف|back/.test(alt) ? 'back' : /أمام|امام|front/.test(alt) ? 'front' : ''; };
+    var a = imgs[0].alt === imgs[1].alt ? '' : side(imgs[0]), b = imgs[0].alt === imgs[1].alt ? '' : side(imgs[1]);
+    var backFirst = a === 'back' || b === 'front';
+    if (!a && !b) {
+      var name = (($('[data-testid="store-product-title"]') || {}).textContent || '').trim().toLowerCase();
+      var vol = (VOICES[name] || [])[0] || ((($('.um-pvol') || {}).textContent || '').match(/\d+/) || [])[0] || '';
+      backFirst = BACK_FIRST.indexOf(('0' + vol).slice(-2)) >= 0;
+    }
+    var group = el('div', 'um-sides swiper-no-swiping');
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-label', t('وجه التيشيرت', 'Side of the tee'));
+    [[backFirst ? 1 : 0, t('الأمام', 'Front')], [backFirst ? 0 : 1, t('الخلف', 'Back')]].forEach(function (s) {
+      var btn = el('button', '', s[1]);
+      btn.type = 'button';
+      btn.dataset.i = s[0];
+      group.appendChild(btn);
+    });
+    var mark = function () { $$('button', group).forEach(function (btn) { btn.setAttribute('aria-pressed', String(Number(btn.dataset.i) === sw.activeIndex)); }); };
+    group.addEventListener('click', function (e) { var btn = e.target.closest('button'); if (btn) sw.slideTo(Number(btn.dataset.i)); });
+    sw.on('slideChange', mark);
+    mark();
+    box.appendChild(group);
+  }
+
   /* sizes: a tile per option, kept in step with Salla's own dropdown (it stays in the form and does the work) */
   function tiles() {
     $$('.product-form salla-product-options select.s-form-control').forEach(function (sel) {
@@ -455,7 +489,7 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); sides(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
