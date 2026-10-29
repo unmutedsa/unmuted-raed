@@ -66,6 +66,12 @@ body.theme-raed { font-family: var(--um-font) !important; }
   .theme-raed salla-cart-summary .s-cart-summary-wrapper { padding: 5px 8px; gap: 6px; }
   .theme-raed salla-cart-summary .s-cart-summary-wrapper::after { display: none; }
 }
+/* the smallest phones (320px): tighter icons so the header doesn't run off the screen */
+@media (max-width: 374px) {
+  .theme-raed .um-hsearch { width: 34px; }
+  .theme-raed #mainnav salla-cart-summary { margin-right: 6px !important; }
+  .theme-raed salla-cart-summary .header-btn__icon { width: 30px !important; height: 30px !important; }
+}
 @media (min-width: 1024px) {
   .theme-raed #mainnav .container > .flex { position: relative; min-height: 76px; }
   .theme-raed #mainnav custom-main-menu { position: absolute; inset-inline: 0; top: 50%; width: max-content; margin-inline: auto; transform: translateY(-50%); }
@@ -98,17 +104,19 @@ body.theme-raed { font-family: var(--um-font) !important; }
 
 /* ---------- product list (VOLUME 01): the name as a poster title, the sort as a pill ---------- */
 .theme-raed .um-plp-old { display: none !important; }
-.um-plp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
+/* the line under the title sets the size: one line on every screen, and the title is exactly as wide (in Alexandria the
+   line is 4× as wide as «VOLUME 01» per pixel of type) */
+.um-plp-head { --um-sub: min(clamp(16px, 1.5vw, 19px), calc((100vw - 20px) / 23.3)); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
 .um-plp-name { display: contents; }
 .um-plp-title {
   grid-column: 1 / -1; justify-self: start; position: relative; display: inline-block; margin: 0; padding: .08em 0 .2em; transform: rotate(-2deg); transform-origin: right bottom;
   font: 900 clamp(44px, 9vw, 110px)/1 var(--um-font); color: var(--um-orange); text-shadow: .035em .045em 0 var(--um-ink);
 }
-.um-plp-title[lang="en"] { font: 800 clamp(64px, 12vw, 156px)/.86 var(--um-latin); font-stretch: 75%; letter-spacing: -.01em; }
+.um-plp-title[lang="en"] { font-weight: 800; font-size: calc(var(--um-sub) * 4); line-height: .86; letter-spacing: -.01em; white-space: nowrap; }
 .um-plp-line { position: absolute; inset-inline: 2% 0; bottom: 0; width: 96%; height: .16em; overflow: visible; fill: none; stroke-linecap: round; }
 .um-plp-line path { stroke: var(--um-blue); stroke-width: 15; }
 .um-plp-line .um-plp-line-shadow { stroke: var(--um-ink); }
-.um-plp-sub { max-width: 34ch; margin: 0; font-size: clamp(16px, 1.5vw, 19px); font-weight: 500; line-height: 1.6; color: var(--um-soft); }
+.um-plp-sub { margin: 0; font-size: var(--um-sub); font-weight: 500; line-height: 1.6; color: var(--um-soft); }
 .theme-raed .um-plp-sort { grid-column: 2; }
 .theme-raed .um-plp-sort label { font-weight: 600; color: var(--um-soft); }
 .theme-raed .um-plp-sort select#product-filter {
@@ -125,9 +133,12 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-infinite-scroll-btn:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--um-ink); }
 .theme-raed .s-infinite-scroll-btn:active { transform: translate(2px, 3px); box-shadow: none; }
 .theme-raed .s-infinite-scroll-last { margin-top: 28px; text-align: center; color: var(--um-soft); }
-@media (max-width: 639px) {
+/* phones and tablets: the sort goes under the line (beside it, the line would wrap) */
+@media (max-width: 899px) {
   .um-plp-head { grid-template-columns: minmax(0, 1fr); }
   .theme-raed .um-plp-sort { grid-column: 1; }
+}
+@media (max-width: 639px) {
   .theme-raed .um-plp-sort, .theme-raed .um-plp-sort > div, .theme-raed .um-plp-sort select#product-filter { width: 100%; }
 }
 
