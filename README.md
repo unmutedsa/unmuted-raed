@@ -25,6 +25,10 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
   «قائمة رائد UNMUTED» (VOLUME 01 only), picked in this copy's header settings.
 - **Product cards (everywhere):** the tee's VOL number outlined in the photo's corner and its voice under the name,
   from the `VOICES` list in `unmuted-raed.js` (copied from the product descriptions; add a line there for a new tee).
+- **Info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية):** the Twilight theme's policies look, built from the
+  text written in Salla: big title, the opening line as the lead, one bold card per h2 (orange shipping, blue exchange,
+  dark privacy, each with its sticker and icon), a list whose points start in bold as fact tiles, h3 + list pairs as
+  yes / no lists, «جاهز تختار صوتك؟» with a button to VOLUME 01.
 - **Bag:** «سلتك», size as words, «احذف», the summary card in ink with the orange button, «سلتك ساكتة.» when empty.
 - **Home:** the Twilight theme's sections, rendered with their default settings by `build_sections.py` (hero poster,
   rail, tracklist, promises, FAQ; the rest of the Twilight sections are left out of this copy) with their animations. The tees link to

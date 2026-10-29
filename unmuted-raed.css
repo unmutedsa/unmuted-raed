@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → CSS).
    The look of the UNMUTED store (UNMUTED-Store/) on Raed's own markup: cream page, ink lines, orange pill buttons,
    Alexandria + Bricolage Grotesque, tees on the wall colour. unmuted-raed.js adds what CSS can't (size tiles, the
-   VOL / voice block, folds, card numbers, list title, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
+   VOL / voice block, folds, card numbers, list title, info cards, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
 /* Salla drops @import from custom CSS: unmuted-raed.js adds the Google Fonts link (Alexandria, Bricolage Grotesque). */
 
 html:root {
@@ -220,6 +220,61 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .no-content-placeholder .icon { display: none; }
 .theme-raed .no-content-placeholder p { font-weight: 900; font-size: 30px; color: var(--um-ink); }
 .theme-raed .no-content-placeholder .um-empty-sub { font-weight: 400; font-size: 16px; }
+
+/* ---------- info pages (shipping, exchange, privacy): the Twilight theme's policies look ----------
+   unmuted-raed.js regroups the text written in Salla into a big title, a lead, one bold card per h2 topic (key facts as
+   tiles, yes / no lists side by side) and a closing call to shop. The page shows once that's done (or after 2.5s). */
+.theme-raed.page-single .content--single-page:not(.is-ready) { opacity: 0; animation: um-info-show 0s linear 2.5s forwards; }
+@keyframes um-info-show { to { opacity: 1; } }
+.theme-raed .um-info { box-sizing: border-box; max-width: 980px; margin-inline: auto; padding: 8px 0 80px; border: 0; border-radius: 0; background: transparent !important; color: var(--um-ink); font-size: 16px; line-height: 1.75; }
+.theme-raed .um-info :is(h1, h2, h3) { line-height: normal; }
+.theme-raed .um-info-hero { padding: 26px 0 10px; text-align: center; }
+.theme-raed .um-info-hero h1 { margin: 10px 0 0; font-size: clamp(44px, 10vw, 92px); font-weight: 900; line-height: 1.05; color: var(--um-ink); }
+.theme-raed .um-info-lead { max-width: 30em; margin: 12px auto 0; font-size: 17px; color: #4d4945; }
+.theme-raed .um-info-lead p { margin: 0; }
+.theme-raed .um-info-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+.theme-raed .um-info-nav a { display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 18px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--c); color: var(--um-ink); font-weight: 800; text-decoration: none; box-shadow: var(--um-hard); transition: transform .12s, box-shadow .12s; }
+.theme-raed .um-info-nav a:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--um-ink); }
+.theme-raed .um-info svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.theme-raed .um-info-nav svg { width: 20px; height: 20px; }
+.theme-raed .um-info-body { list-style: none; }
+.theme-raed .um-info-card { position: relative; margin-top: 46px; padding: clamp(24px, 4.5vw, 44px); border: 2.5px solid var(--um-ink); border-radius: 30px; background: var(--c); color: var(--um-ink); box-shadow: 7px 9px 0 var(--um-ink); scroll-margin-top: 120px; }
+.theme-raed .um-info-card:nth-of-type(even) { transform: rotate(.6deg); }
+.theme-raed .um-info-card:nth-of-type(odd) { transform: rotate(-.5deg); }
+.theme-raed .um-info-sticker { position: absolute; top: -20px; inset-inline-end: 28px; padding: 7px 14px; border: 2px solid var(--um-ink); border-radius: 10px; background: var(--s, var(--um-blue)); color: var(--um-ink); font-weight: 900; font-size: clamp(15px, 2vw, 19px); line-height: 1.2; transform: rotate(-4deg); box-shadow: 2px 3px 0 var(--um-ink); }
+.theme-raed .um-info-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.theme-raed .um-info-icon { flex: none; display: grid; place-items: center; width: 58px; height: 58px; border: 2px solid var(--um-ink); border-radius: 18px; background: var(--um-paper); color: var(--um-ink); }
+.theme-raed .um-info-icon svg { width: 30px; height: 30px; }
+.theme-raed .um-info-card h2 { margin: 0; font-size: clamp(26px, 4.4vw, 38px); font-weight: 900; line-height: 1.15; color: inherit; }
+.theme-raed .um-info-facts { display: grid; gap: 10px; margin: 0 0 22px; padding: 0; list-style: none; }
+@media (min-width: 720px) { .theme-raed .um-info-facts { grid-template-columns: repeat(3, 1fr); } }
+.theme-raed .um-info-facts li { display: grid; gap: 2px; margin: 0; padding: 14px 16px; border: 2px solid var(--um-ink); border-radius: 18px; background: var(--um-paper); list-style: none; }
+.theme-raed .um-info-facts b { font-size: 21px; font-weight: 900; line-height: 1.25; }
+.theme-raed .um-info-facts span { font-size: 14px; line-height: 1.5; color: #4d4945; }
+.theme-raed .um-info-card > p { max-width: 46em; margin: 0; font-size: 16.5px; color: inherit; }
+.theme-raed .um-info-card > p + p { margin-top: 10px; }
+/* any other list written in the page stays a plain list */
+.theme-raed .um-info-card > :is(ul:not(.um-info-facts), ol) { max-width: 46em; margin: 0 0 14px; padding-inline-start: 1.3em; font-size: 16.5px; }
+.theme-raed .um-info-card > ul:not(.um-info-facts) { list-style: disc; }
+.theme-raed .um-info-card a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.theme-raed .um-info-card.is-dark { background: var(--um-ink); color: var(--um-paper); box-shadow: 7px 9px 0 var(--um-blue); }
+.theme-raed .um-info-card.is-dark .um-info-icon { background: var(--um-orange); }
+.theme-raed .um-info-split { display: grid; gap: 14px; }
+@media (min-width: 760px) { .theme-raed .um-info-split { grid-template-columns: 1fr 1fr; } }
+.theme-raed .um-info-list { padding: 20px; border: 2px solid rgba(16, 16, 16, .3); border-radius: 20px; }
+.theme-raed .um-info-card.is-dark .um-info-list { border-color: rgba(250, 245, 239, .3); }
+.theme-raed .um-info-list h3 { margin: 0 0 12px; font-size: 17px; font-weight: 800; color: inherit; }
+.theme-raed .um-info-list ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.theme-raed .um-info-list li { display: flex; align-items: flex-start; gap: 10px; margin: 0; list-style: none; color: inherit; }
+.theme-raed .um-info-list li svg { flex: none; width: 26px; height: 26px; padding: 4px; border-radius: 50%; color: var(--um-ink); stroke-width: 2.6; }
+.theme-raed .um-info-list.is-yes svg { background: var(--um-blue); }
+.theme-raed .um-info-list.is-no svg { background: var(--um-orange); }
+.theme-raed .um-info-end { display: grid; justify-items: center; gap: 14px; margin-top: 64px; text-align: center; }
+.theme-raed .um-info-end p { margin: 0; font-size: clamp(24px, 4vw, 34px); font-weight: 900; }
+.theme-raed .um-info-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 0 28px; border: 2.5px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 16px; text-decoration: none; box-shadow: var(--um-hard); transition: transform .14s, box-shadow .14s; }
+.theme-raed .um-info-btn:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--um-ink); }
+.theme-raed .um-info-btn:active { transform: translate(2px, 3px); box-shadow: none; }
+.theme-raed .um-info salla-comments:empty { display: none; }
 
 /* ---------- footer: cream, «Wear your voice.» (unmuted-raed.js), plain links ---------- */
 .theme-raed .store-footer, .theme-raed .store-footer__inner { background: var(--um-paper) !important; color: var(--um-ink) !important; }

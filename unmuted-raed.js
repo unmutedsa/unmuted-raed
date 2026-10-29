@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
-   each card's VOL number and voice, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's VOL number and voice, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -24,6 +24,11 @@
     'unmuted carnival': ['10', 'صوت المهرجان'], 'good mood, fast food': ['11', 'صوت المزاج'], 'cherry market': ['12', 'صوت الكرز'],
     'play unmuted': ['13', 'صوت الملصقات'], 'vending machine': ['14', 'صوت الاختيار'], 'the original': ['15', 'صوت الأصل'],
     'megaphone': ['16', 'صوت المكبّر'], 'ice cream': ['17', 'صوت الصيف']
+  };
+  // VOLUME 01: the menu's link, or the category's own address while the menu (it loads after the page) isn't there yet
+  var volumeUrl = function () {
+    var a = $$('custom-main-menu a, .store-footer a').filter(function (x) { return /VOLUME\s*01/i.test(x.textContent) && x.href; })[0];
+    return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('volume-01/c598858677') : '/volume-01/c598858677';
   };
   var exchangeUrl = function () {
     var a = $$('a').filter(function (x) { return /الاستبدال|exchange/i.test(x.textContent) && x.href; })[0];
@@ -104,7 +109,7 @@
   /* the sections were rendered with the demo tees: point each one at the real Salla product (matched by name in Raed's
      product list), the shop buttons at VOLUME 01, the «ask us» buttons at the store's contact, «طلباتي» at the orders */
   function links(box) {
-    var volume = ($$('custom-main-menu a, .store-footer a').filter(function (a) { return /VOLUME\s*01/i.test(a.textContent) && a.href; })[0] || {}).href || '/';
+    var volume = volumeUrl();
     var contact = ($$('.store-footer a').filter(function (a) { return /^(tel:|https:\/\/wa\.me|https:\/\/api\.whatsapp)/.test(a.getAttribute('href') || ''); })[0] || {}).href || '';
     var orders = window.salla && salla.url && salla.url.get ? salla.url.get('orders') : '/orders';
     var set = function (a, url) { if (a && url) a.setAttribute('href', url); };
@@ -222,6 +227,153 @@
     });
   }
 
+  /* info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية): the Twilight theme's policies look (its js/unmuted/page.js).
+     The text written in Salla is regrouped: what comes before the first h2 is the lead under the big title, every h2 opens
+     one bold card (shipping, exchange and privacy get their colour, icon and sticker), a list whose points start in bold
+     becomes the fact tiles, h3 + list pairs sit side by side as yes / no lists, two or more cards get a pill nav. */
+  var ICON = {
+    truck: '<path d="M3 6.5h11v9H3zM14 9.5h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+    swap: '<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',
+    lock: '<rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5M12 14.5v2.5"/>',
+    sound: '<path d="M4 9.5h4l5-4v13l-5-4H4zM16.5 9a4 4 0 0 1 0 6M19 6.5a7.5 7.5 0 0 1 0 11"/>',
+    yes: '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+    no: '<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>'
+  };
+  var svg = function (name) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICON[name] + '</svg>'; };
+  // the store's three topics; any other heading gets the next colour of the rotation (brand book: ink, cream, blue, orange)
+  var TOPICS = [
+    { id: 'shipping', re: /شحن|توصيل|shipping|delivery/i, c: 'var(--um-orange)', icon: 'truck', sticker: ['في الطريق لك', 'On its way'], s: 'var(--um-blue)', nav: ['الشحن', 'Shipping'] },
+    { id: 'exchange', re: /استبدال|استرجاع|إرجاع|ارجاع|exchange|return|refund/i, c: 'var(--um-blue)', icon: 'swap', sticker: ['المقاس ما ضبط؟', 'Wrong size?'], s: 'var(--um-orange)', nav: ['الاستبدال', 'Exchange'] },
+    { id: 'privacy', re: /خصوصي|بياناتك|privacy/i, c: 'var(--um-blue)', dark: true, icon: 'lock', sticker: ['بياناتك لك', 'Your data stays yours'], s: 'var(--um-orange)', nav: ['الخصوصية', 'Privacy'] }
+  ];
+  var ROTATION = ['var(--um-orange)', 'var(--um-blue)'];
+  // a heading that says what we *don't* do turns its list into crosses
+  var NEGATIVE = /(^|[\s،,])(ما|لا|لن|مو|ممنوع|not|never|don['’]t|won['’]t)([\s،,:]|$)/i;
+  var kids = function (n) { return Array.prototype.slice.call(n.childNodes); };
+  var isBlank = function (n) { return n.nodeType === 3 ? !n.textContent.trim() : n.nodeType !== 1; };
+  var isList = function (n) { return !!n && n.nodeType === 1 && (n.tagName === 'UL' || n.tagName === 'OL'); };
+  var isBold = function (n) { return !!n && n.nodeType === 1 && /^(STRONG|B)$/.test(n.tagName); };
+  var leadsWithBold = function (li) { return isBold(kids(li).filter(function (n) { return !isBlank(n); })[0]); };
+
+  // a list whose every point starts in bold → the fact tiles (bold = the fact, the rest = its note)
+  function facts(list) {
+    var ul = el('ul', 'um-info-facts');
+    Array.prototype.slice.call(list.children).forEach(function (li) {
+      var strong = Array.prototype.slice.call(li.children).filter(isBold)[0], tile = el('li'), b = el('b'), note = el('span');
+      b.textContent = strong.textContent.trim();
+      strong.remove();
+      kids(li).forEach(function (n) { note.appendChild(n); });
+      if (note.firstChild && note.firstChild.nodeType === 3) note.firstChild.textContent = note.firstChild.textContent.replace(/^[\s:،,–—-]+/, '');
+      tile.appendChild(b);
+      if (note.textContent.trim()) tile.appendChild(note);
+      ul.appendChild(tile);
+    });
+    return ul;
+  }
+
+  function infoCard(title, nodes, i) {
+    var text = (title ? title.textContent : '') + ' ' + nodes.map(function (n) { return n.textContent; }).join(' ').slice(0, 200);
+    var topic = TOPICS.filter(function (x) { return x.re.test(title ? title.textContent : ''); })[0] || (title ? null : TOPICS.filter(function (x) { return x.re.test(text); })[0]);
+    var card = el('section', 'um-info-card' + (topic && topic.dark ? ' is-dark' : ''));
+    card.style.setProperty('--c', topic ? topic.c : ROTATION[i % ROTATION.length]);
+    card.id = topic ? topic.id : 'part-' + (i + 1);
+    if (topic) {
+      var st = el('span', 'um-info-sticker');
+      st.setAttribute('aria-hidden', 'true');
+      st.textContent = t(topic.sticker[0], topic.sticker[1]);
+      st.style.setProperty('--s', topic.s);
+      card.appendChild(st);
+    }
+    if (title) {
+      var head = el('div', 'um-info-head', '<span class="um-info-icon">' + svg(topic ? topic.icon : 'sound') + '</span>');
+      head.appendChild(title);
+      card.appendChild(head);
+    }
+    // h3 + list pairs → yes / no lists, side by side when there are two or more
+    var split = null;
+    for (var k = 0; k < nodes.length; k++) {
+      var n = nodes[k];
+      if (isBlank(n)) continue;
+      if (n.nodeType === 1 && /^H[3-6]$/.test(n.tagName)) {
+        var j = k + 1;
+        while (j < nodes.length && isBlank(nodes[j])) j++;
+        if (isList(nodes[j])) {
+          var no = NEGATIVE.test(n.textContent), box = el('div', 'um-info-list ' + (no ? 'is-no' : 'is-yes')), h3 = el('h3'), ul = el('ul');
+          kids(n).forEach(function (c) { h3.appendChild(c); });
+          Array.prototype.slice.call(nodes[j].children).forEach(function (li) { li.insertAdjacentHTML('afterbegin', svg(no ? 'no' : 'yes')); ul.appendChild(li); });
+          box.appendChild(h3);
+          box.appendChild(ul);
+          if (!split) { split = el('div', 'um-info-split'); card.appendChild(split); }
+          split.appendChild(box);
+          k = j;
+          continue;
+        }
+      }
+      split = null;
+      if (isList(n) && n.tagName === 'UL' && n.children.length && Array.prototype.slice.call(n.children).every(leadsWithBold)) { card.appendChild(facts(n)); continue; }
+      card.appendChild(n);
+    }
+    return { card: card, topic: topic, label: topic ? t(topic.nav[0], topic.nav[1]) : (title ? title.textContent.trim() : '') };
+  }
+
+  function info() {
+    var page = $('.page-single .content--single-page');
+    if (!page || page.classList.contains('um-info')) return;
+    var title = $('h1', page), body = $('.content-entry', page);
+    if (!title || !body) return;
+    page.classList.add('um-info');
+    var hero = el('header', 'um-info-hero');
+    page.insertBefore(hero, title);
+    hero.appendChild(title);
+    try {
+      // the lead (before the first h2) and one group per h2
+      var lead = [], groups = [], cur = null;
+      kids(body).forEach(function (n) {
+        if (n.nodeType === 1 && n.tagName === 'H2') { cur = { title: n, nodes: [] }; groups.push(cur); }
+        else if (cur) cur.nodes.push(n);
+        else lead.push(n);
+      });
+      // a page with no h2: one card, headed by the page's own title
+      if (!groups.length) {
+        var h = el('h2');
+        h.textContent = title.textContent.trim();
+        groups.push({ title: h, nodes: lead.splice(0) });
+      }
+      var cards = groups.map(function (g, i) { return infoCard(g.title, g.nodes, i); });
+      body.textContent = '';
+      cards.forEach(function (c) { body.appendChild(c.card); });
+      if (lead.some(function (n) { return !isBlank(n); })) {
+        var l = el('div', 'um-info-lead');
+        lead.forEach(function (n) { l.appendChild(n); });
+        hero.appendChild(l);
+      }
+      if (cards.length > 1) {
+        var nav = el('nav', 'um-info-nav');
+        nav.setAttribute('aria-label', t('أقسام الصفحة', 'On this page'));
+        cards.forEach(function (c) {
+          var a = el('a', '', svg(c.topic ? c.topic.icon : 'sound'));
+          a.href = '#' + c.card.id;
+          a.style.setProperty('--c', c.card.style.getPropertyValue('--c'));
+          a.appendChild(document.createTextNode(c.label));
+          nav.appendChild(a);
+        });
+        hero.appendChild(nav);
+      }
+      // the closing call to shop
+      var end = el('div', 'um-info-end', '<p>' + t('جاهز تختار صوتك؟', 'Ready to pick your voice?') + '</p>');
+      var go = el('a', 'um-info-btn', t('شوف أصوات VOLUME 01', 'See the VOLUME 01 voices'));
+      go.href = volumeUrl();
+      end.appendChild(go);
+      page.insertBefore(end, body.nextSibling);
+    } finally {
+      body.classList.add('um-info-body');
+      page.classList.add('is-ready');
+    }
+    // a link to …#privacy arrives before the cards exist
+    var target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target && body.contains(target)) target.scrollIntoView({ block: 'start' });
+  }
+
   /* sizes: a tile per option, kept in step with Salla's own dropdown (it stays in the form and does the work) */
   function tiles() {
     $$('.product-form salla-product-options select.s-form-control').forEach(function (sel) {
@@ -303,7 +455,7 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); product(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
