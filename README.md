@@ -49,8 +49,11 @@ The home sections and the cards take their words, photos and tees from the store
 | The questions | Salla → الصفحات التعريفية → «الأسئلة الشائعة» (each question as Heading 3, the answer under it) |
 | A tee's voice and VOL number (cards, tracklist, product page) | The product's description: «صوت …» and «الصوت رقم NN» |
 
-Tees with a cut-out photo in `cdn/` (the 17 of VOLUME 01) keep it on the rail and tracklist; a new tee uses its product
-photo. If a source doesn't answer within 2.5s, that section shows what it was built with.
+Tees with a cut-out photo in `cdn/` (the 17 of VOLUME 01) keep it on the rail and tracklist, whatever their product
+photos become. A new tee hangs by the product photo whose ALT says «شماعة» (Salla → product → photo → ALT; «شماعة خلف»
+for its back, shown on hover); that photo is left out of the product page's gallery. Without one it uses its main photo.
+Best: a PNG with no background, the hanger's hook at the top middle. If a source doesn't answer within 2.5s, that
+section shows what it was built with.
 
 ## Previewing the draft
 

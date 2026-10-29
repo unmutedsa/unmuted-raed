@@ -23,6 +23,9 @@
     return { voice: ((d.match(/«([^»]+)»/) || [])[1] || '').trim(), vol: latin((d.match(/رقم\s+([0-9٠-٩]{1,3})/) || d.match(/VOL\.?\s*([0-9]{1,3})/i) || [])[1] || '') };
   };
   var pad = function (n) { return ('0' + n).slice(-2); };
+  // a product photo whose ALT (Salla → product → photo → ALT) says «شماعة» is the tee on its hanger: it hangs on the home
+  // rail and shows in the tracklist, and the product page leaves it out. «شماعة خلف» is the back of the tee on the hanger.
+  var HANGER = /شماع[ةه]|hanger/i, BACKSIDE = /خلف|ظهر|back/i;
   var money = function (n) { return window.salla && salla.money ? salla.money(n) : n + ' ' + t('ر.س', 'SAR'); };
   // text from the store's own elements, keeping Salla's icons in it (the riyal sign is an <i class="sicon-sar">)
   var copyText = function (to, from) {
@@ -102,10 +105,21 @@
     var tees = settle(attempt(homeTees), 2500), faq = settle(attempt(homeFaq), 2500);
     Promise.all([fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }), tees, faq]).then(function (res) {
       var box = el('div', 'um-home', res[0].split('__BASE__').join(CDN));
+      // the tees the rail has no cut-out for bring their «شماعة» photos from their product pages
+      var cut = {};
+      $$('.um-rail [data-um-qv]', box).forEach(function (a) { cut[(a.getAttribute('data-name') || '').toLowerCase()] = 1; });
+      var news = res[1] ? res[1].items.filter(function (p) { return !cut[String(p.name).toLowerCase()]; }) : [];
+      return settle(Promise.all(news.map(function (p) { return hangerOf(p).catch(function () { return null; }); })), 2000).then(function (found) {
+        var photos = {};
+        (found || []).forEach(function (h) { if (h) photos[h.id] = h; });
+        return [box].concat(res.slice(1), [photos]);
+      });
+    }).then(function (res) {
+      var box = res[0];
       // this copy leaves out the hero's top line («هذي إشارتك عشان ترفع صوتك.») and the squiggle under it
       $$('.um-hero__eyebrow, .um-hero .um-fl.is-w', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
-      [function () { bindHero(box); }, function () { bindRail(box, res[1]); }, function () { bindTracks(box, res[1]); },
+      [function () { bindHero(box); }, function () { bindRail(box, res[1], res[3]); }, function () { bindTracks(box, res[1], res[3]); },
         function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       links(box);
@@ -147,6 +161,17 @@
       return html ? new DOMParser().parseFromString(html, 'text/html').querySelector('.content--single-page .content-entry') : null;
     });
   }
+  function hangerOf(p) {
+    var path = String(p.url || '').replace(/^https?:\/\/[^/]+\/?/, '');
+    var url = window.salla && salla.url && salla.url.get ? salla.url.get(path) : '/' + path;
+    return fetch(url, { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
+      var slider = html && new DOMParser().parseFromString(html, 'text/html').querySelector('salla-slider[data-images]'), imgs = [];
+      try { imgs = JSON.parse(slider.getAttribute('data-images')) || []; } catch (e) { /* no photo list */ }
+      var front = imgs.filter(function (i) { return HANGER.test(i.alt || '') && !BACKSIDE.test(i.alt || ''); })[0];
+      var back = imgs.filter(function (i) { return HANGER.test(i.alt || '') && BACKSIDE.test(i.alt || ''); })[0];
+      return front ? { id: String(p.id), front: front.url, back: back ? back.url : '' } : null;
+    });
+  }
   function bindHero(box) {
     var slide = $('#main-content > .s-block--hero-slider .swiper-slide'), hero = $('.um-hero', box);
     if (!slide || !hero) return;
@@ -159,7 +184,7 @@
   }
   var imageOf = function (p) { return (p.image && p.image.url) || ''; };
   var priceOf = function (p) { return p.is_on_sale && p.sale_price ? p.sale_price : p.price; };
-  function bindRail(box, data) {
+  function bindRail(box, data, photos) {
     var rail = $('.um-rail', box), track = rail && $('[data-um-rail-track]', rail);
     if (!track || !data) return;
     if (data.title && $('.um-rls__title um-t', rail)) $('.um-rls__title um-t', rail).textContent = data.title;
@@ -168,16 +193,16 @@
     lis.forEach(function (li) { var a = $('[data-um-qv]', li); if (a) byName[(a.getAttribute('data-name') || '').toLowerCase()] = li; });
     var out = data.items.map(function (p) {
       var li = byName[String(p.name).toLowerCase()];
-      if (!li) {   // no cut-out photo here: the tee hangs by the hanger in its product photo
+      if (!li) {   // no cut-out here: its «شماعة» photo (front, and back if there is one), else its main photo
+        var h = (photos || {})[String(p.id)] || {}, front = h.front || imageOf(p), back = h.back || '';
         li = lis[0].cloneNode(true);
         li.setAttribute('style', '--iw: 346; --hx: 173; --top: 175.5');
-        $$('.um-rls__face.is-back', li).forEach(function (n) { n.remove(); });
-        $('.um-rls__flip', li).classList.remove('has-back');
-        var img = $('.um-rls__face img', li);
-        img.src = imageOf(p);
-        img.removeAttribute('data-side');
-        $('[data-um-qv]', li).setAttribute('data-img', imageOf(p));
-        $('[data-um-qv]', li).setAttribute('data-back', '');
+        $$('.um-rls__face img', li).forEach(function (img) { img.removeAttribute('data-side'); });
+        $('.um-rls__face img', li).src = front;
+        if (back) $('.um-rls__face.is-back img', li).src = back;
+        else { $$('.um-rls__face.is-back', li).forEach(function (n) { n.remove(); }); $('.um-rls__flip', li).classList.remove('has-back'); }
+        $('[data-um-qv]', li).setAttribute('data-img', front);
+        $('[data-um-qv]', li).setAttribute('data-back', back);
         $('[data-um-qv]', li).setAttribute('data-first', 'front');
       }
       var a = $('[data-um-qv]', li);
@@ -198,13 +223,13 @@
     if (bar) bar.setAttribute('aria-valuemax', n);
     if (sub) sub.textContent = sub.textContent.replace(/[0-9٠-٩]+/, ar ? String(n).replace(/\d/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }) : n);
   }
-  function bindTracks(box, data) {
+  function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
     rows.forEach(function (li) { var b = $('.um-tl__name bdi', li); if (b) byName[b.textContent.trim().toLowerCase()] = li; });
     var out = data.items.map(function (p, i) {
       var li = byName[String(p.name).toLowerCase()], v = voiceOf(p);
-      if (!li) { li = rows[0].cloneNode(true); $('.um-tl__img img', li).src = imageOf(p); }
+      if (!li) { li = rows[0].cloneNode(true); $('.um-tl__img img', li).src = ((photos || {})[String(p.id)] || {}).front || imageOf(p); }
       $('a.um-tl__row', li).setAttribute('href', p.url);
       $('.um-tl__no', li).textContent = v.vol ? pad(v.vol) : pad(i + 1);
       $('.um-tl__name bdi', li).textContent = p.name;
@@ -531,7 +556,15 @@
     var slider = $('salla-slider.details-slider');
     var box = slider && $('.swiper.s-slider-container', slider);
     if (!box || !box.swiper || $('.um-sides', box)) return;
-    var sw = box.swiper, imgs = $$('.swiper-wrapper > .swiper-slide img', box);
+    var sw = box.swiper;
+    // the «شماعة» photos are for the home rail: the gallery leaves them out (never all of them)
+    if (!slider.hasAttribute('data-um-hangers')) {
+      slider.setAttribute('data-um-hangers', '');
+      var thumbs = $('.swiper.s-slider-thumbs-container', slider), all = $$('.swiper-wrapper > .swiper-slide img', box), drop = [];
+      all.forEach(function (img, i) { if (HANGER.test(img.alt || '')) drop.push(i); });
+      if (drop.length < all.length) drop.reverse().forEach(function (i) { sw.removeSlide(i); if (thumbs && thumbs.swiper) thumbs.swiper.removeSlide(i); });
+    }
+    var imgs = $$('.swiper-wrapper > .swiper-slide img', box);
     if (imgs.length < 2) return;
     var side = function (img) { var alt = (img.alt || '').toLowerCase(); return /خلف|back/.test(alt) ? 'back' : /أمام|امام|front/.test(alt) ? 'front' : ''; };
     var a = imgs[0].alt === imgs[1].alt ? '' : side(imgs[0]), b = imgs[0].alt === imgs[1].alt ? '' : side(imgs[1]);
