@@ -1,6 +1,6 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
-   product description, fold-outs, the reassurance line, a search button, the home manifesto, «Wear your voice.» in the
+   product description, fold-outs, the reassurance line, a search button, the home sections, «Wear your voice.» in the
    footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
@@ -42,8 +42,7 @@
     end.insertBefore(b, end.firstChild);
   }
 
-  /* home: the UNMUTED theme's sections (hero poster, rail, manifesto, lookbook, tracklist, duo, colours, cats, spot,
-     promises, drop, film, banner, size guide, FAQ, order tracking) with their animations, built from the Twilight theme
+  /* home: the UNMUTED theme's sections (hero poster, rail, tracklist, promises, FAQ) with their animations, built from the Twilight theme
      by build_sections.py and served from the public repo unmutedsa/unmuted-raed. Raed's own home sections stay on the
      page underneath (hidden) and come back if anything fails to load; its product list also names the real products. */
   var CDN = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@' + CDN_REF + '/cdn';
@@ -72,7 +71,6 @@
       root.classList.remove('um-motion');
       document.body.classList.remove('theme-unmuted', 'um-home-on');
       window.__umHomeLoading = false;
-      home();
     });
   }
 
@@ -111,14 +109,6 @@
         set(a, p ? p.url : volume);
       });
     })();
-  }
-
-  /* home without the UNMUTED sections (they failed to load): the two-line manifesto under Raed's hero */
-  function home() {
-    var hero = $('.s-block--hero-slider');
-    if (!hero || $('.um-mani') || window.__umHomeLoading) return;
-    var m = el('section', 'um-mani', '<p>' + t('قالوا لك: وطّ صوتك.', 'They told you: keep it down.') + '</p><p>' + t('إحنا نقول: البسه.', 'We say: wear it.') + '</p>');
-    hero.parentNode.insertBefore(m, hero.nextSibling);
   }
 
   /* product page: name block, colour, sizes as tiles, reassurance line, fold-outs */
@@ -252,7 +242,7 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { fonts(); header(); sections(); home(); product(); tiles(); addLabel(); cart(); footer(); }
+  function run() { fonts(); header(); sections(); product(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);

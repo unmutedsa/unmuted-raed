@@ -1,6 +1,5 @@
 # Builds cdn/: the UNMUTED home sections of the Twilight theme (../salla-theme-unmuted) for the Raed copy.
-#   cdn/sections.html  the sections rendered with their default settings (store order; no reviews / vouchers, which
-#                      would show sample content), image paths as __BASE__/images/…
+#   cdn/sections.html  the sections in ORDER rendered with their default settings, image paths as __BASE__/images/…
 #   cdn/sections.css   the sections' styles (06-unmuted layer only; Raed's own CSS is already on the page)
 #   cdn/sections.js    the sections' scripts (motion, rail drag, voice, pickers, quick buy…), one file
 #   cdn/images/…       every image / video the sections use
@@ -13,7 +12,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 THEME = os.path.normpath(os.path.join(HERE, '..', 'salla-theme-unmuted'))
 HARNESS = os.environ.get('HARNESS', '/private/tmp/claude-501/-Users-dana-Downloads-Future-Bridge-Full-CMS-V3-3-Clean/96d672f4-d2a4-463a-8c2f-e46bebb237d5/scratchpad/umprev/render.cjs')
 OUT = os.path.join(HERE, 'cdn')
-ORDER = ['hero', 'rail', 'voice', 'lookbook', 'tracks', 'duo', 'colors', 'cats', 'spot', 'promises', 'drop', 'video', 'banner', 'size', 'faq', 'track']
+# 2026-10-30 the user removed voice, lookbook, duo, colors, cats, spot, drop, video, banner, size and track from the
+# Raed copy only (they stay in the Twilight theme)
+ORDER = ['hero', 'rail', 'tracks', 'promises', 'faq']
 STYLES = ['tokens', 'base', 'motion', 's-hero', 's-voice', 's-rail', 'quickview', 's-tracks', 's-lookbook', 's-colors', 's-duo',
           's-promises', 's-cats', 's-drop', 's-spot', 's-video', 's-size', 's-faq', 's-banner', 's-track', 'text-colors']
 

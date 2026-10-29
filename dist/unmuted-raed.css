@@ -82,7 +82,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
 .theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
 
-/* ---------- home: hero slider, features as «وعودنا», manifesto (unmuted-raed.js) ---------- */
+/* ---------- home: Raed's hero slider and features (the fallback when the UNMUTED sections don't load) ---------- */
 .theme-raed .s-block--hero-slider .home-slider__content h2 { font-weight: 900; font-size: clamp(32px, 6vw, 72px); line-height: 1.15; }
 .theme-raed .s-block--features__item { padding: 22px 18px; border: 2px solid var(--um-ink); border-radius: 20px; background: var(--um-paper) !important; box-shadow: var(--um-hard); text-align: start; }
 .theme-raed .s-block--features__item .feature-icon { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 0 12px; border: 2px solid var(--um-ink); border-radius: 14px; background: var(--um-orange); color: var(--um-ink); }
@@ -92,11 +92,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-block--features__item p { color: var(--um-soft); }
 /* the UNMUTED sections took over the home page (unmuted-raed.js): Raed's own sections step aside. Its product list stays
    rendered (off screen): it names the real products the sections link to. */
-.um-home-on #main-content > section.s-block, .um-home-on .um-mani { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .um-home { overflow: clip; }
-.um-mani { padding: clamp(56px, 9vw, 120px) 16px; text-align: center; background: var(--um-paper); }
-.um-mani p { margin: 0; font-weight: 900; font-size: clamp(30px, 6vw, 76px); line-height: 1.25; color: var(--um-ink); }
-.um-mani p + p { color: var(--um-orange); }
 
 /* ---------- product page ---------- */
 .theme-raed .container--product-details { max-width: 1320px; }
