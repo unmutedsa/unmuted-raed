@@ -16,14 +16,23 @@
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8' };
   // the size chart and fit note from the store (placeholders until the owner confirms the numbers)
   var CHART = [['S', 54, 70], ['M', 57, 72], ['L', 60, 74], ['XL', 63, 76]];
-  // each tee's VOL number and «voice», as written in its product description (product names in lower case)
-  var VOICES = {
-    'unmuted sticker': ['01', 'صوت البراند'], 'caution': ['02', 'صوت التنبيه'], 'الرياض': ['03', 'صوت المدينة'],
-    'just padel': ['04', 'صوت الملعب'], 'dates season': ['05', 'صوت الموسم'], 'desert club': ['06', 'صوت البر'],
-    'who said kashta?': ['07', 'صوت الكشتة'], 'call me unmuted': ['08', 'صوت المكالمة'], 'the love pop club': ['09', 'صوت الحب'],
-    'unmuted carnival': ['10', 'صوت المهرجان'], 'good mood, fast food': ['11', 'صوت المزاج'], 'cherry market': ['12', 'صوت الكرز'],
-    'play unmuted': ['13', 'صوت الملصقات'], 'vending machine': ['14', 'صوت الاختيار'], 'the original': ['15', 'صوت الأصل'],
-    'megaphone': ['16', 'صوت المكبّر'], 'ice cream': ['17', 'صوت الصيف']
+  // a tee's «voice» and VOL number, as written in its Salla description («صوت المدينة»، الصوت رقم 03 من إصدار VOLUME 01)
+  var latin = function (s) { return String(s).replace(/[٠-٩]/g, function (d) { return d.charCodeAt(0) - 0x660; }); };
+  var voiceOf = function (p) {
+    var d = String((p && p.description) || '').replace(/<[^>]+>/g, ' ');
+    return { voice: ((d.match(/«([^»]+)»/) || [])[1] || '').trim(), vol: latin((d.match(/رقم\s+([0-9٠-٩]{1,3})/) || d.match(/VOL\.?\s*([0-9]{1,3})/i) || [])[1] || '') };
+  };
+  var pad = function (n) { return ('0' + n).slice(-2); };
+  var money = function (n) { return window.salla && salla.money ? salla.money(n) : n + ' ' + t('ر.س', 'SAR'); };
+  // text from the store's own elements, keeping Salla's icons in it (the riyal sign is an <i class="sicon-sar">)
+  var copyText = function (to, from) {
+    if (!to || !from) return;
+    if (typeof from === 'string') { var tpl = document.createElement('template'); tpl.innerHTML = from; from = tpl.content; }
+    to.textContent = '';
+    Array.prototype.slice.call(from.childNodes).forEach(function (n) {
+      if (n.nodeType === 1 && n.tagName === 'I' && /^sicon-[\w-]+$/.test(n.className)) to.appendChild(el('i', n.className));
+      else to.appendChild(document.createTextNode(n.textContent));
+    });
   };
   // VOLUME 01: the menu's link, or the category's own address while the menu (it loads after the page) isn't there yet
   var volumeUrl = function () {
@@ -90,10 +99,14 @@
     css.rel = 'stylesheet';
     css.href = CDN + '/sections.css';
     document.head.appendChild(css);
-    fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }).then(function (html) {
-      var box = el('div', 'um-home', html.split('__BASE__').join(CDN));
+    var tees = settle(attempt(homeTees), 2500), faq = settle(attempt(homeFaq), 2500);
+    Promise.all([fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }), tees, faq]).then(function (res) {
+      var box = el('div', 'um-home', res[0].split('__BASE__').join(CDN));
       // this copy leaves out the hero's top line («هذي إشارتك عشان ترفع صوتك.») and the squiggle under it
       $$('.um-hero__eyebrow, .um-hero .um-fl.is-w', box).forEach(function (n) { n.remove(); });
+      // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
+      [function () { bindHero(box); }, function () { bindRail(box, res[1]); }, function () { bindTracks(box, res[1]); },
+        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       links(box);
       var js = el('script');
@@ -106,6 +119,142 @@
       document.body.classList.remove('theme-unmuted', 'um-home-on');
       window.__umHomeLoading = false;
     });
+  }
+
+  /* What the store's own home elements hold (Raed's sections stay on the page, hidden) is what the UNMUTED sections show, so
+     the words, photos, tees and questions are edited in Salla:
+       hero      ← «صور متحركة»: first photo, main title, extra text
+       rail      ← «منتجات ثابتة»: its title and its tees (the tees with a cut-out photo here keep it; others use their photo)
+       tracklist ← the same tees, with the voice and VOL number from each description
+       promises  ← «مميزات المتجر»: icon, title and line of each item
+       questions ← the store's page «الأسئلة الشائعة» (Salla → الصفحات التعريفية): an h3 per question, the answer under it */
+  var attempt = function (f) { try { return f(); } catch (e) { return null; } };
+  var settle = function (p, ms) { return Promise.race([Promise.resolve(p).catch(function () { return null; }), new Promise(function (r) { setTimeout(r, ms, null); })]); };
+  function homeTees() {
+    var list = $('#main-content > section salla-products-list[source], #main-content > section salla-products-slider[source]');
+    if (!list || !window.salla || !salla.product || !salla.product.fetch) return null;
+    var value = list.getAttribute('source-value'), head = $('.s-block__title h2', list.closest('section'));
+    try { value = JSON.parse(value); } catch (e) { /* one id */ }
+    return salla.product.fetch({ source: list.getAttribute('source'), source_value: value, limit: Number(list.getAttribute('limit')) || 20 })
+      .then(function (r) { return { title: head ? head.textContent.trim() : '', items: (r && r.data) || [] }; });
+  }
+  var FAQ_PAGE = '92387200';   // «الأسئلة الشائعة», unless the footer links another one by that name
+  function homeFaq() {
+    var a = $$('.store-footer a').filter(function (x) { return /\/page-\d+/.test(x.href) && /الأسئلة الشائعة|FAQ/i.test(x.textContent); })[0];
+    var id = a ? a.href.match(/\/page-(\d+)/)[1] : FAQ_PAGE;
+    var url = window.salla && salla.url && salla.url.get ? salla.url.get('-/page-' + id) : '/-/page-' + id;
+    return fetch(url, { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.text() : null; }).then(function (html) {
+      return html ? new DOMParser().parseFromString(html, 'text/html').querySelector('.content--single-page .content-entry') : null;
+    });
+  }
+  function bindHero(box) {
+    var slide = $('#main-content > .s-block--hero-slider .swiper-slide'), hero = $('.um-hero', box);
+    if (!slide || !hero) return;
+    var title = $('h2', slide), sub = $('p', slide), bg = $('[style*="background-image"]', slide);
+    if (title && title.textContent.trim()) copyText($('.um-hero__title um-t', hero), title);
+    if (sub && sub.textContent.trim()) copyText($('.um-hero__sub um-t', hero), sub);
+    else if ($('.um-hero__sub', hero)) $('.um-hero__sub', hero).remove();
+    var url = bg && (bg.style.backgroundImage.match(/url\(["']?([^"')]+)/) || [])[1];
+    if (url) $('.um-hero__photo', hero).src = url;
+  }
+  var imageOf = function (p) { return (p.image && p.image.url) || ''; };
+  var priceOf = function (p) { return p.is_on_sale && p.sale_price ? p.sale_price : p.price; };
+  function bindRail(box, data) {
+    var rail = $('.um-rail', box), track = rail && $('[data-um-rail-track]', rail);
+    if (!track || !data) return;
+    if (data.title && $('.um-rls__title um-t', rail)) $('.um-rls__title um-t', rail).textContent = data.title;
+    var lis = $$('.um-rls__item', track), byName = {};
+    if (!data.items.length || !lis.length) return;
+    lis.forEach(function (li) { var a = $('[data-um-qv]', li); if (a) byName[(a.getAttribute('data-name') || '').toLowerCase()] = li; });
+    var out = data.items.map(function (p) {
+      var li = byName[String(p.name).toLowerCase()];
+      if (!li) {   // no cut-out photo here: the tee hangs by the hanger in its product photo
+        li = lis[0].cloneNode(true);
+        li.setAttribute('style', '--iw: 346; --hx: 173; --top: 175.5');
+        $$('.um-rls__face.is-back', li).forEach(function (n) { n.remove(); });
+        $('.um-rls__flip', li).classList.remove('has-back');
+        var img = $('.um-rls__face img', li);
+        img.src = imageOf(p);
+        img.removeAttribute('data-side');
+        $('[data-um-qv]', li).setAttribute('data-img', imageOf(p));
+        $('[data-um-qv]', li).setAttribute('data-back', '');
+        $('[data-um-qv]', li).setAttribute('data-first', 'front');
+      }
+      var a = $('[data-um-qv]', li);
+      a.setAttribute('href', p.url);
+      a.setAttribute('data-id', p.id);
+      a.setAttribute('data-name', p.name);
+      a.setAttribute('data-price', money(priceOf(p)));
+      a.setAttribute('data-was', p.is_on_sale ? money(p.regular_price) : '');
+      a.setAttribute('data-status', p.status || 'sale');
+      a.setAttribute('aria-label', p.name + '، ' + priceOf(p) + ' ' + t('ر.س', 'SAR'));
+      return li;
+    });
+    track.textContent = '';
+    out.forEach(function (li) { track.appendChild(li); });
+    // the numbers that count the tees follow the list
+    var n = out.length, ends = $$('.um-rls__progress > span', rail), bar = $('[data-um-rail-bar]', rail), sub = $('.um-rls__sub um-t', rail);
+    if (ends[1]) ends[1].textContent = pad(n);
+    if (bar) bar.setAttribute('aria-valuemax', n);
+    if (sub) sub.textContent = sub.textContent.replace(/[0-9٠-٩]+/, ar ? String(n).replace(/\d/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }) : n);
+  }
+  function bindTracks(box, data) {
+    var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
+    if (!data || !data.items.length || !rows.length) return;
+    rows.forEach(function (li) { var b = $('.um-tl__name bdi', li); if (b) byName[b.textContent.trim().toLowerCase()] = li; });
+    var out = data.items.map(function (p, i) {
+      var li = byName[String(p.name).toLowerCase()], v = voiceOf(p);
+      if (!li) { li = rows[0].cloneNode(true); $('.um-tl__img img', li).src = imageOf(p); }
+      $('a.um-tl__row', li).setAttribute('href', p.url);
+      $('.um-tl__no', li).textContent = v.vol ? pad(v.vol) : pad(i + 1);
+      $('.um-tl__name bdi', li).textContent = p.name;
+      $('.um-tl__name small', li).textContent = v.voice;
+      copyText($('.um-tl__end > b', li), money(priceOf(p)));
+      return li;
+    });
+    list.textContent = '';
+    out.forEach(function (li) { list.appendChild(li); });
+  }
+  function bindPromises(box) {
+    var feats = $$('#main-content > .s-block--features .s-block--features__item'), list = $('.um-promises ul.um-box', box);
+    if (!feats.length || !list) return;
+    var lis = $$('li', list), ics = lis.map(function (li) { return ($('.um-box__ic', li) || {}).innerHTML || ''; });
+    // the drawn card / truck / box stay for those icons; any other icon picked in the editor shows as Salla's own
+    var iconFor = function (cls) {
+      if (/card|pay|wallet|cash|money/.test(cls) && ics[0]) return ics[0];
+      if (/ship|truck|deliver/.test(cls) && ics[1]) return ics[1];
+      if (/box|gift|package/.test(cls) && ics[2]) return ics[2];
+      return '<i class="' + cls + '"></i>';
+    };
+    var out = feats.map(function (f, i) {
+      var li = lis[i % lis.length].cloneNode(true), icon = $('i[class*="sicon-"]', f), ic = $('.um-box__ic', li);
+      if (icon && ic) ic.innerHTML = iconFor((icon.className.match(/sicon-[\w-]+/) || [''])[0]);
+      copyText($('b um-t', li) || $('b', li), $('h2', f));
+      copyText($('small um-t', li) || $('small', li), $('p', f));
+      return li;
+    });
+    list.textContent = '';
+    out.forEach(function (li) { list.appendChild(li); });
+  }
+  function bindFaq(box, entry) {
+    var wrap = $('.um-faq .um-mics', box), tpl = wrap && $('details.um-mic', wrap), pairs = [], cur = null;
+    if (!tpl || !entry) return;
+    Array.prototype.slice.call(entry.children).forEach(function (n) {
+      if (/^H[2-4]$/.test(n.tagName)) { cur = { q: n.textContent.trim(), a: [] }; pairs.push(cur); }
+      else if (cur && n.textContent.trim()) cur.a.push(n);
+    });
+    pairs = pairs.filter(function (x) { return x.q && x.a.length; });
+    if (!pairs.length) return;
+    var out = pairs.map(function (x) {
+      var d = tpl.cloneNode(true), a = $('.um-mic__a', d);
+      d.removeAttribute('open');
+      ($('summary b um-t', d) || $('summary b', d)).textContent = x.q;
+      a.textContent = '';
+      x.a.forEach(function (n) { a.appendChild(document.importNode(n, true)); });
+      return d;
+    });
+    wrap.textContent = '';
+    out.forEach(function (d) { wrap.appendChild(d); });
   }
 
   /* the sections were rendered with the demo tees: point each one at the real Salla product (matched by name in Raed's
@@ -138,7 +287,7 @@
         var p = map[(a.dataset.name || '').toLowerCase()];
         if (p) { a.dataset.id = p.id; a.setAttribute('href', p.url); }
       });
-      $$('.um-tracks a.um-tl__row, .um-tracks a[href="#"], .um-spot a[href="#"]', box).forEach(function (a) {
+      $$('.um-tracks a[href="#"], .um-spot a[href="#"]', box).forEach(function (a) {
         var p = find(a.closest('.um-spot') ? a.closest('.um-spot').textContent : a.textContent);
         set(a, p ? p.url : volume);
       });
@@ -215,15 +364,15 @@
     document.body.classList.add('um-plp');
   }
 
-  /* product cards: the tee's voice under its name */
+  /* product cards: the tee's voice under its name (from its description) */
   function cards() {
     $$('custom-salla-product-card').forEach(function (c) {
-      if ($('.um-cvoice', c) || c.hasAttribute('data-um-plain')) return;
+      if ($('.um-cvoice', c) || c.hasAttribute('data-um-plain') || !c.product) return;
       var a = $('.s-product-card-content-title a', c);
       if (!a) return;
-      var v = VOICES[a.textContent.trim().toLowerCase()];
+      var v = voiceOf(c.product).voice;
       if (!v) { c.setAttribute('data-um-plain', ''); return; }
-      a.parentElement.insertAdjacentHTML('afterend', '<p class="um-cvoice">' + esc(v[1]) + '</p>');
+      a.parentElement.insertAdjacentHTML('afterend', '<p class="um-cvoice">' + esc(v) + '</p>');
     });
   }
 
@@ -388,8 +537,7 @@
     var a = imgs[0].alt === imgs[1].alt ? '' : side(imgs[0]), b = imgs[0].alt === imgs[1].alt ? '' : side(imgs[1]);
     var backFirst = a === 'back' || b === 'front';
     if (!a && !b) {
-      var name = (($('[data-testid="store-product-title"]') || {}).textContent || '').trim().toLowerCase();
-      var vol = (VOICES[name] || [])[0] || ((($('.um-pvol') || {}).textContent || '').match(/\d+/) || [])[0] || '';
+      var vol = ((($('.um-pvol') || {}).textContent || '').match(/\d+/) || [])[0] || '';
       backFirst = BACK_FIRST.indexOf(('0' + vol).slice(-2)) >= 0;
     }
     var group = el('div', 'um-sides swiper-no-swiping');

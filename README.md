@@ -26,8 +26,7 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 - **VOLUME 01 (any product list):** the name as a poster title in the store's title style (orange, ink shadow, blue
   swoosh), one line under it, the sort as a pill, «عرض المزيد» as a paper pill. The header menu is the store menu
   «قائمة رائد UNMUTED» (VOLUME 01 only), picked in this copy's header settings.
-- **Product cards (everywhere):** the tee's voice under its name, from the `VOICES` list in `unmuted-raed.js` (copied
-  from the product descriptions; add a line there for a new tee).
+- **Product cards (everywhere):** the tee's voice under its name, read from its description («صوت …»).
 - **Info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية):** the Twilight theme's policies look, built from the
   text written in Salla: big title, the opening line as the lead, one bold card per h2 (orange shipping, blue exchange,
   dark privacy, each with its sticker and icon), a list whose points start in bold as fact tiles, h3 + list pairs as
@@ -37,6 +36,21 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
   rail, tracklist, promises, FAQ; the rest of the Twilight sections, and the hero's top line with its squiggle, are left
   out of this copy) with their animations. The tees link to
   the real products by name. Raed's own home sections stay underneath as the fallback.
+
+## Editing the content (no code)
+
+The home sections and the cards take their words, photos and tees from the store, so they are edited in Salla:
+
+| What | Where in Salla |
+|---|---|
+| Hero photo, «البس صوتك.», the line under it | Theme editor → home → «صور متحركة (محسنة)» → first photo |
+| «اختر صوتك» title and which tees hang on the rail (and the tracklist) | Theme editor → home → «منتجات ثابتة» (its category or picked products) |
+| The three promises (icon, title, line) | Theme editor → home → «مميزات المتجر» |
+| The questions | Salla → الصفحات التعريفية → «الأسئلة الشائعة» (each question as Heading 3, the answer under it) |
+| A tee's voice and VOL number (cards, tracklist, product page) | The product's description: «صوت …» and «الصوت رقم NN» |
+
+Tees with a cut-out photo in `cdn/` (the 17 of VOLUME 01) keep it on the rail and tracklist; a new tee uses its product
+photo. If a source doesn't answer within 2.5s, that section shows what it was built with.
 
 ## Previewing the draft
 

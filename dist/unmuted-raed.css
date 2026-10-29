@@ -149,6 +149,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
    rendered (off screen): it names the real products the sections link to. */
 .um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .um-home { overflow: clip; }
+/* a promise whose icon (picked in «مميزات المتجر») isn't one of the drawn ones shows Salla's own icon */
+.um-promises .um-box__ic i { font-size: 22px; line-height: 1; }
 
 /* ---------- product page ---------- */
 .theme-raed .container--product-details { max-width: 1320px; }
