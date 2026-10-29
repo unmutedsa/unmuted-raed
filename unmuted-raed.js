@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '785ff0ae3be4e6320092b43f96efc8d6892855e9';
+  var CDN_REF = 'db6b0a06c52f42f34460008b367f434bbb60b1f5';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8' };
   // the size chart and fit note from the store (placeholders until the owner confirms the numbers)
   var CHART = [['S', 54, 70], ['M', 57, 72], ['L', 60, 74], ['XL', 63, 76]];
