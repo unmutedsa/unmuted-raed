@@ -1,0 +1,187 @@
+/* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → CSS).
+   The look of the UNMUTED store (UNMUTED-Store/) on Raed's own markup: cream page, ink lines, orange pill buttons,
+   Alexandria + Bricolage Grotesque, tees on the wall colour. unmuted-raed.js adds what CSS can't (size tiles, the
+   VOL / voice block, folds, footer line, manifesto). build.py puts the logo in as a data URI (the LOGO placeholder). */
+/* Salla drops @import from custom CSS: unmuted-raed.js adds the Google Fonts link (Alexandria, Bricolage Grotesque). */
+
+html:root {
+  --um-paper: #FAF5EF;
+  --um-ink: #101010;
+  --um-orange: #F36C27;
+  --um-blue: #2AACE2;
+  --um-wall: #DCD5CA;
+  --um-line: rgba(16, 16, 16, .14);
+  --um-soft: rgba(16, 16, 16, .7);
+  --um-hard: 3px 4px 0 #101010;
+  --um-font: 'Alexandria', 'Bricolage Grotesque', system-ui, sans-serif;
+  --um-latin: 'Bricolage Grotesque', 'Alexandria', system-ui, sans-serif;
+  /* Raed's own colour tokens (buttons, links, badges) */
+  --color-primary: #101010;
+  --color-primary-dark: #000;
+  --color-primary-light: #333;
+  --color-primary-reverse: #FAF5EF;
+  --font-main: 'Alexandria';
+}
+
+/* ---------- page, type ---------- */
+body.theme-raed, .theme-raed .app-inner { background: var(--um-paper) !important; color: var(--um-ink); }
+body.theme-raed { font-family: var(--um-font) !important; }
+.theme-raed :is(h1, h2, h3, h4, h5, h6, p, a, span, b, strong, small, label, li, button, input, select, textarea, .s-block__title):not([class*="sicon"]) { font-family: inherit; }
+.theme-raed [lang="en"] { font-family: var(--um-latin); }
+.theme-raed .s-block__title h2, .theme-raed .s-block__title h3, .theme-raed .s-slider-block__title h2 { font-weight: 900; font-size: clamp(26px, 4vw, 44px); line-height: 1.2; color: var(--um-ink); }
+.theme-raed .bg-white { background-color: transparent !important; }
+.theme-raed .shadow-default { box-shadow: none !important; }
+.theme-raed .text-primary { color: var(--um-ink) !important; }
+
+/* buttons: an orange pill with an ink edge and a hard shadow */
+.theme-raed .s-button-element.s-button-primary, .theme-raed .btn--primary, .theme-raed .s-button-solid.s-button-primary {
+  min-height: 52px; border: 2.5px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important;
+  color: var(--um-ink) !important; font-weight: 800; font-size: 16px; box-shadow: var(--um-hard); transition: transform .14s, box-shadow .14s;
+}
+.theme-raed .s-button-element.s-button-primary:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--um-ink); opacity: 1; }
+.theme-raed .s-button-element.s-button-primary:active { transform: translate(2px, 3px); box-shadow: none; }
+.theme-raed .s-button-element.s-button-primary:disabled, .theme-raed .s-button-element.s-button-primary.s-button-disabled {
+  border-color: rgba(16, 16, 16, .3) !important; background: var(--um-paper) !important; color: rgba(16, 16, 16, .5) !important; box-shadow: none;
+}
+.theme-raed .s-button-outline.s-button-primary, .theme-raed .btn--outline-primary { border: 2px solid var(--um-ink) !important; border-radius: 999px !important; color: var(--um-ink) !important; background: transparent !important; }
+.theme-raed .s-form-control, .theme-raed .form-input { border-radius: 14px; border-color: rgba(16, 16, 16, .3); background: #fff; }
+.theme-raed .s-form-control:focus, .theme-raed .form-input:focus { border-color: var(--um-ink); box-shadow: 0 0 0 3px rgba(42, 172, 226, .35); }
+
+/* ---------- header: cream bar, logo, menu in the middle, «السلة» pill ---------- */
+.theme-raed .store-header .top-navbar { display: none; }
+.theme-raed #mainnav, .theme-raed #mainnav .inner { background: var(--um-paper) !important; box-shadow: none !important; }
+.theme-raed #mainnav { border-bottom: 2px solid var(--um-ink); }
+.theme-raed .navbar-brand img { content: url(__LOGO__); width: auto !important; height: 46px !important; max-height: none; object-fit: contain; }
+.theme-raed custom-main-menu .main-menu > li > a, .theme-raed .main-menu > li > a { color: var(--um-ink); font-weight: 800; font-size: 16px; }
+.theme-raed .main-menu .sub-menu { padding: 8px; border: 2px solid var(--um-ink); border-radius: 16px; background: var(--um-paper); box-shadow: var(--um-hard); }
+.theme-raed .main-menu .sub-menu a { border-radius: 10px; font-weight: 600; }
+.theme-raed .main-menu .sub-menu a:hover { background: var(--um-blue); }
+.theme-raed salla-cart-summary .s-cart-summary-wrapper { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 2px solid var(--um-ink); border-radius: 999px; background: transparent; }
+.theme-raed salla-cart-summary .s-cart-summary-count { position: static; display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--um-ink); color: var(--um-paper); font: 800 12px/1 var(--um-latin); }
+.theme-raed salla-cart-summary .s-cart-summary-content { display: none; }
+.theme-raed salla-cart-summary .s-cart-summary-wrapper::after { content: 'السلة'; font-weight: 800; font-size: 15px; }
+.theme-raed .um-hsearch { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--um-ink); font-size: 20px; cursor: pointer; }
+@media (min-width: 1024px) {
+  .theme-raed #mainnav .container > .flex { position: relative; min-height: 76px; }
+  .theme-raed #mainnav custom-main-menu { position: absolute; inset-inline: 0; top: 50%; width: max-content; margin-inline: auto; transform: translateY(-50%); }
+}
+/* the announcement strip: black with cream type */
+.theme-raed salla-advertisement, .theme-raed .s-advertisement-wrapper, .theme-raed .s-advertisement { background: var(--um-ink) !important; color: var(--um-paper) !important; }
+.theme-raed .s-advertisement * { color: inherit !important; font-weight: 600; }
+
+/* ---------- product cards: the tee on the wall colour, name, price, orange add button ---------- */
+.theme-raed .s-product-card-entry { overflow: visible; border-radius: 18px; background: transparent !important; box-shadow: none !important; }
+.theme-raed .s-product-card-image { position: relative; overflow: hidden; border-radius: 16px; background: var(--um-wall) !important; }
+.theme-raed .s-product-card-image img { object-fit: contain !important; padding: 6% 4% 2%; transition: transform .5s cubic-bezier(.2, .8, .2, 1); filter: drop-shadow(0 12px 12px rgba(0, 0, 0, .18)); }
+.theme-raed .s-product-card-entry:hover .s-product-card-image img { transform: scale(1.04) rotate(-1deg); }
+.theme-raed .s-product-card-content { padding: 12px 4px 4px; }
+.theme-raed .s-product-card-content-title, .theme-raed .s-product-card-content-title a { color: var(--um-ink); font-weight: 800; font-size: 16px; }
+.theme-raed .s-product-card-price, .theme-raed .s-product-card-sale-price h4 { color: var(--um-ink); font-weight: 800; }
+.theme-raed .s-product-card-promotion-title { border: 2px solid var(--um-ink); border-radius: 10px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; transform: rotate(-4deg); }
+.theme-raed .s-product-card-wishlist-btn button, .theme-raed .s-product-card-wishlist-btn.s-button-element { border: 1.5px solid var(--um-ink); background: var(--um-paper); }
+.theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
+.theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
+
+/* ---------- home: hero slider, features as «وعودنا», manifesto (unmuted-raed.js) ---------- */
+.theme-raed .s-block--hero-slider .home-slider__content h2 { font-weight: 900; font-size: clamp(32px, 6vw, 72px); line-height: 1.15; }
+.theme-raed .s-block--features__item { padding: 22px 18px; border: 2px solid var(--um-ink); border-radius: 20px; background: var(--um-paper) !important; box-shadow: var(--um-hard); text-align: start; }
+.theme-raed .s-block--features__item .feature-icon { display: grid; place-items: center; width: 52px; height: 52px; margin: 0 0 12px; border: 2px solid var(--um-ink); border-radius: 14px; background: var(--um-orange); color: var(--um-ink); }
+.theme-raed .s-block--features__item:nth-child(3n + 2) .feature-icon { background: var(--um-blue); }
+.theme-raed .s-block--features__item:nth-child(3n) .feature-icon { background: var(--um-ink); color: var(--um-paper); }
+.theme-raed .s-block--features__item h2 { font-weight: 800; font-size: 18px; color: var(--um-ink); }
+.theme-raed .s-block--features__item p { color: var(--um-soft); }
+/* the UNMUTED sections took over the home page (unmuted-raed.js): Raed's own sections step aside. Its product list stays
+   rendered (off screen): it names the real products the sections link to. */
+.um-home-on #main-content > section.s-block, .um-home-on .um-mani { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.um-home { overflow: clip; }
+.um-mani { padding: clamp(56px, 9vw, 120px) 16px; text-align: center; background: var(--um-paper); }
+.um-mani p { margin: 0; font-weight: 900; font-size: clamp(30px, 6vw, 76px); line-height: 1.25; color: var(--um-ink); }
+.um-mani p + p { color: var(--um-orange); }
+
+/* ---------- product page ---------- */
+.theme-raed .container--product-details { max-width: 1320px; }
+.theme-raed .details-slider .swiper-slide, .theme-raed .details-slider .magnify-wrapper { background: var(--um-wall); }
+.theme-raed .details-slider .magnify-wrapper img { object-fit: contain !important; padding: 6% 6% 2%; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .25)); }
+.theme-raed .details-slider { border-radius: 0 !important; }
+.theme-raed .slide--one-fourth img { background: var(--um-wall) !important; object-fit: contain !important; border-radius: 10px; }
+.theme-raed .main-content h1[data-testid="store-product-title"] { margin-bottom: 4px !important; font-weight: 900 !important; font-size: clamp(26px, 6.6vw, 40px) !important; line-height: 1.15 !important; color: var(--um-ink) !important; }
+.um-pvol { margin: 0; font: 800 clamp(44px, 13vw, 72px)/.9 var(--um-latin); font-stretch: 75%; color: var(--um-ink); }
+.um-pvoice { margin: 0; font-size: 17px; font-weight: 600; color: var(--um-orange); }
+.um-ptag { margin: 2px 0 14px; color: var(--um-soft); }
+.um-pchip { display: inline-block; margin: 12px 0 4px; padding: 3px 10px; border: 1.5px solid var(--um-ink); border-radius: 999px; font-size: 13px; font-weight: 600; }
+.um-pcolour { display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; font-size: 15px; }
+.um-pcolour i { width: 40px; height: 40px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px var(--um-paper), 0 0 0 5px var(--um-ink); margin-inline: 4px; }
+.theme-raed [data-testid="store-product-price"] p, .theme-raed [data-testid="store-product-price"] .font-bold { font-size: 24px !important; font-weight: 800 !important; color: var(--um-ink) !important; }
+/* the description becomes the name block + «عن هذا الصوت» (unmuted-raed.js) */
+.theme-raed .um-pdesc-done { display: none !important; }
+/* the separate price row and the quantity row: the store has neither (the price shows under the name) */
+.theme-raed .product-form > section.flex.p-5:has(.price-wrapper) { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.theme-raed .sticky-product-bar__quantity { display: none !important; }
+.theme-raed .sticky-product-bar { padding: 0 !important; border: 0 !important; }
+.theme-raed .product-form salla-add-product-button .s-button-element { min-height: 56px; }
+/* sizes: tiles (unmuted-raed.js) over Salla's dropdown */
+.theme-raed salla-product-options, .theme-raed salla-product-options .s-product-options-option-container { padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; }
+.theme-raed salla-product-options .s-product-options-option-label b { font-weight: 700; font-size: 15px; }
+.theme-raed salla-product-options .s-product-options-option-label small { display: none; }
+.theme-raed .um-tiles-on select.s-form-control { position: absolute !important; width: 1px !important; height: 1px !important; opacity: 0; pointer-events: none; }
+.um-tiles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.um-tile { min-width: 58px; height: 48px; padding: 0 14px; border: 2px solid var(--um-ink); border-radius: 12px; background: var(--um-paper); color: var(--um-ink); font: 800 17px/1 var(--um-latin); cursor: pointer; }
+.um-tile[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
+.um-tile:disabled { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
+.um-tile:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-trust { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0 0; font-size: 14px; font-weight: 600; line-height: 1.6; color: var(--um-ink); }
+.um-trust::before { content: '⇄'; flex: none; display: grid; place-items: center; width: 24px; height: 24px; border: 1.5px solid var(--um-ink); border-radius: 50%; font-size: 13px; line-height: 1; }
+.um-trust a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.um-folds { margin-top: 22px; border-top: 2px solid var(--um-ink); }
+.um-folds details { border-bottom: 1.5px solid var(--um-line); }
+.um-folds summary { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; font-weight: 700; list-style: none; cursor: pointer; }
+.um-folds summary::-webkit-details-marker { display: none; }
+.um-folds summary::after { content: '+'; font: 700 22px/1 var(--um-latin); }
+.um-folds details[open] summary::after { content: '−'; }
+.um-folds .um-fbody { display: grid; gap: 10px; padding: 0 0 18px; color: var(--um-soft); line-height: 1.7; }
+.um-folds .um-fbody p { margin: 0; }
+.um-folds .um-fbody a { color: var(--um-ink); text-decoration: underline; text-underline-offset: 3px; }
+.um-chart { width: 100%; border-collapse: collapse; font-size: 14px; }
+.um-chart th, .um-chart td { padding: 8px; border-bottom: 1px solid var(--um-line); text-align: center; }
+.um-chart th { color: var(--um-ink); font-weight: 700; }
+.um-share { margin-top: 14px; padding: 6px 0; border: 0; background: none; color: var(--um-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.theme-raed salla-social-share, .theme-raed .main-content .btn--wishlist { display: none !important; }
+.theme-raed .s-comments, .theme-raed .s-comments-product { background: transparent !important; }
+
+/* ---------- bag (cart page): the store's drawer rows ---------- */
+.theme-raed .cart-item { padding: 16px 0 !important; border-bottom: 1px solid var(--um-line); border-radius: 0 !important; margin-bottom: 0 !important; }
+.theme-raed .cart-item img { width: 92px !important; height: 92px !important; padding: 6px; border: 0 !important; border-radius: 14px !important; background: var(--um-wall) !important; object-fit: contain !important; }
+.theme-raed .cart-item h1, .theme-raed .cart-item h1 a { font-size: 16px !important; font-weight: 800; color: var(--um-ink) !important; }
+.theme-raed .cart-item .item-total { font-weight: 800; color: var(--um-ink); }
+.theme-raed .cart-item .text-primary { color: var(--um-ink) !important; }
+.theme-raed .cart-item > span.absolute { top: auto !important; bottom: 14px; }
+.theme-raed .cart-item .btn--delete .s-button-element { width: auto; height: auto; padding: 4px 0; border: 0; background: none !important; color: var(--um-soft) !important; }
+.theme-raed .cart-item .btn--delete .s-button-text i { display: none; }
+.theme-raed .cart-item .btn--delete .s-button-text::after { content: 'احذف'; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.um-cmeta { margin: 2px 0 0; font-size: 13px; color: var(--um-soft); }
+.theme-raed .um-copts-done { display: none !important; }
+.theme-raed salla-quantity-input .s-quantity-input-container { width: max-content; border: 1.5px solid var(--um-ink) !important; border-radius: 999px !important; background: transparent; overflow: hidden; }
+.theme-raed salla-quantity-input .s-quantity-input-button { width: 36px; height: 34px; border: 0; background: none; color: var(--um-ink); font-size: 18px; font-weight: 700; }
+.theme-raed salla-quantity-input .s-quantity-input-input { width: 30px; border: 0; background: none; font-weight: 700; text-align: center; box-shadow: none; }
+.theme-raed #free-shipping { border: 2px solid var(--um-ink) !important; border-radius: 14px !important; background: var(--um-blue) !important; }
+.theme-raed #free-shipping .progress-bg, .theme-raed #free-shipping .bg-primary { background: var(--um-ink) !important; }
+.theme-raed salla-cart-summary-card { display: block; padding: 16px; border: 2px solid var(--um-ink); border-radius: 20px; background: var(--um-paper); box-shadow: var(--um-hard); }
+.theme-raed .s-cart-summary-card-bar, .theme-raed .s-cart-summary-card-sheet { background: transparent !important; }
+.theme-raed .s-cart-summary-card-line span, .theme-raed .s-cart-summary-card-line b, .theme-raed .s-cart-summary-card-bar-label-text, .theme-raed .s-cart-summary-card-bar-total { color: var(--um-ink) !important; }
+.theme-raed .s-cart-summary-card-bar-label-text, .theme-raed .s-cart-summary-card-bar-total { font-weight: 800; }
+.um-cart-title { margin: 8px 0 0; padding-bottom: 14px; border-bottom: 2px solid var(--um-ink); font-weight: 900; font-size: clamp(30px, 6vw, 48px); line-height: 1.1; }
+.theme-raed .no-content-placeholder { padding: 64px 12px; }
+.theme-raed .no-content-placeholder .icon { display: none; }
+.theme-raed .no-content-placeholder p { font-weight: 900; font-size: 30px; color: var(--um-ink); }
+.theme-raed .no-content-placeholder .um-empty-sub { font-weight: 400; font-size: 16px; }
+
+/* ---------- footer: cream, «Wear your voice.» (unmuted-raed.js), plain links ---------- */
+.theme-raed .store-footer, .theme-raed .store-footer__inner { background: var(--um-paper) !important; color: var(--um-ink) !important; }
+.theme-raed .store-footer { border-top: 2px solid var(--um-ink); }
+.theme-raed .store-footer h3 { color: var(--um-ink); font-weight: 800; }
+.theme-raed .store-footer a, .theme-raed .store-footer salla-menu a { color: var(--um-ink) !important; }
+.theme-raed .store-footer .copyright-text p { color: var(--um-soft) !important; }
+.um-ftr-big { padding: clamp(48px, 8vw, 96px) 16px 24px; text-align: center; }
+.um-ftr-big p { margin: 0; }
+.um-ftr-big p:first-child { font: 800 clamp(48px, 11vw, 150px)/.9 var(--um-latin); font-stretch: 75%; letter-spacing: -.02em; color: var(--um-ink); }
+.um-ftr-big p + p { margin-top: 12px; font-weight: 800; font-size: clamp(18px, 2.4vw, 26px); color: var(--um-orange); }
