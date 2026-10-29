@@ -40,6 +40,24 @@
     document.head.appendChild(l);
   }
 
+  /* draft preview (salla.sa/<store>?preview=…): Salla writes the menu and product links with the store's own domain,
+     and that domain shows the published theme. While previewing, those links stay on the preview so the draft stays in view. */
+  function previewLinks() {
+    var preview = new URLSearchParams(location.search).get('preview');
+    if (location.hostname !== 'salla.sa' || !preview || window.__umPreviewLinks) return;
+    window.__umPreviewLinks = true;
+    var base = 'https://salla.sa/' + location.pathname.split('/')[1];   // the store's path on salla.sa
+    var keep = function (e) {
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a || !/^(www\.)?unmutedsa\.com$/.test(a.hostname)) return;
+      var u = new URL(a.href);
+      u.searchParams.set('preview', preview);
+      a.href = base + u.pathname + u.search + u.hash;
+    };
+    document.addEventListener('pointerdown', keep, true);
+    document.addEventListener('click', keep, true);
+  }
+
   /* header: a search button where Raed's top bar used to be */
   function header() {
     var end = $('#mainnav .justify-end');
@@ -285,7 +303,7 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { fonts(); header(); sections(); listing(); cards(); product(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); product(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);

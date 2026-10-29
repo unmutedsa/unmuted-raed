@@ -30,6 +30,12 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
   rail, tracklist, promises, FAQ; the rest of the Twilight sections are left out of this copy) with their animations. The tees link to
   the real products by name. Raed's own home sections stay underneath as the fallback.
 
+## Previewing the draft
+
+The draft opens from the theme list («…» → «معاينة») at `salla.sa/unmuted?preview=…`. Salla writes the menu and product
+links with the store's domain, and unmutedsa.com always shows the **published** theme, so while previewing the script
+keeps those clicks on the preview. Once this copy is published, unmutedsa.com itself shows the new design.
+
 ## Updating
 
 1. Change the Twilight sections or styles in `../salla-theme-unmuted`, then `python3 -I build_sections.py`.
