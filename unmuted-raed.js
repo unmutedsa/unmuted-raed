@@ -122,6 +122,7 @@
       [function () { bindHero(box); }, function () { bindRail(box, res[1], res[3]); }, function () { bindTracks(box, res[1], res[3]); },
         function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
+      railTouch(box);
       links(box);
       var js = el('script');
       js.src = CDN + '/sections.js';
@@ -280,6 +281,20 @@
     });
     wrap.textContent = '';
     out.forEach(function (d) { wrap.appendChild(d); });
+  }
+
+  /* phones: a sideways swipe on the rail drags it (rail.js follows the finger). Once a swipe is clearly sideways the page
+     is held still for it, so the browser doesn't take it over as a scroll; an up / down swipe still scrolls the page. */
+  function railTouch(box) {
+    $$('[data-um-rail-viewport]', box).forEach(function (vp) {
+      var x0 = 0, y0 = 0, way = '';
+      vp.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; way = ''; }, { passive: true });
+      vp.addEventListener('touchmove', function (e) {
+        var dx = Math.abs(e.touches[0].clientX - x0), dy = Math.abs(e.touches[0].clientY - y0);
+        if (!way && dx + dy > 4) way = dx > dy ? 'x' : 'y';
+        if (way === 'x' && e.cancelable) e.preventDefault();
+      }, { passive: false });
+    });
   }
 
   /* the sections were rendered with the demo tees: point each one at the real Salla product (matched by name in Raed's

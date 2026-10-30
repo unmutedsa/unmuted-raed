@@ -149,6 +149,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
    rendered (off screen): it names the real products the sections link to. */
 .um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .um-home { overflow: clip; }
+/* the rail moves by dragging it (mouse or finger) and by its 01 —●— 17 bar: no arrow buttons */
+.um-home .um-rls__nav { display: none !important; }
 /* a promise whose icon (picked in «مميزات المتجر») isn't one of the drawn ones shows Salla's own icon */
 .um-promises .um-box__ic i { font-size: 22px; line-height: 1; }
 
@@ -206,6 +208,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .um-share { margin-top: 14px; padding: 6px 0; border: 0; background: none; color: var(--um-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .theme-raed salla-social-share, .theme-raed .main-content .btn--wishlist { display: none !important; }
 .theme-raed .s-comments, .theme-raed .s-comments-product { background: transparent !important; }
+/* Salla's own «منتجات مشابهة» block under the product: the page keeps «منتجات قد تعجبك» only */
+.theme-raed .s-block--bundle-similar-products { display: none !important; }
 /* an empty reviews box (no reviews yet, no form) takes no space (unmuted-raed.js) */
 .theme-raed salla-comments.um-empty { display: none !important; }
 
