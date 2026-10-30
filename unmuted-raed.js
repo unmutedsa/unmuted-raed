@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
-   each card's voice, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's voice and its turn to the other side on hover, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -23,6 +23,14 @@
     return { voice: ((d.match(/«([^»]+)»/) || [])[1] || '').trim(), vol: latin((d.match(/رقم\s+([0-9٠-٩]{1,3})/) || d.match(/VOL\.?\s*([0-9]{1,3})/i) || [])[1] || '') };
   };
   var pad = function (n) { return ('0' + n).slice(-2); };
+  // a product's photos (url, alt, main) from Salla, asked for once per page
+  var photoLists = {};
+  var photosOf = function (id) {
+    if (!photoLists[id]) photoLists[id] = window.salla && salla.product && salla.product.getDetails
+      ? salla.product.getDetails(id, ['images']).then(function (r) { return ((r && r.data) || r || {}).images || []; }).catch(function () { return []; })
+      : Promise.resolve([]);
+    return photoLists[id];
+  };
   // a product photo whose ALT (Salla → product → photo → ALT) says «شماعة» is the tee on its hanger: it hangs on the home
   // rail and shows in the tracklist, and the product page leaves it out. «شماعة خلف» is the back of the tee on the hanger.
   var HANGER = /شماع[ةه]|hanger/i, BACKSIDE = /خلف|ظهر|back/i;
@@ -163,11 +171,7 @@
     });
   }
   function hangerOf(p) {
-    var path = String(p.url || '').replace(/^https?:\/\/[^/]+\/?/, '');
-    var url = window.salla && salla.url && salla.url.get ? salla.url.get(path) : '/' + path;
-    return fetch(url, { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.text() : ''; }).then(function (html) {
-      var slider = html && new DOMParser().parseFromString(html, 'text/html').querySelector('salla-slider[data-images]'), imgs = [];
-      try { imgs = JSON.parse(slider.getAttribute('data-images')) || []; } catch (e) { /* no photo list */ }
+    return photosOf(p.id).then(function (imgs) {
       var front = imgs.filter(function (i) { return HANGER.test(i.alt || '') && !BACKSIDE.test(i.alt || ''); })[0];
       var back = imgs.filter(function (i) { return HANGER.test(i.alt || '') && BACKSIDE.test(i.alt || ''); })[0];
       return front ? { id: String(p.id), front: front.url, back: back ? back.url : '' } : null;
@@ -236,6 +240,18 @@
       $('.um-tl__name bdi', li).textContent = p.name;
       $('.um-tl__name small', li).textContent = v.voice;
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
+      // its back: the rail's back photo of the same tee (a cut-out, or its «شماعة خلف» photo)
+      var hung = $$('.um-rail [data-um-qv]', box).filter(function (a) { return (a.getAttribute('data-name') || '').toLowerCase() === String(p.name).toLowerCase(); })[0];
+      var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li);
+      $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
+      if (back && pic) {
+        var img = el('img', 'um-tl__back um-face-back');
+        img.alt = '';
+        img.src = back;
+        $('img', pic).classList.add('um-face');
+        pic.appendChild(img);
+        pic.classList.add('um-turn');
+      }
       return li;
     });
     list.textContent = '';
@@ -417,6 +433,36 @@
       var v = voiceOf(c.product).voice;
       if (!v) { c.setAttribute('data-um-plain', ''); return; }
       a.parentElement.insertAdjacentHTML('afterend', '<p class="um-cvoice">' + esc(v) + '</p>');
+    });
+  }
+
+  /* product cards: on hover the tee turns round to its other photo (the first one after its main photo that isn't a
+     «شماعة» photo). Only where there's a mouse; the photo list is asked for when the card is about to show. */
+  var hoverable = !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
+  var flipIO = hoverable && window.IntersectionObserver ? new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      flipIO.unobserve(en.target);
+      var c = en.target, pic = $('.s-product-card-image', c), front = pic && $('a img', pic);
+      if (!c.product || !front || en.boundingClientRect.width < 60) return;
+      photosOf(c.product.id).then(function (imgs) {
+        var other = imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
+        if (!other || $('.um-cback', pic)) return;
+        var back = el('img', 'um-cback um-face-back');
+        back.alt = '';
+        back.src = other.url;
+        front.classList.add('um-face');
+        front.parentNode.appendChild(back);
+        pic.classList.add('um-turn');
+      });
+    });
+  }, { rootMargin: '300px' }) : null;
+  function flips() {
+    if (!flipIO) return;
+    $$('custom-salla-product-card:not([data-um-flip])').forEach(function (c) {
+      if (!c.product) return;
+      c.setAttribute('data-um-flip', '');
+      flipIO.observe(c);
     });
   }
 
@@ -722,9 +768,9 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); info(); product(); sides(); related(); reviews(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); flips(); info(); product(); sides(); related(); reviews(); tiles(); addLabel(); cart(); footer(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
-  new MutationObserver(function () { tiles(); addLabel(); cards(); reviews(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); addLabel(); cards(); flips(); reviews(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();

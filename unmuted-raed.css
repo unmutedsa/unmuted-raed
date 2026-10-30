@@ -93,6 +93,19 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
 @media (max-width: 639px) { .theme-raed .s-product-card-content-footer .s-button-element { padding-inline: 10px; } }
 .theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
+/* on hover a card's tee turns round to its other photo, and a tracklist thumbnail to the tee's back (unmuted-raed.js adds
+   that photo); the two faces swap at the edge-on midpoint, like the tees on the rail */
+.theme-raed .um-turn a { position: relative; display: block; perspective: 1400px; }
+.um-tracks .um-tl__img.um-turn { perspective: 900px; }
+.um-tracks .um-tl__img.um-turn > img { grid-area: 1 / 1; }
+.theme-raed .um-turn img.um-face, .theme-raed .um-turn img.um-face-back { transition: transform .8s cubic-bezier(.65, 0, .35, 1), opacity 0s linear .4s; }
+.theme-raed .s-product-card-image.um-turn img.um-face-back { position: absolute; inset: 0; width: 100%; height: 100%; }
+.theme-raed .um-turn img.um-face-back { opacity: 0; transform: rotateY(-180deg); }
+.theme-raed .s-product-card-entry:hover .um-turn img.um-face, .theme-raed .um-tl__row:hover .um-turn img.um-face { opacity: 0; transform: rotateY(180deg); }
+.theme-raed .s-product-card-entry:hover .um-turn img.um-face-back, .theme-raed .um-tl__row:hover .um-turn img.um-face-back { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .theme-raed .um-turn img.um-face, .theme-raed .um-turn img.um-face-back { transition: opacity .2s; transform: none !important; }
+}
 /* the tee's voice under its name (unmuted-raed.js) */
 .theme-raed .s-product-card-content-title:has(+ .um-cvoice) { margin-bottom: 0; }
 .um-cvoice { margin: 4px 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--um-soft); }

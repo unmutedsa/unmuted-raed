@@ -26,7 +26,9 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 - **VOLUME 01 (any product list):** the name as a poster title in the store's title style (orange, ink shadow, blue
   swoosh), one line under it, the sort as a pill, «عرض المزيد» as a paper pill. The header menu is the store menu
   «قائمة رائد UNMUTED» (VOLUME 01 only), picked in this copy's header settings.
-- **Product cards (everywhere):** the tee's voice under its name, read from its description («صوت …»).
+- **Product cards (everywhere):** the tee's voice under its name, read from its description («صوت …»); with a mouse,
+  hovering turns the tee round to its other photo (the first after the main one that isn't a «شماعة» photo). The home
+  tracklist thumbnails turn to the tee's back the same way.
 - **Info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية):** the Twilight theme's policies look, built from the
   text written in Salla: big title, the opening line as the lead, one bold card per h2 (orange shipping, blue exchange,
   dark privacy, each with its sticker and icon), a list whose points start in bold as fact tiles, h3 + list pairs as
