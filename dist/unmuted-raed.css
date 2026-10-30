@@ -162,6 +162,9 @@ body.theme-raed { font-family: var(--um-font) !important; }
    rendered (off screen): it names the real products the sections link to. */
 .um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .um-home { overflow: clip; }
+/* coming back to a page: it stays hidden (not the header) until it sits where it was left (unmuted-raed.js), then fades in */
+html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; transition: none; }
+#main-content, .store-footer { transition: opacity .25s; }   /* only showing fades; hiding is at once */
 /* the hero's zoom through the logo plays over a much shorter scroll (the theme's stage is 340vh) */
 .um-home .um-hero.is-poster .um-hero__stage { height: 170vh; }
 /* phones: the tees on the rail hang at about 40% of their size (--k), so three or four show side by side; the rail,

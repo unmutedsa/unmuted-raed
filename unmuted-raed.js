@@ -778,23 +778,29 @@
   }
 
   /* back to a page (the browser's back button) lands where it was left. The home's sections and Salla's product lists
-     are added after the page loads, so the browser's own restore meets a short page and ends at the top. */
+     are added after the page loads, so on the way back the page is short at first: the browser's own restore would stop
+     at the footer, the sections would then push the view up to the top, and only then would it reach the spot. So the
+     page (not the header) stays hidden until it sits at the spot, then fades in. */
   function keepPlace() {
-    var key = 'um-y:' + location.pathname + location.search;
+    var key = 'um-y:' + location.pathname + location.search, root = document.documentElement;
     addEventListener('pagehide', function () { try { sessionStorage.setItem(key, String(Math.round(scrollY))); } catch (e) { /* private mode */ } });
     var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null, y = 0;
     try { y = Number(sessionStorage.getItem(key)) || 0; } catch (e) { /* private mode */ }
     if (!nav || nav.type !== 'back_forward' || !y) return;
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    root.classList.add('um-restoring');
     var stop = false, steady = 0, h = 0, tries = 0;
-    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { stop = true; }, { once: true, passive: true }); });
+    var show = function () { root.classList.remove('um-restoring'); };
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { stop = true; show(); }, { once: true, passive: true }); });
+    setTimeout(show, 3500);   // whatever happens, the page shows
     (function go() {
-      if (stop || ++tries > 60) return;   // the visitor moved, or 6s went by
-      var tall = document.documentElement.scrollHeight - innerHeight >= y - 2;
-      if (tall) scrollTo(0, y);
-      steady = tall && Math.abs(scrollY - y) < 3 && document.documentElement.scrollHeight === h ? steady + 1 : 0;
-      h = document.documentElement.scrollHeight;
-      if (steady < 8) setTimeout(go, 100);   // stays put while the page settles
+      if (stop || ++tries > 60) return show();   // the visitor moved, or 6s went by
+      var tall = root.scrollHeight - innerHeight >= y - 2;
+      if (tall) scrollTo({ top: y, behavior: 'instant' });   // the theme scrolls smoothly; this must be a jump
+      steady = tall && Math.abs(scrollY - y) < 3 && root.scrollHeight === h ? steady + 1 : 0;
+      h = root.scrollHeight;
+      if (steady >= 3) show();                  // at the spot and the page has stopped growing: show it
+      if (steady < 8) setTimeout(go, 100);      // and keep it there while late images settle
     })();
   }
 
