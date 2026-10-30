@@ -222,6 +222,26 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .theme-raed .sticky-product-bar__quantity { display: none !important; }
 .theme-raed .sticky-product-bar { padding: 0 !important; border: 0 !important; }
 .theme-raed .product-form salla-add-product-button .s-button-element { min-height: 56px; }
+/* phones: the add-to-bag bar follows the page down (Raed pins it); here it's a cream dock with an ink top edge, the two
+   buttons side by side at the same size, Apple Pay (if any) under them at their full width (unmuted-raed.js marks it
+   um-dock and gives the page room for it) */
+.theme-raed .sticky-product-bar.um-dock { z-index: 40; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)) !important; border-top: 2px solid var(--um-ink) !important; background: var(--um-paper) !important; box-shadow: 0 -10px 24px rgba(16, 16, 16, .08) !important; }
+.theme-raed .um-dock salla-add-product-button { margin-top: 0 !important; }
+.theme-raed .um-dock .s-add-product-button-main { display: flex !important; align-items: stretch; gap: 8px; }
+.theme-raed .um-dock .s-add-product-button-main > salla-button { flex: 1 1 0; min-width: 0; }
+.theme-raed .um-dock .s-add-product-button-main > salla-mini-checkout-widget { flex: 1 1 0; min-width: 0; height: auto; }
+.theme-raed .um-dock salla-add-product-button .s-button-element { min-height: 48px !important; height: 48px; padding-inline: 8px !important; font-size: clamp(13px, 3.7vw, 15px) !important; white-space: nowrap; box-shadow: 2px 3px 0 var(--um-ink) !important; }
+body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important; }
+/* Apple Pay (where the phone has it) gets its own slim row under the two buttons */
+.theme-raed .um-dock salla-add-product-button { flex-wrap: wrap !important; row-gap: 8px; }
+.theme-raed .um-dock salla-add-product-button > .s-add-product-button-main { flex: 1 1 100%; }
+.theme-raed .um-dock salla-add-product-button > salla-quick-buy { order: 2; flex: 1 0 100%; width: 100%; }
+.theme-raed .product-form salla-quick-buy { --apple-pay-button-border-radius: 999px; }   /* a pill, like the buttons above it */
+/* the add button's words beside the cart icon (Salla keeps them for screen readers only on narrow screens) */
+.theme-raed .product-form salla-add-product-button .s-button-text:has(.um-label) { display: inline-flex; align-items: center; gap: 8px; }
+.theme-raed .product-form salla-add-product-button .s-button-text svg { flex: none; width: 18px; height: 18px; }
+@media (max-width: 380px) { .theme-raed .um-dock salla-add-product-button .s-button-text svg { display: none; } }   /* the words fit */
+.theme-raed .product-form .s-add-product-button-sr-only.um-label { position: static !important; width: auto !important; height: auto !important; margin: 0 !important; overflow: visible !important; clip: auto !important; white-space: nowrap; }
 /* sizes: tiles (unmuted-raed.js) over Salla's dropdown */
 .theme-raed salla-product-options, .theme-raed salla-product-options .s-product-options-option-container { padding: 0 !important; background: none !important; border: 0 !important; box-shadow: none !important; }
 .theme-raed salla-product-options .s-product-options-option-label b { font-weight: 700; font-size: 15px; }

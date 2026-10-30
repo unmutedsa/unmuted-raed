@@ -395,7 +395,9 @@
     // reassurance line under the add button
     var add = $('salla-add-product-button', form);
     var ex = exchangeUrl();
-    if (add && !$('.um-trust')) add.insertAdjacentHTML('afterend', '<p class="um-trust"><span>' + t('الاستبدال خلال ٧ أيام، ونوصل لكل مدن المملكة.', '7-day exchange, delivery across Saudi Arabia.') + (ex ? ' <a href="' + esc(ex) + '">' + t('التفاصيل', 'Details') + '</a>' : '') + '</span></p>');
+    // after the buttons' bar (on phones that bar is pinned to the screen, the line stays in the page)
+    var bar = add && add.closest('.sticky-product-bar');
+    if (add && !$('.um-trust')) (bar || add).insertAdjacentHTML('afterend', '<p class="um-trust"><span>' + t('الاستبدال خلال ٧ أيام، ونوصل لكل مدن المملكة.', '7-day exchange, delivery across Saudi Arabia.') + (ex ? ' <a href="' + esc(ex) + '">' + t('التفاصيل', 'Details') + '</a>' : '') + '</span></p>');
     // fold-outs + share, after the form
     var chart = '<table class="um-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر (سم)', 'Chest (cm)') + '</th><th>' + t('الطول (سم)', 'Length (cm)') + '</th></tr></thead><tbody>' +
       CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
@@ -697,6 +699,27 @@
     $$('salla-comments').forEach(function (c) { c.classList.toggle('um-empty', !c.textContent.trim() && !$('img, textarea, input, select', c)); });
   }
 
+  /* phones: Raed pins the add-to-bag bar to the bottom of the screen; it becomes a cream dock (um-dock), and the page
+     gets room at its end for it, as tall as the dock really is (Apple Pay can add a row) */
+  function dock() {
+    $$('.sticky-product-bar').forEach(function (bar) {
+      var on = getComputedStyle(bar).position === 'fixed';
+      bar.classList.toggle('um-dock', on);
+      document.body.classList.toggle('um-docked', on);
+      if (on) document.body.style.setProperty('--um-dock-h', bar.offsetHeight + 'px');
+    });
+  }
+  /* «اشترِ الآن» is drawn inside Salla's component, where the page's CSS can't reach: it gets the store's pill there */
+  function quickBuy() {
+    $$('salla-mini-checkout-widget').forEach(function (w) {
+      if (!w.shadowRoot || w.shadowRoot.querySelector('style[data-um]')) return;
+      var st = document.createElement('style');
+      st.setAttribute('data-um', '');
+      st.textContent = '.s-fast-checkout-button.s-fast-checkout-button{width:100%!important;height:100%!important;min-height:48px!important;border:2px solid #101010!important;border-radius:999px!important;background:#FAF5EF!important;color:#101010!important;font-weight:700!important;font-size:14px!important}';
+      w.shadowRoot.appendChild(st);
+    });
+  }
+
   /* sizes: a tile per option, kept in step with Salla's own dropdown (it stays in the form and does the work) */
   function tiles() {
     $$('.product-form salla-product-options select.s-form-control').forEach(function (sel) {
@@ -731,6 +754,14 @@
   /* the add button speaks like the store: «أضف صوتك للسلة» (only Salla's default label is swapped) */
   function addLabel() {
     $$('.product-form salla-add-product-button .s-button-text').forEach(function (s) {
+      // narrow screens: Salla shows only the cart icon and keeps the words for screen readers; they show beside it
+      var sr = $('.s-add-product-button-sr-only', s);
+      if (sr) {
+        if (/أضف إلى السلة|إضافة للسلة/.test(sr.textContent)) sr.textContent = 'أضف صوتك للسلة';
+        else if (/add to cart/i.test(sr.textContent)) sr.textContent = 'Add your voice to the bag';
+        sr.classList.add('um-label');
+        return;
+      }
       var txt = s.textContent.trim();
       if (txt === 'أضف إلى السلة' || txt === 'إضافة للسلة') s.textContent = 'أضف صوتك للسلة';
       else if (txt === 'Add to cart' || txt === 'Add To Cart') s.textContent = 'Add your voice to the bag';
@@ -805,10 +836,11 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); flips(); info(); product(); sides(); related(); reviews(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); flips(); info(); product(); sides(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
-  new MutationObserver(function () { tiles(); addLabel(); cards(); flips(); reviews(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  addEventListener('resize', dock);
+  new MutationObserver(function () { tiles(); addLabel(); cards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
