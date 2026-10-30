@@ -283,10 +283,14 @@
     out.forEach(function (d) { wrap.appendChild(d); });
   }
 
-  /* phones: a sideways swipe on the rail drags it (rail.js follows the finger). Once a swipe is clearly sideways the page
-     is held still for it, so the browser doesn't take it over as a scroll; an up / down swipe still scrolls the page. */
+  /* phones: a sideways swipe on the rail drags it (rail.js follows the finger).
+     - A finger belongs to the tee it first touched; when rail.js moves it over to the rail, that tee reports
+       «lostpointercapture», which rail.js takes as the end of the drag, so only the rail's own one gets through.
+     - Once a swipe is clearly sideways the page is held still for it, so the browser doesn't take it over as a scroll;
+       an up / down swipe still scrolls the page. */
   function railTouch(box) {
     $$('[data-um-rail-viewport]', box).forEach(function (vp) {
+      vp.addEventListener('lostpointercapture', function (e) { if (e.target !== vp) e.stopPropagation(); }, true);
       var x0 = 0, y0 = 0, way = '';
       vp.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; way = ''; }, { passive: true });
       vp.addEventListener('touchmove', function (e) {
