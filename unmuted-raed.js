@@ -140,6 +140,7 @@
       css.remove();
       root.classList.remove('um-motion');
       document.body.classList.remove('theme-unmuted', 'um-home-on');
+      document.body.classList.add('um-home-off');   // Raed's own sections show instead
       window.__umHomeLoading = false;
     });
   }

@@ -161,6 +161,12 @@ body.theme-raed { font-family: var(--um-font) !important; }
 /* the UNMUTED sections took over the home page (unmuted-raed.js): Raed's own sections step aside. Its product list stays
    rendered (off screen): it names the real products the sections link to. */
 .um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+/* ...and they stay out of sight from the first paint, before the script has run (this CSS loads before it): no flash of
+   them on the way in or back. If the sections fail, the script shows them (um-home-off); without the script at all,
+   they show after 6s. */
+body.index:not(.um-home-on) #main-content > section.s-block { visibility: hidden; animation: um-unhide 0s linear 6s forwards; }
+body.index.um-home-off #main-content > section.s-block { visibility: visible; animation: none; }
+@keyframes um-unhide { to { visibility: visible; } }
 .um-home { overflow: clip; }
 /* coming back to a page: it stays hidden (not the header) until it sits where it was left (unmuted-raed.js), then fades in */
 html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; transition: none; }
