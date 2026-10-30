@@ -128,7 +128,7 @@
       $$('.um-hero__eyebrow, .um-hero .um-fl.is-w', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
       [function () { bindHero(box); }, function () { bindRail(box, res[1], res[3]); }, function () { bindTracks(box, res[1], res[3]); },
-        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
+        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       railTouch(box);
       links(box);
@@ -297,6 +297,15 @@
     });
     wrap.textContent = '';
     out.forEach(function (d) { wrap.appendChild(d); });
+  }
+
+  /* the rail is for looking: a tee there opens nothing (no quick buy, no link); «كل الأصوات» under it leads to VOLUME 01 */
+  function railShowcase(box) {
+    $$('.um-rail .um-rls__swing', box).forEach(function (a) {
+      a.removeAttribute('href');
+      a.removeAttribute('data-um-qv');
+      a.setAttribute('role', 'img');
+    });
   }
 
   /* phones: a sideways swipe on the rail drags it (rail.js follows the finger).
@@ -768,7 +777,29 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
+  /* back to a page (the browser's back button) lands where it was left. The home's sections and Salla's product lists
+     are added after the page loads, so the browser's own restore meets a short page and ends at the top. */
+  function keepPlace() {
+    var key = 'um-y:' + location.pathname + location.search;
+    addEventListener('pagehide', function () { try { sessionStorage.setItem(key, String(Math.round(scrollY))); } catch (e) { /* private mode */ } });
+    var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null, y = 0;
+    try { y = Number(sessionStorage.getItem(key)) || 0; } catch (e) { /* private mode */ }
+    if (!nav || nav.type !== 'back_forward' || !y) return;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    var stop = false, steady = 0, h = 0, tries = 0;
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { stop = true; }, { once: true, passive: true }); });
+    (function go() {
+      if (stop || ++tries > 60) return;   // the visitor moved, or 6s went by
+      var tall = document.documentElement.scrollHeight - innerHeight >= y - 2;
+      if (tall) scrollTo(0, y);
+      steady = tall && Math.abs(scrollY - y) < 3 && document.documentElement.scrollHeight === h ? steady + 1 : 0;
+      h = document.documentElement.scrollHeight;
+      if (steady < 8) setTimeout(go, 100);   // stays put while the page settles
+    })();
+  }
+
   function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); flips(); info(); product(); sides(); related(); reviews(); tiles(); addLabel(); cart(); footer(); }
+  keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);

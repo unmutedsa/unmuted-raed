@@ -36,7 +36,11 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 - **Bag:** «سلتك», size as words, «احذف», the summary card in ink with the orange button, «سلتك ساكتة.» when empty.
 - **Home:** the Twilight theme's sections, rendered with their default settings by `build_sections.py` (hero poster,
   rail, tracklist, promises, FAQ; the rest of the Twilight sections, and the hero's top line with its squiggle, are left
-  out of this copy) with their animations. The tees link to
+  out of this copy) with their animations. In this copy the hero's zoom plays over 170vh (not 340vh), the rail is for
+  looking only (no quick buy, no links; «كل الأصوات» leads to VOLUME 01), and on phones its tees hang at ~40% size so
+  three or four show side by side.
+- **Everywhere:** the browser's back button returns to the place on the page (the content added after load would
+  otherwise send it to the top). The tees link to
   the real products by name. Raed's own home sections stay underneath as the fallback.
 
 ## Editing the content (no code)

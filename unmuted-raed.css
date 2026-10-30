@@ -162,6 +162,26 @@ body.theme-raed { font-family: var(--um-font) !important; }
    rendered (off screen): it names the real products the sections link to. */
 .um-home-on #main-content > section.s-block { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .um-home { overflow: clip; }
+/* the hero's zoom through the logo plays over a much shorter scroll (the theme's stage is 340vh) */
+.um-home .um-hero.is-poster .um-hero__stage { height: 170vh; }
+/* phones: the tees on the rail hang at about 40% of their size (--k), so three or four show side by side; the rail,
+   the titles and the scene's scale (--px) stay as they are */
+@media (max-width: 899px) {
+  .um-home .um-rls { --k: .42; min-height: 0; }
+  .um-home .um-rls__viewport { height: calc(560 * var(--px) * var(--k)); }
+  .um-home .um-rls__item { width: calc(366 * var(--px) * var(--k)); }
+  .um-home .um-rls__swing { width: calc(var(--iw) * var(--px) * var(--k)); margin-left: calc(-1 * var(--hx) * var(--px) * var(--k)); transform-origin: calc(var(--hx) * var(--px) * var(--k)) 0; }
+  .um-home .um-rls__flip { margin-top: calc((var(--top) - 190) * var(--px) * var(--k)); }
+  .um-home .um-rls__face img[data-side] {
+    --tip-w: calc((var(--hx) - 3) * var(--px) * var(--k));
+    --tip: linear-gradient(#000 0 0) var(--tip-at) top calc((180 - var(--top)) * var(--px) * var(--k)) / var(--tip-w) calc(24 * var(--px) * var(--k)) no-repeat;
+  }
+  .um-home .um-rls__face img[data-side="back"] { --tip-w: calc((var(--iw) - var(--hx) - 3) * var(--px) * var(--k)); }
+  .um-home .um-rls__progress { top: calc((190 + 560 * var(--k)) * var(--px) + 14px); }
+  .um-home .um-rls__more { padding-top: calc((190 + 560 * var(--k)) * var(--px) + 64px); }
+}
+/* the rail is for looking (unmuted-raed.js takes the links off): the tees just hang and swing */
+.um-home .um-rls__swing { cursor: inherit; }
 /* the rail moves by dragging it (mouse or finger) and by its 01 —●— 17 bar: no arrow buttons */
 .um-home .um-rls__nav { display: none !important; }
 /* a promise whose icon (picked in «مميزات المتجر») isn't one of the drawn ones shows Salla's own icon */
