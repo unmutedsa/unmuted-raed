@@ -108,7 +108,7 @@
     css.rel = 'stylesheet';
     css.href = CDN + '/sections.css';
     document.head.appendChild(css);
-    var tees = settle(attempt(homeTees), 2500), faq = settle(attempt(homeFaq), 2500);
+    var tees = settle(attempt(homeTees), 4000), faq = settle(attempt(homeFaq), 2500);
     Promise.all([fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }), tees, faq]).then(function (res) {
       var box = el('div', 'um-home', res[0].split('__BASE__').join(CDN));
       // the tees the rail has no cut-out for bring their «شماعة» photos from their product pages
@@ -152,13 +152,20 @@
        questions ← the store's page «الأسئلة الشائعة» (Salla → الصفحات التعريفية): an h3 per question, the answer under it */
   var attempt = function (f) { try { return f(); } catch (e) { return null; } };
   var settle = function (p, ms) { return Promise.race([Promise.resolve(p).catch(function () { return null; }), new Promise(function (r) { setTimeout(r, ms, null); })]); };
+  // Raed's list and Salla's script can still be on their way when this runs: it looks again every 100ms (the caller
+  // gives up after a few seconds and keeps the built-in tees)
   function homeTees() {
-    var list = $('#main-content > section salla-products-list[source], #main-content > section salla-products-slider[source]');
-    if (!list || !window.salla || !salla.product || !salla.product.fetch) return null;
-    var value = list.getAttribute('source-value'), head = $('.s-block__title h2', list.closest('section'));
-    try { value = JSON.parse(value); } catch (e) { /* one id */ }
-    return salla.product.fetch({ source: list.getAttribute('source'), source_value: value, limit: Number(list.getAttribute('limit')) || 20 })
-      .then(function (r) { return { title: head ? head.textContent.trim() : '', items: (r && r.data) || [] }; });
+    return new Promise(function (done, fail) {
+      var tries = 0;
+      (function look() {
+        var list = $('#main-content > section salla-products-list[source], #main-content > section salla-products-slider[source]');
+        if (!list || !window.salla || !salla.product || !salla.product.fetch) return ++tries < 40 ? setTimeout(look, 100) : done(null);
+        var value = list.getAttribute('source-value'), head = $('.s-block__title h2', list.closest('section'));
+        try { value = JSON.parse(value); } catch (e) { /* one id */ }
+        salla.product.fetch({ source: list.getAttribute('source'), source_value: value, limit: Number(list.getAttribute('limit')) || 20 })
+          .then(function (r) { done({ title: head ? head.textContent.trim() : '', items: (r && r.data) || [] }); }, fail);
+      })();
+    });
   }
   var FAQ_PAGE = '92387200';   // «الأسئلة الشائعة», unless the footer links another one by that name
   function homeFaq() {
@@ -246,9 +253,10 @@
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
       // its back: the rail's back photo of the same tee (a cut-out, or its «شماعة خلف» photo)
       var hung = $$('.um-rail [data-um-qv]', box).filter(function (a) { return (a.getAttribute('data-name') || '').toLowerCase() === String(p.name).toLowerCase(); })[0];
-      var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li);
+      var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p));
       $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
-      if (back && pic) {
+      if (model && pic) modelTrack(pic, p, model);
+      else if (back && pic) {
         var img = el('img', 'um-tl__back um-face-back');
         img.alt = '';
         img.src = back;
@@ -260,6 +268,24 @@
     });
     list.textContent = '';
     out.forEach(function (li) { list.appendChild(li); });
+  }
+  // a tee with model photos (the HD list below) shows its main one instead of the cut-out, and its «خلف» model photo on hover
+  function modelTrack(pic, p, front) {
+    var face = $('img', pic);
+    face.src = front;
+    face.classList.remove('um-face');
+    pic.classList.remove('um-turn');
+    pic.classList.add('um-model');
+    photosOf(p.id).then(function (imgs) {
+      var b = imgs.filter(function (i) { return BACKSIDE.test(i.alt || '') && mdOf(i.url); })[0];
+      if (!b || $('.um-tl__back', pic)) return;
+      var img = el('img', 'um-tl__back um-face-back');
+      img.alt = '';
+      img.src = mdOf(b.url);
+      face.classList.add('um-face');
+      pic.appendChild(img);
+      pic.classList.add('um-turn');
+    });
   }
   function bindPromises(box) {
     var feats = $$('#main-content > .s-block--features .s-block--features__item'), list = $('.um-promises ul.um-box', box);
@@ -625,7 +651,7 @@
      (cdn/photos/, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@06151651c4b3b7767021152fa500be7bbea62e04/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fe9fc0f99bccd4cc52509e818355bb0c0104201f/cdn/photos/';
   var HD = {
     ZHKr1xwBcqjn4PhV2sBf7GdedXuSdHN8vUFVq3rP: 'carnival/duo-front.jpg',
     '6maPE9bIuKJHIrCi9DEi5MdzBgy4PxuZzFsx8TGE': 'carnival/man-back.jpg',
@@ -639,6 +665,8 @@
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
     return m && HD[m[1]] ? PHOTOS + HD[m[1]] : '';
   };
+  // the same photo at 1600x2000 (cdn/photos/<tee>/md/), sharp enough for a card and light enough for the home page
+  var mdOf = function (url) { var hd = hdOf(url); return hd ? hd.replace(/([^/]+)$/, 'md/$1') : ''; };
   function hdPhotos() {
     var box = $('salla-slider.details-slider .s-slider-container');
     if (!box || !box.swiper || box.hasAttribute('data-um-hd')) return;

@@ -228,6 +228,8 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .theme-raed .details-slider .s-slider-thumbs-container img[alt*="مودل"] { object-fit: cover !important; background: transparent !important; }
 .theme-raed .s-product-card-image.um-model { background: transparent !important; }
 .theme-raed .s-product-card-image.um-model img { object-fit: cover !important; padding: 0; filter: none; }
+.um-tracks .um-tl__img.um-model { background: transparent; }
+.um-tracks .um-tl__img.um-model img { width: 100%; height: 100%; object-fit: cover; }
 .theme-raed .main-content h1[data-testid="store-product-title"] { margin-bottom: 4px !important; font-weight: 900 !important; font-size: clamp(26px, 6.6vw, 40px) !important; line-height: 1.15 !important; color: var(--um-ink) !important; }
 .um-pvol { margin: 0; font: 800 clamp(44px, 13vw, 72px)/.9 var(--um-latin); font-stretch: 75%; color: var(--um-ink); }
 .um-pvoice { margin: 0; font-size: 17px; font-weight: 600; color: var(--um-orange); }
