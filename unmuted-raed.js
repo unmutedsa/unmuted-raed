@@ -648,31 +648,38 @@
   }
 
   /* product photos in 4K: Salla keeps a product photo at 800x1000 at most, so a photo with a 4K copy in this repo
-     (cdn/photos/, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
+     (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@0368431b475c217d34287a5407016d11217f667c/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c32755fd16e4662f14a01f3df4c190373eff58cc/cdn/photos/';
   var HD = {
-    bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.jpg',
-    lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.jpg',
-    IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.jpg',
-    smD5wPX1MvxhwT524DkIy8GVVN1oR1F8dJZKdPNA: 'carnival/man-side.jpg',
-    Jmjn5BWcCljfGe9DDfbYtplgCxReLeDLMX9lc0wu: 'carnival/woman-back.jpg',
-    BLmv8weJ6tnpakywSYncA0lh7hUUHBnpFJVmVvcL: 'carnival/woman-front.jpg',
-    Wu1SCF6H8Q3Fpb3u6x4j9FrM4dbIXWM3Nug8DRWt: 'carnival/woman-side.jpg',
-    AHacurnYSVN4BRt6YGSkbO4IZDabeMrnDTXnOXQ2: 'love-pop/duo-front.jpg',
-    iA5xCfZAKON9Ca9OSvB0lty0QN9wJ7skcWs2aaJi: 'love-pop/man-back.jpg',
-    vZxP63LgOzPiKbt5BbgmbsTgr5mQWKmUqO72P3hQ: 'love-pop/man-front.jpg',
-    BkM8osa40ySvpeeSC6u3lU228Y4ljjVYYHTvHWQw: 'love-pop/man-side.jpg',
-    Bu0rYUDdTIrzROmLcqywEfVxdst36cNLrkaaP6z6: 'love-pop/woman-back.jpg',
-    IV9fZM64ANdTYNrMPfwqvxJJJg1WsX2cb2v6Y6Ks: 'love-pop/woman-front.jpg',
-    UJjGi0At9A6MyfCzjwDfh7vWihSGl1So0Y2tCsb7: 'love-pop/woman-side.jpg'
+    bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
+    lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
+    IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
+    smD5wPX1MvxhwT524DkIy8GVVN1oR1F8dJZKdPNA: 'carnival/man-side.webp',
+    Jmjn5BWcCljfGe9DDfbYtplgCxReLeDLMX9lc0wu: 'carnival/woman-back.webp',
+    BLmv8weJ6tnpakywSYncA0lh7hUUHBnpFJVmVvcL: 'carnival/woman-front.webp',
+    Wu1SCF6H8Q3Fpb3u6x4j9FrM4dbIXWM3Nug8DRWt: 'carnival/woman-side.webp',
+    AHacurnYSVN4BRt6YGSkbO4IZDabeMrnDTXnOXQ2: 'love-pop/duo-front.webp',
+    iA5xCfZAKON9Ca9OSvB0lty0QN9wJ7skcWs2aaJi: 'love-pop/man-back.webp',
+    vZxP63LgOzPiKbt5BbgmbsTgr5mQWKmUqO72P3hQ: 'love-pop/man-front.webp',
+    BkM8osa40ySvpeeSC6u3lU228Y4ljjVYYHTvHWQw: 'love-pop/man-side.webp',
+    Bu0rYUDdTIrzROmLcqywEfVxdst36cNLrkaaP6z6: 'love-pop/woman-back.webp',
+    IV9fZM64ANdTYNrMPfwqvxJJJg1WsX2cb2v6Y6Ks: 'love-pop/woman-front.webp',
+    UJjGi0At9A6MyfCzjwDfh7vWihSGl1So0Y2tCsb7: 'love-pop/woman-side.webp',
+    WT3sTKhDV0PEkRXRuzUZwrCosefII2BZtq6LuHv0: 'good-mood/duo-front.webp',
+    BgjTJQxxJs9qMjzJEG7offWUmdPkDSXzjbP4tf67: 'good-mood/man-back.webp',
+    AFGaxmHeu85CPg16Icd7lP2Oopp37vKu0b8fez04: 'good-mood/man-front.webp',
+    tJYvjOh6DYhN5wb1CaT43onVnaQ5LRHnl1LCpRLF: 'good-mood/man-side.webp',
+    hlmcNW0MryUanRqnyUahE4e4WfCCaBfmpkWBy8d0: 'good-mood/woman-back.webp',
+    AZOeig3nYpAUy0sUwUCk8ZtB9SUOFwu74wuW1aqe: 'good-mood/woman-front.webp',
+    '4VIIDuLE5bIxkcaAg02mJuw8ylt8lNmUUHQonlzs': 'good-mood/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
     return m && HD[m[1]] ? PHOTOS + HD[m[1]] : '';
   };
-  // the same photo at 1600x2000 (cdn/photos/<tee>/md/), sharp enough for a card and light enough for the home page
+  // the same photo at 1600x2000 (cdn/photos/<tee>/md/, WebP), sharp enough for a card and light enough for the home page
   var mdOf = function (url) { var hd = hdOf(url); return hd ? hd.replace(/([^/]+)$/, 'md/$1') : ''; };
   function hdPhotos() {
     var box = $('salla-slider.details-slider .s-slider-container');
