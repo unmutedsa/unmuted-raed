@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d6e6b93fae8345fe9cc7c2e2f0a6eada9e5d2fd4/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c0ac776f405822557e04a0facb2b8d30a1a659c5/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -672,8 +672,8 @@
     Sq9SvBYaIS2DJwySDk69ay3YSJzsTKSnmevDV23i: 'good-mood/man-front.webp',
     jt693BawHnM6tbUO1N0tHmP6lRBUCwdHciekMvmK: 'good-mood/man-side.webp',
     pRRKuvR5hwNrQEUVfQGFY8WlUzjlxeyuu2e8OESU: 'good-mood/woman-back.webp',
-    UxX3Docy5Rjcq4YSte5RRSJfkV8L0J5ri5fWlD3Q: 'good-mood/woman-front.webp',
-    '3rqKFuZS71sxSgM1R7flOKZ7rZupYTo9wd0DLOK0': 'good-mood/woman-side.webp',
+    '8Ca3NNlkveoYaQqbBvC8nkvnSglCyFwbnxvOK5FH': 'good-mood/woman-front.webp',
+    rSKz3pX0VdoFq3gSHDdy1pZ0tBtaBkY9BY7uoW8A: 'good-mood/woman-side.webp',
     XfOROzYs4Bgsxa7gA7EZib331t97LtKwxl1W6onT: 'cherry-market/duo-front.webp',
     lL5vt5mX8XjrRBTpFaVD2pGHhatHIZC2v3RwyRJU: 'cherry-market/man-back.webp',
     lp2PjlHLA0MB4T0jgqkAbYE9AAMFrxCU7cXfP8FE: 'cherry-market/man-front.webp',
