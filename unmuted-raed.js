@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, a search button, the home sections, the VOLUME 01 page title,
-   each card's voice and its turn to the other side on hover, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's voice and its turn to the other side on hover, 4K copies of product photos, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -621,6 +621,54 @@
     if (target && body.contains(target)) target.scrollIntoView({ block: 'start' });
   }
 
+  /* product photos in 4K: Salla keeps a product photo at 800x1000 at most, so a photo with a 4K copy in this repo
+     (cdn/photos/, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
+     Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
+     once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@06151651c4b3b7767021152fa500be7bbea62e04/cdn/photos/';
+  var HD = {
+    ZHKr1xwBcqjn4PhV2sBf7GdedXuSdHN8vUFVq3rP: 'carnival/duo-front.jpg',
+    '6maPE9bIuKJHIrCi9DEi5MdzBgy4PxuZzFsx8TGE': 'carnival/man-back.jpg',
+    O2J1KSm16jfmdbYxjB8CE5udQMKmnHEd7P2sWr66: 'carnival/man-front.jpg',
+    yRK6JbRtqM2PSeKNLkKL98Gw408w4p3pTLOzOhhR: 'carnival/man-side.jpg',
+    SBiJ4SI7cmXZRtMnQNVT1VNpyBRlDVxh64gCrHvs: 'carnival/woman-back.jpg',
+    VGwt08zFmP0jkVT29XRkV7NETQtryGLxdTyhynqH: 'carnival/woman-front.jpg',
+    f11fWsFMDntU5hIoZSVuIupK6xSHSGlCeE6kXIWu: 'carnival/woman-side.jpg'
+  };
+  var hdOf = function (url) {
+    var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
+    return m && HD[m[1]] ? PHOTOS + HD[m[1]] : '';
+  };
+  function hdPhotos() {
+    var box = $('salla-slider.details-slider .s-slider-container');
+    if (!box || !box.swiper || box.hasAttribute('data-um-hd')) return;
+    box.setAttribute('data-um-hd', '');
+    var links = $$('a[data-fslightbox]', box), swapped = false;
+    links.forEach(function (a) { var hd = hdOf(a.getAttribute('href')); if (hd) { a.setAttribute('href', hd); swapped = true; } });
+    if (swapped && typeof window.refreshFsLightbox === 'function') window.refreshFsLightbox();
+    var upgrade = function (k) {
+      var slide = $$('.swiper-wrapper > .swiper-slide', box)[k];   // looked up each time: sides() may drop slides
+      var img = slide && $('img', slide), hd = img && !img.hasAttribute('data-um-hd') && hdOf(img.getAttribute('src'));
+      if (!hd) return;
+      img.setAttribute('data-um-hd', '');
+      var pre = new Image();
+      pre.onload = function () { img.src = hd; };
+      pre.src = hd;
+    };
+    var near = function () { var k = box.swiper.activeIndex; upgrade(k); upgrade(k + 1); upgrade(k - 1); };
+    near();
+    box.swiper.on('slideChange', near);
+  }
+
+  /* a product card whose photo is one of those model photos fills its frame like the gallery does (cards don't carry
+     the photo's ALT, so the file name tells) */
+  function modelCards() {
+    $$('custom-salla-product-card').forEach(function (c) {
+      var box = $('.s-product-card-image', c);
+      if (box && c.product && c.product.image && hdOf(c.product.image.url)) box.classList.add('um-model');
+    });
+  }
+
   /* product photo: «الأمام / الخلف» over the slider (the Twilight theme's switch). A photo's alt text can say which side
      it shows (Salla → product → photo); otherwise the first two photos are front then back, or back then front for the
      tees whose first photo is the back print (the Twilight theme's um_pdp_back_first list). */
@@ -838,11 +886,11 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); flips(); info(); product(); sides(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); sides(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); addLabel(); cards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); addLabel(); cards(); modelCards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
