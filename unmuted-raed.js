@@ -835,7 +835,7 @@
     });
   }
 
-  /* «مساعد المقاس» under the size tiles: height and weight (with a live guess), how tees usually sit on you, how you like
+  /* «مساعد المقاس» under the size tiles: height and weight (with a live guess), then how you like
      this one to sit, then a size with the reasons and the chart (cm or inch); «اختر» picks that tile. The idea is the
      owner's reference (a «Find my size» advisor); the numbers come from CHART. Answers stay in this browser only. */
   var FIT_KEY = 'um-fit';
@@ -846,8 +846,7 @@
   function fitSize(s) {
     var chest = s.g === 'w' ? 60 + 0.45 * s.w + 0.05 * (s.h - 165) : 64 + 0.42 * s.w + 0.08 * (s.h - 175);
     var ease = { slim: 10, over: 18, more: 26 }[s.like || 'over'];
-    var adj = { loose: -4, fine: 0, tight: 6 }[s.usual || 'fine'];
-    var need = chest + ease + adj, i = 0;
+    var need = chest + ease, i = 0;
     while (i < CHART.length - 1 && CHART[i][1] * 2 < need) i++;
     var tall = s.g === 'w' ? (s.h >= 186 ? 3 : s.h >= 178 ? 2 : 0) : (s.h >= 195 ? 3 : s.h >= 188 ? 2 : 0);
     var byLength = Math.max(i, Math.min(tall, CHART.length - 1)) > i;
@@ -901,7 +900,7 @@
     var draw = function () {
       var r = fitSize(s), html = '<div class="um-fit-top"><b>' + t('مساعد المقاس', 'Size advisor') + '</b><button type="button" class="um-fit-x" aria-label="' + t('إغلاق', 'Close') + '">×</button></div>';
       html += '<div class="um-fit-item">' + (thumb ? '<img src="' + esc(thumb.currentSrc || thumb.src) + '" alt="">' : '') + '<div><b>' + esc(name.trim()) + '</b><span></span></div></div>';
-      if (step < 4) html += '<div class="um-fit-steps" aria-hidden="true"><i class="on"></i><i' + (step > 1 ? ' class="on"' : '') + '></i><i' + (step > 2 ? ' class="on"' : '') + '></i></div><p class="um-fit-count">' + t('خطوة ' + arNum(step) + ' من ' + arNum(3), 'Step ' + step + ' of 3') + '</p>';
+      if (step < 3) html += '<div class="um-fit-steps" aria-hidden="true"><i class="on"></i><i' + (step > 1 ? ' class="on"' : '') + '></i></div><p class="um-fit-count">' + t('خطوة ' + arNum(step) + ' من ' + arNum(2), 'Step ' + step + ' of 2') + '</p>';
       if (step === 1) {
         html += '<h3>' + t('نعرفك بثانيتين', 'Two measurements, ten seconds') + '</h3><p class="um-fit-sub">' + t('طولك ووزنك بس.', 'Just your height and weight.') + '</p>' +
           seg('g', ['m', t('شباب', 'Men')], ['w', t('بنات', 'Women')]) +
@@ -910,22 +909,16 @@
           '<span class="um-fit-range"><button type="button" data-step="h" data-d="-1" aria-label="−">−</button><input type="range" min="140" max="205" step="1" value="' + s.h + '" data-f="h" aria-label="' + t('الطول', 'Height') + '"><button type="button" data-step="h" data-d="1" aria-label="+">+</button></span></label>' +
           '<label class="um-fit-dial"><span class="um-fit-dial-top">' + t('الوزن', 'Weight') + seg('wu', ['kg', t('كجم', 'kg')], ['lb', t('رطل', 'lb')]) + '</span><output>' + wTxt() + '</output>' +
           '<span class="um-fit-range"><button type="button" data-step="w" data-d="-1" aria-label="−">−</button><input type="range" min="40" max="140" step="1" value="' + s.w + '" data-f="w" aria-label="' + t('الوزن', 'Weight') + '"><button type="button" data-step="w" data-d="1" aria-label="+">+</button></span></label>' +
-          '</div><div class="um-fit-live" aria-live="polite"><span>' + t('تقديرنا الحين', 'Our guess so far') + '<small>' + t('يتأكد في الخطوتين الجاية', 'Firms up in the next two steps') + '</small></span><b lang="en">' + r.size + '</b></div>' +
+          '</div><div class="um-fit-live" aria-live="polite"><span>' + t('تقديرنا الحين', 'Our guess so far') + '<small>' + t('يتأكد في الخطوة الجاية', 'Firms up in the next step') + '</small></span><b lang="en">' + r.size + '</b></div>' +
           '<button type="button" class="um-fit-go" data-to="2">' + t('كمّل', 'Continue') + '</button>';
       } else if (step === 2) {
-        html += '<h3>' + t('التيشيرتات العادية عليك كيف تجي؟', 'How do regular tees fit you?') + '</h3><p class="um-fit-sub">' + t('عند الصدر والأكتاف.', 'Across the chest and shoulders.') + '</p>' +
-          choice('usual', [['loose', t('واسعة عليّ', 'Loose'), t('غالباً أحس فيها مجال زيادة', 'They usually feel roomy')], ['fine', t('مضبوطة', 'Just right'), t('مقاسي المعتاد يركب', 'My usual size fits')], ['tight', t('ضيقة عليّ', 'Tight'), t('تشد عند الصدر أو الأكتاف', 'They pull at the chest or shoulders')]]) +
-          '<div class="um-fit-nav"><button type="button" class="um-fit-back" data-to="1">' + t('رجوع', 'Back') + '</button><button type="button" class="um-fit-go" data-to="3"' + (s.usual ? '' : ' disabled') + '>' + t('كمّل', 'Continue') + '</button></div>';
-      } else if (step === 3) {
         html += '<h3>' + t('وش تحب في اللبسة؟', 'How do you like it to sit?') + '</h3><p class="um-fit-sub">' + t('تيشيرتاتنا قصّة واسعة من الأساس.', 'Our tees are cut oversized to begin with.') + '</p>' +
           choice('like', [['over', t('أوفرسايز زي ما انقصّت', 'Oversized, as cut'), t('ننصح فيها', 'Our pick')], ['slim', t('أقرب للجسم', 'Closer to the body'), t('أقل اتساع', 'Less room')], ['more', t('أوسع بعد', 'Even roomier'), t('تنزل على الكتف أكثر', 'Drops further off the shoulder')]]) +
-          '<div class="um-fit-nav"><button type="button" class="um-fit-back" data-to="2">' + t('رجوع', 'Back') + '</button><button type="button" class="um-fit-go" data-to="4"' + (s.like ? '' : ' disabled') + '>' + t('شوف مقاسي', 'See my size') + '</button></div>';
+          '<div class="um-fit-nav"><button type="button" class="um-fit-back" data-to="1">' + t('رجوع', 'Back') + '</button><button type="button" class="um-fit-go" data-to="3"' + (s.like ? '' : ' disabled') + '>' + t('شوف مقاسي', 'See my size') + '</button></div>';
       } else {
         var why = [];
         var plain = function (x) { return x.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); };
         why.push(t('طولك ' + plain(hTxt()) + ' ووزنك ' + plain(wTxt()) + '.', 'You are ' + plain(hTxt()) + ' and ' + plain(wTxt()) + '.'));
-        if (s.usual === 'tight') why.push(t('قلت التيشيرتات تضيق عليك، فأعطيناك مجال زيادة.', 'Tees tend to pull on you, so we added room.'));
-        if (s.usual === 'loose') why.push(t('قلت التيشيرتات تجي واسعة عليك، فقلّلنا الاتساع شوي.', 'Tees tend to be roomy on you, so we took a little off.'));
         why.push({ over: t('تبيها أوفرسايز زي ما انقصّت، وهذا المقاس يعطيك هالقصّة.', 'You want it oversized as cut; this size gives you that.'), slim: t('تبيها أقرب للجسم، فاخترنا اتساع أقل.', 'You want it closer; we chose less room.'), more: t('تبيها أوسع، فكبّرنا لك.', 'You want it roomier; we went up.') }[s.like]);
         if (r.byLength) why.push(t('وطولك يناسبه طول هالمقاس (' + arNum(CHART[r.i][2]) + ' سم).', 'Your height suits this size’s length (' + CHART[r.i][2] + ' cm).'));
         if (r.tight) why.push(t(CHART[r.i][0] + ' أكبر مقاس عندنا، وبيجيك أقرب للجسم من الأوفرسايز.', CHART[r.i][0] + ' is our largest; it will sit closer than oversized.'));
