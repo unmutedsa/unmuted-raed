@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c0ac776f405822557e04a0facb2b8d30a1a659c5/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e34de64d89d6e03de70a39c36cf5427f766bf8e3/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -659,7 +659,7 @@
     smD5wPX1MvxhwT524DkIy8GVVN1oR1F8dJZKdPNA: 'carnival/man-side.webp',
     Jmjn5BWcCljfGe9DDfbYtplgCxReLeDLMX9lc0wu: 'carnival/woman-back.webp',
     BLmv8weJ6tnpakywSYncA0lh7hUUHBnpFJVmVvcL: 'carnival/woman-front.webp',
-    Wu1SCF6H8Q3Fpb3u6x4j9FrM4dbIXWM3Nug8DRWt: 'carnival/woman-side.webp',
+    a1Dp54xtX72Cs0V5rgyslfAnYL9A2ZbHubHsw3hV: 'carnival/woman-side.webp',
     AHacurnYSVN4BRt6YGSkbO4IZDabeMrnDTXnOXQ2: 'love-pop/duo-front.webp',
     iA5xCfZAKON9Ca9OSvB0lty0QN9wJ7skcWs2aaJi: 'love-pop/man-back.webp',
     vZxP63LgOzPiKbt5BbgmbsTgr5mQWKmUqO72P3hQ: 'love-pop/man-front.webp',
@@ -674,13 +674,13 @@
     pRRKuvR5hwNrQEUVfQGFY8WlUzjlxeyuu2e8OESU: 'good-mood/woman-back.webp',
     '8Ca3NNlkveoYaQqbBvC8nkvnSglCyFwbnxvOK5FH': 'good-mood/woman-front.webp',
     rSKz3pX0VdoFq3gSHDdy1pZ0tBtaBkY9BY7uoW8A: 'good-mood/woman-side.webp',
-    XfOROzYs4Bgsxa7gA7EZib331t97LtKwxl1W6onT: 'cherry-market/duo-front.webp',
-    lL5vt5mX8XjrRBTpFaVD2pGHhatHIZC2v3RwyRJU: 'cherry-market/man-back.webp',
-    lp2PjlHLA0MB4T0jgqkAbYE9AAMFrxCU7cXfP8FE: 'cherry-market/man-front.webp',
-    dyrwMO13hZzfH2xfRWNGaXQplrvKSKCAzvodgafA: 'cherry-market/man-side.webp',
-    CENIljFwsGsTpZbtKkQzP3Hsn91TNkBJ9mUYMEdc: 'cherry-market/woman-back.webp',
-    id8VhWkdKHPgACvhPT9jFWhDAVVRSDT79VLBobeo: 'cherry-market/woman-front.webp',
-    '4AQYs7CYJopw1PkoouH9WcaRzQcbyEQ3SxfeJblZ': 'cherry-market/woman-side.webp',
+    Rt7BOpXQSeCrEmwvLcmTbEGx5OeO5fviikxZXDfJ: 'cherry-market/duo-front.webp',
+    cstSlTd3Gj4wuGBAwImPpYVUo2ESzNzwfaNACCPp: 'cherry-market/man-back.webp',
+    bnY9IrMqpwARQIuOoAdEQbQr2N51KzSLx46u1ivp: 'cherry-market/man-front.webp',
+    JCeN1DTEs8ouob5hwBbdNMaa6va0JeRnpe9Kx1Fi: 'cherry-market/man-side.webp',
+    USL8zoThjCPjKybpMmbS3a0p3ncDOQWCry0bARpr: 'cherry-market/woman-back.webp',
+    yP55M6ypcIFJw9QPjKMbz0EaruV3XIpl6I7cFRMk: 'cherry-market/woman-front.webp',
+    K4YZZ0m1LfH9hcufIm2PBtT9I32eAHFLiOyoNaBB: 'cherry-market/woman-side.webp',
     s1RngmvTuUOKUMu7YkQ1K9rmqqInfymur7JBPxP4: 'caution/duo-front.webp',
     Arkb8Uu3OdyD5D1MOKCG0L1O1mmoekwjm8MLQF6M: 'caution/man-back.webp',
     sYnxcMJE9XlsVJYG0jSMUVnZGgyV5w8rpSmeXAcE: 'caution/man-front.webp',
