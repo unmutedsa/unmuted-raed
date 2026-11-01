@@ -323,9 +323,7 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .um-fit-seg button[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
 .um-fit > .um-fit-seg { display: grid; width: 100%; }
 .um-fit > .um-fit-seg button { padding: 12px; }
-.um-fit-body { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; margin-top: 18px; }
-.um-fit-fig { width: 64px; height: 128px; fill: none; stroke: var(--um-ink); stroke-width: 1.6; stroke-linejoin: round; }
-.um-fit-dials { display: grid; gap: 16px; }
+.um-fit-dials { display: grid; gap: 16px; margin-top: 18px; }
 .um-fit-dial { display: grid; gap: 6px; }
 .um-fit-dial-top { display: flex; align-items: center; justify-content: space-between; color: var(--um-soft); font-size: 13px; font-weight: 700; }
 .um-fit-dial-top .um-fit-seg { border-width: 1.5px; }

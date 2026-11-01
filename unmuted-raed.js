@@ -898,10 +898,6 @@
     var wTxt = function () { return s.wu === 'kg' ? arNum(s.w) + ' <small>' + t('كجم', 'kg') + '</small>' : arNum(Math.round(s.w * 2.2046)) + ' <small>' + t('رطل', 'lb') + '</small>'; };
     var seg = function (k, a, b) { return '<div class="um-fit-seg" data-k="' + k + '">' + [a, b].map(function (o) { return '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (s[k] === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>'; };
     var choice = function (k, list) { return '<div class="um-fit-choices" role="radiogroup">' + list.map(function (o) { return '<button type="button" role="radio" data-k="' + k + '" data-v="' + o[0] + '" aria-checked="' + (s[k] === o[0]) + '"><b>' + o[1] + '</b>' + (o[2] ? '<span>' + o[2] + '</span>' : '') + '</button>'; }).join('') + '</div>'; };
-    var figure = function () {
-      var wide = Math.max(.82, Math.min(1.3, 1 + (s.w - (s.g === 'w' ? 60 : 75)) / 90)), tall = Math.max(.86, Math.min(1.12, s.h / (s.g === 'w' ? 163 : 175)));
-      return '<svg class="um-fit-fig" viewBox="0 0 60 120" aria-hidden="true"><g transform="translate(30 118) scale(' + wide.toFixed(3) + ' ' + tall.toFixed(3) + ') translate(-30 -118)"><circle cx="30" cy="14" r="8"/><path d="M14 30h32l6 34h-8l-3-20v74h-9V82h-4v36h-9V44l-3 20H8z"/></g></svg>';
-    };
     var draw = function () {
       var r = fitSize(s), html = '<div class="um-fit-top"><b>' + t('مساعد المقاس', 'Size advisor') + '</b><button type="button" class="um-fit-x" aria-label="' + t('إغلاق', 'Close') + '">×</button></div>';
       html += '<div class="um-fit-item">' + (thumb ? '<img src="' + esc(thumb.currentSrc || thumb.src) + '" alt="">' : '') + '<div><b>' + esc(name.trim()) + '</b><span></span></div></div>';
@@ -909,12 +905,12 @@
       if (step === 1) {
         html += '<h3>' + t('نعرفك بثانيتين', 'Two measurements, ten seconds') + '</h3><p class="um-fit-sub">' + t('طولك ووزنك بس.', 'Just your height and weight.') + '</p>' +
           seg('g', ['m', t('شباب', 'Men')], ['w', t('بنات', 'Women')]) +
-          '<div class="um-fit-body">' + figure() + '<div class="um-fit-dials">' +
+          '<div class="um-fit-dials">' +
           '<label class="um-fit-dial"><span class="um-fit-dial-top">' + t('الطول', 'Height') + seg('hu', ['cm', t('سم', 'cm')], ['ft', t('قدم', 'ft')]) + '</span><output>' + hTxt() + '</output>' +
           '<span class="um-fit-range"><button type="button" data-step="h" data-d="-1" aria-label="−">−</button><input type="range" min="140" max="205" step="1" value="' + s.h + '" data-f="h" aria-label="' + t('الطول', 'Height') + '"><button type="button" data-step="h" data-d="1" aria-label="+">+</button></span></label>' +
           '<label class="um-fit-dial"><span class="um-fit-dial-top">' + t('الوزن', 'Weight') + seg('wu', ['kg', t('كجم', 'kg')], ['lb', t('رطل', 'lb')]) + '</span><output>' + wTxt() + '</output>' +
           '<span class="um-fit-range"><button type="button" data-step="w" data-d="-1" aria-label="−">−</button><input type="range" min="40" max="140" step="1" value="' + s.w + '" data-f="w" aria-label="' + t('الوزن', 'Weight') + '"><button type="button" data-step="w" data-d="1" aria-label="+">+</button></span></label>' +
-          '</div></div><div class="um-fit-live" aria-live="polite"><span>' + t('تقديرنا الحين', 'Our guess so far') + '<small>' + t('يتأكد في الخطوتين الجاية', 'Firms up in the next two steps') + '</small></span><b lang="en">' + r.size + '</b></div>' +
+          '</div><div class="um-fit-live" aria-live="polite"><span>' + t('تقديرنا الحين', 'Our guess so far') + '<small>' + t('يتأكد في الخطوتين الجاية', 'Firms up in the next two steps') + '</small></span><b lang="en">' + r.size + '</b></div>' +
           '<button type="button" class="um-fit-go" data-to="2">' + t('كمّل', 'Continue') + '</button>';
       } else if (step === 2) {
         html += '<h3>' + t('التيشيرتات العادية عليك كيف تجي؟', 'How do regular tees fit you?') + '</h3><p class="um-fit-sub">' + t('عند الصدر والأكتاف.', 'Across the chest and shoulders.') + '</p>' +
@@ -953,11 +949,10 @@
     };
     var live = function () {
       var r = fitSize({ g: s.g, h: s.h, w: s.w });
-      var b = $('.um-fit-live b', box), o = $$('.um-fit-dial output', box), fig = $('.um-fit-fig', box);
+      var b = $('.um-fit-live b', box), o = $$('.um-fit-dial output', box);
       if (b) b.textContent = r.size;
       if (o[0]) o[0].innerHTML = hTxt();
       if (o[1]) o[1].innerHTML = wTxt();
-      if (fig) fig.outerHTML = figure();
     };
     box.addEventListener('input', function (e) { var f = e.target.getAttribute('data-f'); if (f) { s[f] = +e.target.value; live(); fitSave(s); } });
     box.addEventListener('click', function (e) {
