@@ -56,6 +56,8 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .main-menu .sub-menu { padding: 8px; border: 2px solid var(--um-ink); border-radius: 16px; background: var(--um-paper); box-shadow: var(--um-hard); }
 .theme-raed .main-menu .sub-menu a { border-radius: 10px; font-weight: 600; }
 .theme-raed .main-menu .sub-menu a:hover { background: var(--um-blue); }
+/* the header sits on the page's base layer, so the home hero painted over the menu's dropdown */
+@media (min-width: 1024px) { .theme-raed .store-header { position: relative; z-index: 50; } }
 .theme-raed salla-cart-summary .s-cart-summary-wrapper { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 2px solid var(--um-ink); border-radius: 999px; background: transparent; }
 .theme-raed salla-cart-summary .s-cart-summary-count { position: static; display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--um-ink); color: var(--um-paper); font: 800 12px/1 var(--um-latin); }
 .theme-raed salla-cart-summary .s-cart-summary-content { display: none; }
@@ -113,14 +115,14 @@ body.theme-raed { font-family: var(--um-font) !important; }
 /* ---------- product list (VOLUME 01): the name as a poster title, the sort as a pill ---------- */
 .theme-raed .um-plp-old { display: none !important; }
 /* the line under the title sets the size: one line on every screen, and the title is exactly as wide (in Alexandria the
-   line is 4× as wide as «VOLUME 01» per pixel of type) */
-.um-plp-head { --um-sub: min(clamp(16px, 1.5vw, 19px), calc((100vw - 20px) / 23.3)); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
+   line is 4.21× as wide as «VOLUME 01» per pixel of type) */
+.um-plp-head { --um-sub: min(clamp(16px, 1.5vw, 19px), calc((100vw - 20px) / 24.6)); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
 .um-plp-name { display: contents; }
 .um-plp-title {
   grid-column: 1 / -1; justify-self: start; position: relative; display: inline-block; margin: 0; padding: .08em 0 .2em; transform: rotate(-2deg); transform-origin: right bottom;
   font: 900 clamp(44px, 9vw, 110px)/1 var(--um-font); color: var(--um-orange); text-shadow: .035em .045em 0 var(--um-ink);
 }
-.um-plp-title[lang="en"] { font-weight: 800; font-size: calc(var(--um-sub) * 4); line-height: .86; letter-spacing: -.01em; white-space: nowrap; }
+.um-plp-title[lang="en"] { font-weight: 800; font-size: calc(var(--um-sub) * 4.21); line-height: .86; letter-spacing: -.01em; white-space: nowrap; }
 .um-plp-line { position: absolute; inset-inline: 2% 0; bottom: 0; width: 96%; height: .16em; overflow: visible; fill: none; stroke-linecap: round; }
 .um-plp-line path { stroke: var(--um-blue); stroke-width: 15; }
 .um-plp-line .um-plp-line-shadow { stroke: var(--um-ink); }
@@ -252,9 +254,6 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-tile[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
 .um-tile:disabled { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
 .um-tile:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
-.um-trust { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0 0; font-size: 14px; font-weight: 600; line-height: 1.6; color: var(--um-ink); }
-.um-trust::before { content: '⇄'; flex: none; display: grid; place-items: center; width: 24px; height: 24px; border: 1.5px solid var(--um-ink); border-radius: 50%; font-size: 13px; line-height: 1; }
-.um-trust a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .um-folds { margin-top: 22px; border-top: 2px solid var(--um-ink); }
 .um-folds details { border-bottom: 1.5px solid var(--um-line); }
 .um-folds summary { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; font-weight: 700; list-style: none; cursor: pointer; }
@@ -264,6 +263,10 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-folds .um-fbody { display: grid; gap: 10px; padding: 0 0 18px; color: var(--um-soft); line-height: 1.7; }
 .um-folds .um-fbody p { margin: 0; }
 .um-folds .um-fbody a { color: var(--um-ink); text-decoration: underline; text-underline-offset: 3px; }
+/* the fold's way to the full policy page */
+.um-folds .um-fbody a.um-fmore { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--um-ink); border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; transition: background-color .15s, color .15s; }
+.um-folds .um-fbody a.um-fmore:hover { background: var(--um-ink); color: var(--um-paper); }
+.um-folds .um-fbody a.um-fmore:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .um-chart { width: 100%; border-collapse: collapse; font-size: 14px; }
 .um-chart th, .um-chart td { padding: 8px; border-bottom: 1px solid var(--um-line); text-align: center; }
 .um-chart th { color: var(--um-ink); font-weight: 700; }

@@ -50,9 +50,10 @@
     var a = $$('custom-main-menu a, .store-footer a').filter(function (x) { return /VOLUME\s*01/i.test(x.textContent) && x.href; })[0];
     return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('volume-01/c598858677') : '/volume-01/c598858677';
   };
-  var exchangeUrl = function () {
-    var a = $$('a').filter(function (x) { return /الاستبدال|exchange/i.test(x.textContent) && x.href; })[0];
-    return a ? a.href : '';
+  // a policy page's address: its footer link, or (the footer renders after the page) Salla's short address, which redirects
+  var pageUrl = function (re, id) {
+    var a = $$('a').filter(function (x) { return re.test(x.textContent) && x.href; })[0];
+    return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('-/page-' + id) : '/-/page-' + id;
   };
 
   /* fonts: Salla drops @import from custom CSS, so the link goes in the head */
@@ -392,19 +393,18 @@
     // the description moves into «عن هذا الصوت»
     var aboutHtml = box ? box.innerHTML : '';
     if (box) box.classList.add('um-pdesc-done');
-    // reassurance line under the add button
-    var add = $('salla-add-product-button', form);
-    var ex = exchangeUrl();
-    // after the buttons' bar (on phones that bar is pinned to the screen, the line stays in the page)
-    var bar = add && add.closest('.sticky-product-bar');
-    if (add && !$('.um-trust')) (bar || add).insertAdjacentHTML('afterend', '<p class="um-trust"><span>' + t('الاستبدال خلال ٧ أيام، ونوصل لكل مدن المملكة.', '7-day exchange, delivery across Saudi Arabia.') + (ex ? ' <a href="' + esc(ex) + '">' + t('التفاصيل', 'Details') + '</a>' : '') + '</span></p>');
+    // delivery and exchange each get a fold whose last line opens the policy page
+    var more = function (url, ar, en) { return url ? '<a class="um-fmore" href="' + esc(url) + '">' + t(ar, en) + '</a>' : ''; };
     // fold-outs + share, after the form
     var chart = '<table class="um-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر (سم)', 'Chest (cm)') + '</th><th>' + t('الطول (سم)', 'Length (cm)') + '</th></tr></thead><tbody>' +
       CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
     var folds = el('div', 'um-folds',
       (aboutHtml ? '<details><summary>' + t('عن هذا الصوت', 'About this voice') + '</summary><div class="um-fbody">' + aboutHtml + '</div></details>' : '') +
       '<details id="um-size"><summary>' + t('المقاسات والقصّة', 'Sizes and fit') + '</summary><div class="um-fbody"><p>' + t('قصّة واسعة (Oversized) بنفس المقاسات للبنات والشباب. اختر مقاسك المعتاد للّبسة الواسعة، أو أصغر بمقاس لو تبيه أقرب للجسم.', 'One oversized cut, the same sizes for everyone. Take your usual size for a loose fit, or one down for a closer one.') + '</p>' + chart + '</div></details>' +
-      '<details><summary>' + t('التوصيل والاستبدال', 'Delivery and exchange') + '</summary><div class="um-fbody"><p>' + t('نوصل لكل مدن المملكة، ورسوم الشحن تظهر في السلة قبل الدفع.', 'We deliver across Saudi Arabia; shipping shows in the bag before you pay.') + '</p><p>' + t('المقاس ما ضبط؟ تقدر تستبدله حسب ', 'Wrong size? Swap it under our ') + (ex ? '<a href="' + esc(ex) + '">' + t('سياسة الاستبدال', 'exchange policy') + '</a>' : t('سياسة الاستبدال', 'exchange policy')) + '.</p></div></details>');
+      '<details><summary>' + t('الشحن والتوصيل', 'Shipping and delivery') + '</summary><div class="um-fbody"><p>' + t('نوصل لكل مدن المملكة. نجهّز طلبك خلال يومين عمل، ويوصلك عادةً خلال ٢ إلى ٥ أيام عمل حسب مدينتك. رسوم الشحن تظهر في السلة قبل الدفع.', 'We deliver across Saudi Arabia. Your order is packed within 2 working days and usually arrives in 2 to 5 working days. Shipping shows in the bag before you pay.') + '</p>' +
+        more(pageUrl(/الشحن|shipping/i, '55332806'), 'اضغط هنا لمعرفة تفاصيل الشحن والتوصيل', 'Read the shipping and delivery details') + '</div></details>' +
+      '<details><summary>' + t('الاستبدال والاسترجاع', 'Exchange and returns') + '</summary><div class="um-fbody"><p>' + t('المقاس ما ضبط؟ تقدر تطلب استبدال خلال ٧ أيام من الاستلام.', 'Wrong size? You can ask for an exchange within 7 days of delivery.') + '</p>' +
+        more(pageUrl(/الاستبدال|exchange/i, '1986202060'), 'اضغط هنا لمعرفة سياسة الاستبدال والاسترجاع', 'Read the exchange and returns policy') + '</div></details>');
     form.parentNode.insertBefore(folds, form.nextSibling);
     var share = el('button', 'um-share', t('شارك هذا الصوت', 'Share this voice'));
     share.type = 'button';
@@ -426,7 +426,7 @@
     var head = el('header', 'um-plp-head',
       '<div class="um-plp-name"><h1 class="um-plp-title"' + (/^[\x00-\x7F]+$/.test(name) ? ' lang="en"' : '') + '>' + esc(name) +
       '<svg class="um-plp-line" viewBox="0 0 420 44" preserveAspectRatio="none" aria-hidden="true"><path class="um-plp-line-shadow" d="M14 34C120 22 260 16 404 18"/><path d="M10 28C116 16 256 10 400 12"/></svg></h1>' +
-      (/^VOLUME/i.test(name) ? '<p class="um-plp-sub">' + t('كل تيشيرت هنا صوت له شخصيته. اختر اللي يشبهك.', 'Every tee here is a voice of its own. Pick the one that sounds like you.') + '</p>' : '') + '</div>');
+      (/^VOLUME/i.test(name) ? '<p class="um-plp-sub">' + t('كل تيشيرت هنا له صوت وله شخصية. اختر اللي يشبهك.', 'Every tee here has a voice and a character. Pick the one that sounds like you.') + '</p>' : '') + '</div>');
     var old = $('#page-main-title') && $('#page-main-title').parentElement;
     var sort = $('#product-filter');
     var tools = sort && sort.parentElement && sort.parentElement.parentElement;
