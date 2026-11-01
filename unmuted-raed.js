@@ -1,6 +1,6 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
-   product description, fold-outs, the reassurance line, a search button, the home sections, the VOLUME 01 page title,
+   product description, fold-outs, a search button, the home sections, the VOLUME 01 page title,
    each card's voice and its turn to the other side on hover, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
@@ -45,15 +45,12 @@
       else to.appendChild(document.createTextNode(n.textContent));
     });
   };
-  // VOLUME 01: the menu's link, or the category's own address while the menu (it loads after the page) isn't there yet
-  var volumeUrl = function () {
-    var a = $$('custom-main-menu a, .store-footer a').filter(function (x) { return /VOLUME\s*01/i.test(x.textContent) && x.href; })[0];
-    return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('volume-01/c598858677') : '/volume-01/c598858677';
-  };
-  // a policy page's address: its footer link, or (the footer renders after the page) Salla's short address, which redirects
-  var pageUrl = function (re, id) {
-    var a = $$('a').filter(function (x) { return re.test(x.textContent) && x.href; })[0];
-    return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('-/page-' + id) : '/-/page-' + id;
+  // «اختر صوتك»: the category that holds every tee (Salla has no all-products page). The shop buttons go there: the menu's
+  // link, or Salla's short address of the category (it redirects) while the menu (it loads after the page) isn't there yet.
+  var ALL_CAT = '1495831469';
+  var allUrl = function () {
+    var a = $$('custom-main-menu a').filter(function (x) { return x.textContent.trim() === 'اختر صوتك' && x.href; })[0];
+    return a ? a.href : window.salla && salla.url && salla.url.get ? salla.url.get('-/c' + ALL_CAT) : '/-/c' + ALL_CAT;
   };
 
   /* fonts: Salla drops @import from custom CSS, so the link goes in the head */
@@ -125,11 +122,11 @@
       });
     }).then(function (res) {
       var box = res[0];
-      // this copy leaves out the hero's top line («هذي إشارتك عشان ترفع صوتك.») and the squiggle under it
-      $$('.um-hero__eyebrow, .um-hero .um-fl.is-w', box).forEach(function (n) { n.remove(); });
+      // this copy leaves out the hero's top line («هذي إشارتك عشان ترفع صوتك.») and the squiggle under it, and the rail's count line
+      $$('.um-hero__eyebrow, .um-hero .um-fl.is-w, .um-rail .um-rls__sub', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
       [function () { bindHero(box); }, function () { bindRail(box, res[1], res[3]); }, function () { bindTracks(box, res[1], res[3]); },
-        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
+        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       railTouch(box);
       links(box);
@@ -224,11 +221,16 @@
     });
     track.textContent = '';
     out.forEach(function (li) { track.appendChild(li); });
-    // the numbers that count the tees follow the list
-    var n = out.length, ends = $$('.um-rls__progress > span', rail), bar = $('[data-um-rail-bar]', rail), sub = $('.um-rls__sub um-t', rail);
+  }
+  // the rail hangs the first ten tees of the list (the section's «كل الأصوات» button leads to the rest), and its bar counts them
+  var RAIL_MAX = 10;
+  function railTen(box) {
+    var rail = $('.um-rail', box), items = rail ? $$('[data-um-rail-track] > .um-rls__item', rail) : [];
+    if (!items.length) return;
+    items.slice(RAIL_MAX).forEach(function (li) { li.remove(); });
+    var n = Math.min(items.length, RAIL_MAX), ends = $$('.um-rls__progress > span', rail), bar = $('[data-um-rail-bar]', rail);
     if (ends[1]) ends[1].textContent = pad(n);
     if (bar) bar.setAttribute('aria-valuemax', n);
-    if (sub) sub.textContent = sub.textContent.replace(/[0-9٠-٩]+/, ar ? String(n).replace(/\d/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }) : n);
   }
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
@@ -329,9 +331,9 @@
   }
 
   /* the sections were rendered with the demo tees: point each one at the real Salla product (matched by name in Raed's
-     product list), the shop buttons at VOLUME 01, the «ask us» buttons at the store's contact, «طلباتي» at the orders */
+     product list), the shop buttons at «اختر صوتك» (every tee), the «ask us» buttons at the store's contact, «طلباتي» at the orders */
   function links(box) {
-    var volume = volumeUrl();
+    var volume = allUrl();
     var contact = ($$('.store-footer a').filter(function (a) { return /^(tel:|https:\/\/wa\.me|https:\/\/api\.whatsapp)/.test(a.getAttribute('href') || ''); })[0] || {}).href || '';
     var orders = window.salla && salla.url && salla.url.get ? salla.url.get('orders') : '/orders';
     var set = function (a, url) { if (a && url) a.setAttribute('href', url); };
@@ -365,7 +367,7 @@
     })();
   }
 
-  /* product page: name block, colour, sizes as tiles, reassurance line, fold-outs */
+  /* product page: name block, colour, sizes as tiles, fold-outs (about the tee, sizes) */
   function product() {
     var form = $('.product-form');
     var title = $('[data-testid="store-product-title"]');
@@ -393,18 +395,12 @@
     // the description moves into «عن هذا الصوت»
     var aboutHtml = box ? box.innerHTML : '';
     if (box) box.classList.add('um-pdesc-done');
-    // delivery and exchange each get a fold whose last line opens the policy page
-    var more = function (url, ar, en) { return url ? '<a class="um-fmore" href="' + esc(url) + '">' + t(ar, en) + '</a>' : ''; };
     // fold-outs + share, after the form
     var chart = '<table class="um-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر (سم)', 'Chest (cm)') + '</th><th>' + t('الطول (سم)', 'Length (cm)') + '</th></tr></thead><tbody>' +
       CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
     var folds = el('div', 'um-folds',
       (aboutHtml ? '<details><summary>' + t('عن هذا الصوت', 'About this voice') + '</summary><div class="um-fbody">' + aboutHtml + '</div></details>' : '') +
-      '<details id="um-size"><summary>' + t('المقاسات والقصّة', 'Sizes and fit') + '</summary><div class="um-fbody"><p>' + t('قصّة واسعة (Oversized) بنفس المقاسات للبنات والشباب. اختر مقاسك المعتاد للّبسة الواسعة، أو أصغر بمقاس لو تبيه أقرب للجسم.', 'One oversized cut, the same sizes for everyone. Take your usual size for a loose fit, or one down for a closer one.') + '</p>' + chart + '</div></details>' +
-      '<details><summary>' + t('الشحن والتوصيل', 'Shipping and delivery') + '</summary><div class="um-fbody"><p>' + t('نوصل لكل مدن المملكة. نجهّز طلبك خلال يومين عمل، ويوصلك عادةً خلال ٢ إلى ٥ أيام عمل حسب مدينتك. رسوم الشحن تظهر في السلة قبل الدفع.', 'We deliver across Saudi Arabia. Your order is packed within 2 working days and usually arrives in 2 to 5 working days. Shipping shows in the bag before you pay.') + '</p>' +
-        more(pageUrl(/الشحن|shipping/i, '55332806'), 'اضغط هنا لمعرفة تفاصيل الشحن والتوصيل', 'Read the shipping and delivery details') + '</div></details>' +
-      '<details><summary>' + t('الاستبدال والاسترجاع', 'Exchange and returns') + '</summary><div class="um-fbody"><p>' + t('المقاس ما ضبط؟ تقدر تطلب استبدال خلال ٧ أيام من الاستلام.', 'Wrong size? You can ask for an exchange within 7 days of delivery.') + '</p>' +
-        more(pageUrl(/الاستبدال|exchange/i, '1986202060'), 'اضغط هنا لمعرفة سياسة الاستبدال والاسترجاع', 'Read the exchange and returns policy') + '</div></details>');
+      '<details id="um-size"><summary>' + t('المقاسات والقصّة', 'Sizes and fit') + '</summary><div class="um-fbody"><p>' + t('قصّة واسعة (Oversized) بنفس المقاسات للبنات والشباب. اختر مقاسك المعتاد للّبسة الواسعة، أو أصغر بمقاس لو تبيه أقرب للجسم.', 'One oversized cut, the same sizes for everyone. Take your usual size for a loose fit, or one down for a closer one.') + '</p>' + chart + '</div></details>');
     form.parentNode.insertBefore(folds, form.nextSibling);
     var share = el('button', 'um-share', t('شارك هذا الصوت', 'Share this voice'));
     share.type = 'button';
@@ -426,7 +422,7 @@
     var head = el('header', 'um-plp-head',
       '<div class="um-plp-name"><h1 class="um-plp-title"' + (/^[\x00-\x7F]+$/.test(name) ? ' lang="en"' : '') + '>' + esc(name) +
       '<svg class="um-plp-line" viewBox="0 0 420 44" preserveAspectRatio="none" aria-hidden="true"><path class="um-plp-line-shadow" d="M14 34C120 22 260 16 404 18"/><path d="M10 28C116 16 256 10 400 12"/></svg></h1>' +
-      (/^VOLUME/i.test(name) ? '<p class="um-plp-sub">' + t('كل تيشيرت هنا له صوت وله شخصية. اختر اللي يشبهك.', 'Every tee here has a voice and a character. Pick the one that sounds like you.') + '</p>' : '') + '</div>');
+      (/^VOLUME/i.test(name) || location.pathname.indexOf('/c' + ALL_CAT) >= 0 ? '<p class="um-plp-sub">' + t('كل تيشيرت هنا له صوت وله شخصية. اختر اللي يشبهك.', 'Every tee here has a voice and a character. Pick the one that sounds like you.') + '</p>' : '') + '</div>');
     var old = $('#page-main-title') && $('#page-main-title').parentElement;
     var sort = $('#product-filter');
     var tools = sort && sort.parentElement && sort.parentElement.parentElement;
@@ -612,8 +608,8 @@
       }
       // the closing call to shop
       var end = el('div', 'um-info-end', '<p>' + t('جاهز تختار صوتك؟', 'Ready to pick your voice?') + '</p>');
-      var go = el('a', 'um-info-btn', t('شوف أصوات VOLUME 01', 'See the VOLUME 01 voices'));
-      go.href = volumeUrl();
+      var go = el('a', 'um-info-btn', t('شوف كل الأصوات', 'See every voice'));
+      go.href = allUrl();
       end.appendChild(go);
       page.insertBefore(end, body.nextSibling);
     } finally {
@@ -667,7 +663,8 @@
   }
 
   /* «منتجات قد تعجبك» under the product: Salla's related list comes back empty for these tees, so the slider shows the
-     rest of the tee's category (VOLUME 01) instead, without the tee itself. When Salla has related products, they stay. */
+     rest of the tee's category instead (every tee, when that album has fewer than five), without the tee itself. When
+     Salla has related products, they stay. */
   function related() {
     var old = $('salla-products-slider[source="related"]');
     if (!old || old.hasAttribute('data-um-checked') || !$('[data-testid="store-product-title"]') || !window.salla || !salla.product || !salla.product.fetch) return;
@@ -676,22 +673,27 @@
     salla.product.fetch({ source: 'related', source_value: id }).then(function (r) {
       if (r && r.data && r.data.length) return;
       var crumb = $$('.breadcrumbs a').filter(function (a) { return /\/c\d+/.test(a.href); }).pop();
-      var cat = crumb ? crumb.href.match(/\/c(\d+)/)[1] : '598858677';
-      var n = el('salla-products-slider', 's-products-slider-wrapper');
-      n.setAttribute('data-testid', old.getAttribute('data-testid') || 'store-product-related');
-      n.setAttribute('block-title', old.getAttribute('block-title') || t('منتجات قد تعجبك', 'You may also like'));
-      n.setAttribute('source', 'categories');
-      n.setAttribute('source-value', '[' + cat + ']');
-      n.setAttribute('display-all-url', crumb ? crumb.href : volumeUrl());
-      old.parentNode.replaceChild(n, old);
-      // the tee on this page leaves the list (the slider redraws its cards while it settles, so look again for a while)
-      var tries = 0;
-      (function drop() {
-        var own = $('custom-salla-product-card[id="' + id + '"]', n), slide = own && own.closest('.swiper-slide'), box = $('.swiper', n);
-        if (slide) { slide.remove(); if (box && box.swiper) box.swiper.update(); }
-        if (++tries < 48) setTimeout(drop, 250);
-      })();
+      var cat = crumb ? crumb.href.match(/\/c(\d+)/)[1] : ALL_CAT;
+      var big = cat === ALL_CAT ? Promise.resolve(true) : salla.product.fetch({ source: 'categories', source_value: [cat], limit: 6 })
+        .then(function (r2) { return !!(r2 && r2.data && r2.data.length >= 5); }).catch(function () { return false; });
+      return big.then(function (ok) { swap(old, id, ok ? cat : ALL_CAT, ok && crumb ? crumb.href : allUrl()); });
     }).catch(function () {});
+  }
+  function swap(old, id, cat, all) {
+    var n = el('salla-products-slider', 's-products-slider-wrapper');
+    n.setAttribute('data-testid', old.getAttribute('data-testid') || 'store-product-related');
+    n.setAttribute('block-title', old.getAttribute('block-title') || t('منتجات قد تعجبك', 'You may also like'));
+    n.setAttribute('source', 'categories');
+    n.setAttribute('source-value', '[' + cat + ']');
+    n.setAttribute('display-all-url', all);
+    old.parentNode.replaceChild(n, old);
+    // the tee on this page leaves the list (the slider redraws its cards while it settles, so look again for a while)
+    var tries = 0;
+    (function drop() {
+      var own = $('custom-salla-product-card[id="' + id + '"]', n), slide = own && own.closest('.swiper-slide'), box = $('.swiper', n);
+      if (slide) { slide.remove(); if (box && box.swiper) box.swiper.update(); }
+      if (++tries < 48) setTimeout(drop, 250);
+    })();
   }
 
   /* reviews: Salla's box is an empty block until a tee has reviews (or a signed-in buyer gets the form), so it steps aside till then */

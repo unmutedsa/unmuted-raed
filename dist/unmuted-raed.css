@@ -173,8 +173,24 @@ body.index.um-home-off #main-content > section.s-block { visibility: visible; an
 /* coming back to a page: it stays hidden (not the header) until it sits where it was left (unmuted-raed.js), then fades in */
 html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; transition: none; }
 #main-content, .store-footer { transition: opacity .25s; }   /* only showing fades; hiding is at once */
-/* the hero's zoom through the logo plays over a much shorter scroll (the theme's stage is 340vh) */
-.um-home .um-hero.is-poster .um-hero__stage { height: 170vh; }
+/* the hero is a still photo (the one the zoom through the logo used to open onto): no logo, zoom, floating icons, scroll
+   button or steps. Its words still come up as the page scrolls (sections.js sets --cap from 84% to 96% of the stage),
+   so the stage is only a little taller than the screen. */
+.um-home .um-hero.is-poster .um-hero__stage { height: 140vh; }
+.um-home .um-hero.is-poster .um-hero__svg, .um-home .um-hero.is-poster .um-float, .um-home .um-hero.is-poster .um-hero__ui, .um-home .um-hero.is-poster .um-hero__steps { display: none; }
+.um-home .um-hero.is-poster .um-hero__photo { transform: none; }
+/* computers: the tracklist after the rail is three tees a row, each a big photo (phones already show two a row) */
+@media (min-width: 900px) {
+  .um-home .um-tl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 28px; padding-top: 28px; }
+  .um-home .um-tl__row { position: relative; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 12px; padding: 0 0 18px; }
+  .um-home .um-tl__img { width: 100%; aspect-ratio: 4 / 5; border-radius: 22px; }
+  .um-home .um-tl__img img { width: 100%; height: 100%; object-fit: cover; }
+  .um-home .um-tl__no { position: absolute; top: 12px; inset-inline-start: 12px; z-index: 1; padding: 4px 10px 5px; border: 2px solid var(--um-ink); border-radius: 12px; background: var(--um-paper); color: var(--um-ink); font-size: 28px; }
+  .um-home .um-tl__name b { font-size: 19px; }
+  .um-home .um-tl__name small { font-size: 15px; }
+  .um-home .um-tl__end { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; text-align: start; }
+  .um-home .um-tl__end span { display: inline; font-size: 14px; }
+}
 /* phones: the tees on the rail hang at about 40% of their size (--k), so three or four show side by side; the rail,
    the titles and the scene's scale (--px) stay as they are */
 @media (max-width: 899px) {
@@ -263,10 +279,6 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-folds .um-fbody { display: grid; gap: 10px; padding: 0 0 18px; color: var(--um-soft); line-height: 1.7; }
 .um-folds .um-fbody p { margin: 0; }
 .um-folds .um-fbody a { color: var(--um-ink); text-decoration: underline; text-underline-offset: 3px; }
-/* the fold's way to the full policy page */
-.um-folds .um-fbody a.um-fmore { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1.5px solid var(--um-ink); border-radius: 999px; font-size: 14px; font-weight: 700; text-decoration: none; transition: background-color .15s, color .15s; }
-.um-folds .um-fbody a.um-fmore:hover { background: var(--um-ink); color: var(--um-paper); }
-.um-folds .um-fbody a.um-fmore:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .um-chart { width: 100%; border-collapse: collapse; font-size: 14px; }
 .um-chart th, .um-chart td { padding: 8px; border-bottom: 1px solid var(--um-line); text-align: center; }
 .um-chart th { color: var(--um-ink); font-weight: 700; }

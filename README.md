@@ -21,24 +21,28 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 - **Product page:** «الأمام / الخلف» over the photo (a photo's alt text can name its side; otherwise the first two photos
   are front then back, or back then front for the back-print tees in `BACK_FIRST`), VOL.xx, name, «voice» and tagline
   read from the description, chip, colour swatch, «منتجات قد تعجبك» filled from the tee's category when Salla's related
-  list is empty (without the tee itself), the empty reviews box hidden until there are reviews, sizes as tiles
-  over Salla's own dropdown, «أضف صوتك للسلة», the reassurance line, fold-outs (about / sizes / delivery), share.
-- **VOLUME 01 (any product list):** the name as a poster title in the store's title style (orange, ink shadow, blue
-  swoosh), one line under it, the sort as a pill, «عرض المزيد» as a paper pill. The header menu is the store menu
-  «قائمة رائد UNMUTED» (VOLUME 01 only), picked in this copy's header settings.
+  list is empty (every tee when that album has fewer than five; never the tee itself), the empty reviews box hidden
+  until there are reviews, sizes as tiles over Salla's own dropdown, «أضف صوتك للسلة», fold-outs (about / sizes), share.
+- **Product lists (any category):** the name as a poster title in the store's title style (orange, ink shadow, blue
+  swoosh), the sort as a pill, «عرض المزيد» as a paper pill; VOLUME 01 and «اختر صوتك» also get the line under it.
+  The header menu is the store menu «قائمة رائد UNMUTED», picked in this copy's header settings: «اختر صوتك» (the
+  category that holds every tee) and «الألبومات» with the ten album categories under it (ثقافة، عبارات، كاركترز،
+  لايف ستايل، قيمنق، أنمي ومانجا، رياضة، موسيقى وترفيه، فن وإبداع، رموز وأيقونات). A new tee goes in «اختر صوتك»
+  and its album.
 - **Product cards (everywhere):** the tee's voice under its name, read from its description («صوت …»); with a mouse,
   hovering turns the tee round to its other photo (the first after the main one that isn't a «شماعة» photo). The home
   tracklist thumbnails turn to the tee's back the same way.
 - **Info pages (الشحن والتوصيل، الاستبدال والاسترجاع، الخصوصية):** the Twilight theme's policies look, built from the
   text written in Salla: big title, the opening line as the lead, one bold card per h2 (orange shipping, blue exchange,
   dark privacy, each with its sticker and icon), a list whose points start in bold as fact tiles, h3 + list pairs as
-  yes / no lists, «جاهز تختار صوتك؟» with a button to VOLUME 01.
+  yes / no lists, «جاهز تختار صوتك؟» with a button to «اختر صوتك».
 - **Bag:** «سلتك», size as words, «احذف», the summary card in ink with the orange button, «سلتك ساكتة.» when empty.
 - **Home:** the Twilight theme's sections, rendered with their default settings by `build_sections.py` (hero poster,
   rail, tracklist, promises, FAQ; the rest of the Twilight sections, and the hero's top line with its squiggle, are left
-  out of this copy) with their animations. In this copy the hero's zoom plays over 170vh (not 340vh), the rail is for
-  looking only (no quick buy, no links; «كل الأصوات» leads to VOLUME 01), and on phones its tees hang at ~40% size so
-  three or four show side by side.
+  out of this copy). In this copy the hero is a still photo (no logo zoom, no floating icons) whose words come up as
+  the page scrolls, the rail hangs the first ten tees with no count line and is for looking only (no quick buy, no
+  links; «كل الأصوات» leads to «اختر صوتك»), on phones its tees hang at ~40% size so three or four show side by side,
+  and the tracklist is a grid of big photos (three a row on computers, two on phones).
 - **Everywhere:** the browser's back button returns to the place on the page (the content added after load would
   otherwise send it to the top). The tees link to
   the real products by name. Raed's own home sections stay underneath as the fallback.
@@ -50,7 +54,7 @@ The home sections and the cards take their words, photos and tees from the store
 | What | Where in Salla |
 |---|---|
 | Hero photo, «البس صوتك.», the line under it | Theme editor → home → «صور متحركة (محسنة)» → first photo |
-| «اختر صوتك» title and which tees hang on the rail (and the tracklist) | Theme editor → home → «منتجات ثابتة» (its category or picked products) |
+| «اختر صوتك» title and which tees hang on the rail (the first ten) and show in the tracklist | Theme editor → home → «منتجات ثابتة» (its category or picked products) |
 | The three promises (icon, title, line) | Theme editor → home → «مميزات المتجر» |
 | The questions | Salla → الصفحات التعريفية → «الأسئلة الشائعة» (each question as Heading 3, the answer under it) |
 | A tee's voice and VOL number (cards, tracklist, product page) | The product's description: «صوت …» and «الصوت رقم NN» |
