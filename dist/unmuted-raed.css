@@ -95,16 +95,16 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-footer .s-button-element { min-height: 44px; border: 2px solid var(--um-ink) !important; border-radius: 999px !important; background: var(--um-orange) !important; color: var(--um-ink) !important; font-weight: 800; box-shadow: none; }
 @media (max-width: 639px) { .theme-raed .s-product-card-content-footer .s-button-element { padding-inline: 10px; } }
 .theme-raed .s-product-card-content-footer .s-button-element:disabled, .theme-raed .s-product-card-content-footer .s-button-disabled { background: transparent !important; color: rgba(16, 16, 16, .5) !important; border-color: rgba(16, 16, 16, .3) !important; }
-/* on hover a card's tee turns round to its other photo, and a tracklist thumbnail to the tee's back (unmuted-raed.js adds
-   that photo); the two faces swap at the edge-on midpoint, like the tees on the rail */
-.theme-raed .um-turn a { position: relative; display: block; perspective: 1400px; }
-.um-tracks .um-tl__img.um-turn { perspective: 900px; }
+/* on hover a card's other photo (a tracklist thumbnail: the tee's back; unmuted-raed.js adds it) fades in over the first
+   while both zoom in a touch, no turning (the owner asked for not-boring.com's cards); the rail's tees keep their turn */
+.theme-raed .um-turn a { position: relative; display: block; overflow: hidden; }
+.um-tracks .um-tl__img.um-turn { overflow: hidden; }
 .um-tracks .um-tl__img.um-turn > img { grid-area: 1 / 1; }
-.theme-raed .um-turn img.um-face, .theme-raed .um-turn img.um-face-back { transition: transform .8s cubic-bezier(.65, 0, .35, 1), opacity 0s linear .4s; }
+.theme-raed .um-turn img.um-face, .theme-raed .um-turn img.um-face-back { transition: opacity .5s ease, transform .5s ease; }
 .theme-raed .s-product-card-image.um-turn img.um-face-back { position: absolute; inset: 0; width: 100%; height: 100%; }
-.theme-raed .um-turn img.um-face-back { opacity: 0; transform: rotateY(-180deg); }
-.theme-raed .s-product-card-entry:hover .um-turn img.um-face, .theme-raed .um-tl__row:hover .um-turn img.um-face { opacity: 0; transform: rotateY(180deg); }
-.theme-raed .s-product-card-entry:hover .um-turn img.um-face-back, .theme-raed .um-tl__row:hover .um-turn img.um-face-back { opacity: 1; transform: none; }
+.theme-raed .um-turn img.um-face-back { opacity: 0; }
+.theme-raed .s-product-card-entry:hover .um-turn img.um-face, .theme-raed .um-tl__row:hover .um-turn img.um-face { transform: scale(1.03); }
+.theme-raed .s-product-card-entry:hover .um-turn img.um-face-back, .theme-raed .um-tl__row:hover .um-turn img.um-face-back { opacity: 1; transform: scale(1.03); }
 @media (prefers-reduced-motion: reduce) {
   .theme-raed .um-turn img.um-face, .theme-raed .um-turn img.um-face-back { transition: opacity .2s; transform: none !important; }
 }
@@ -288,6 +288,84 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-chart th, .um-chart td { padding: 8px; border-bottom: 1px solid var(--um-line); text-align: center; }
 .um-chart th { color: var(--um-ink); font-weight: 700; }
 .um-share { margin-top: 14px; padding: 6px 0; border: 0; background: none; color: var(--um-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+
+/* ---------- «مساعد المقاس» (unmuted-raed.js fitHelper): a sheet from the bottom on phones, a card on computers ---------- */
+.um-fit-open, .um-fit-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 4px 0; border: 0; background: none; color: var(--um-ink); font: 600 14px/1.4 var(--um-font); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.um-fit-open svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; }
+.um-fit-link { margin-top: 2px; }
+html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
+.um-fit-veil { position: fixed; inset: 0; z-index: 9999; display: flex; align-items: flex-end; justify-content: center; background: rgba(16, 16, 16, .45); animation: um-fit-fade .2s ease; }
+.um-fit { position: relative; width: 100%; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; padding: 18px 18px calc(18px + env(safe-area-inset-bottom)); border: 2px solid var(--um-ink); border-bottom: 0; border-radius: 24px 24px 0 0; background: var(--um-paper); color: var(--um-ink); font-family: var(--um-font); animation: um-fit-up .28s cubic-bezier(.2, .8, .2, 1); }
+@media (min-width: 720px) {
+  .um-fit-veil { align-items: center; }
+  .um-fit { width: 460px; max-height: 88vh; padding: 22px 24px 22px; border-bottom: 2px solid var(--um-ink); border-radius: 24px; box-shadow: 6px 8px 0 var(--um-ink); }
+}
+@keyframes um-fit-fade { from { opacity: 0; } }
+@keyframes um-fit-up { from { transform: translateY(40px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .um-fit-veil, .um-fit { animation: none; } }
+.um-fit:focus { outline: none; }
+.um-fit-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.um-fit-top b { font-size: 15px; font-weight: 800; }
+.um-fit-x { width: 36px; height: 36px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-paper); color: var(--um-ink); font: 600 22px/1 var(--um-latin); cursor: pointer; }
+.um-fit-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1.5px solid var(--um-line); border-radius: 16px; background: #fff; }
+.um-fit-item img { width: 52px; height: 65px; border-radius: 10px; object-fit: cover; background: var(--um-wall); }
+.um-fit-item div { display: grid; gap: 2px; min-width: 0; }
+.um-fit-item b { font: 800 15px/1.3 var(--um-latin); }
+.um-fit-item span { color: var(--um-soft); font-size: 13px; }
+.um-fit-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 16px; }
+.um-fit-steps i { height: 4px; border-radius: 4px; background: var(--um-line); }
+.um-fit-steps i.on { background: var(--um-ink); }
+.um-fit-count { margin: 8px 0 0; color: var(--um-soft); font-size: 12px; font-weight: 600; }
+.um-fit h3 { margin: 14px 0 2px; font-size: 22px; font-weight: 800; line-height: 1.3; outline: none; }
+.um-fit-sub { margin: 0 0 14px; color: var(--um-soft); font-size: 14px; }
+.um-fit-seg { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 2px solid var(--um-ink); border-radius: 999px; overflow: hidden; }
+.um-fit-seg button { min-width: 44px; padding: 8px 14px; border: 0; background: transparent; color: var(--um-ink); font: 700 14px/1 var(--um-font); cursor: pointer; }
+.um-fit-seg button[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
+.um-fit > .um-fit-seg { display: grid; width: 100%; }
+.um-fit > .um-fit-seg button { padding: 12px; }
+.um-fit-body { display: grid; grid-template-columns: 64px 1fr; gap: 14px; align-items: center; margin-top: 18px; }
+.um-fit-fig { width: 64px; height: 128px; fill: none; stroke: var(--um-ink); stroke-width: 1.6; stroke-linejoin: round; }
+.um-fit-dials { display: grid; gap: 16px; }
+.um-fit-dial { display: grid; gap: 6px; }
+.um-fit-dial-top { display: flex; align-items: center; justify-content: space-between; color: var(--um-soft); font-size: 13px; font-weight: 700; }
+.um-fit-dial-top .um-fit-seg { border-width: 1.5px; }
+.um-fit-dial-top .um-fit-seg button { min-width: 40px; padding: 5px 9px; font-size: 12px; }
+.um-fit-dial output { font: 800 30px/1.1 var(--um-latin); }
+.um-fit-dial output small { font: 600 14px var(--um-font); color: var(--um-soft); }
+.um-fit-range { display: grid; grid-template-columns: 32px 1fr 32px; gap: 10px; align-items: center; }
+.um-fit-range button { width: 32px; height: 32px; border: 1.5px solid var(--um-ink); border-radius: 50%; background: var(--um-paper); color: var(--um-ink); font: 600 18px/1 var(--um-latin); cursor: pointer; }
+.um-fit-range input { width: 100%; height: 28px; margin: 0; background: none; accent-color: var(--um-ink); -webkit-appearance: none; appearance: none; cursor: pointer; }
+.um-fit-range input::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: var(--um-ink); }
+.um-fit-range input::-moz-range-track { height: 4px; border-radius: 4px; background: var(--um-ink); }
+.um-fit-range input::-webkit-slider-thumb { width: 22px; height: 22px; margin-top: -9px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-orange); -webkit-appearance: none; }
+.um-fit-range input::-moz-range-thumb { width: 18px; height: 18px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-orange); }
+.um-fit-live { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding: 12px 16px; border: 2px solid var(--um-ink); border-radius: 16px; background: #fff; font-weight: 700; }
+.um-fit-live small { display: block; color: var(--um-soft); font-size: 12px; font-weight: 500; }
+.um-fit-live b { font: 800 30px/1 var(--um-latin); }
+.um-fit-go { display: block; width: 100%; margin-top: 16px; padding: 14px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font: 800 16px/1 var(--um-font); box-shadow: var(--um-hard); cursor: pointer; transition: transform .14s, box-shadow .14s; }
+.um-fit-go:active { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--um-ink); }
+.um-fit-go:disabled { opacity: .4; box-shadow: none; cursor: not-allowed; }
+.um-fit-nav { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: end; }
+.um-fit-back { margin-top: 16px; padding: 14px 6px; border: 0; background: none; color: var(--um-ink); font: 700 15px/1 var(--um-font); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.um-fit-choices { display: grid; gap: 10px; }
+.um-fit-choices button { display: grid; gap: 3px; padding: 14px 16px; border: 2px solid var(--um-ink); border-radius: 16px; background: #fff; color: var(--um-ink); text-align: start; font-family: var(--um-font); cursor: pointer; }
+.um-fit-choices b { font-size: 16px; font-weight: 800; }
+.um-fit-choices span { color: var(--um-soft); font-size: 13px; }
+.um-fit-choices button[aria-checked="true"] { background: var(--um-ink); color: var(--um-paper); box-shadow: 3px 4px 0 var(--um-orange); }
+.um-fit-choices button[aria-checked="true"] span { color: rgba(250, 245, 239, .75); }
+.um-fit-size { display: grid; place-items: center; width: 132px; height: 132px; margin: 8px auto 14px; border: 2px solid var(--um-ink); border-radius: 28px; background: var(--um-orange); box-shadow: 6px 8px 0 var(--um-ink); outline: none; }
+.um-fit-size b { font: 800 64px/1 var(--um-latin); }
+.um-fit-why { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.um-fit-why li { position: relative; padding-inline-start: 18px; font-size: 14px; line-height: 1.6; }
+.um-fit-why li::before { content: ''; position: absolute; inset-inline-start: 0; top: .6em; width: 8px; height: 8px; border-radius: 50%; background: var(--um-orange); border: 1.5px solid var(--um-ink); }
+.um-fit-chart-top { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 6px; font-size: 14px; }
+.um-fit-chart-top .um-fit-seg button { min-width: 40px; padding: 5px 10px; font-size: 12px; }
+.um-fit-chart tr.on td { background: var(--um-ink); color: var(--um-paper); font-weight: 800; }
+.um-fit-chart tr.on td:first-child { border-radius: 0 10px 10px 0; }
+.um-fit-chart tr.on td:last-child { border-radius: 10px 0 0 10px; }
+.um-fit-again { display: block; margin: 4px auto 0; }
+.um-fit-note { margin: 14px 0 0; color: var(--um-soft); font-size: 12px; text-align: center; }
+.um-fit button:focus-visible, .um-fit input:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .theme-raed salla-social-share, .theme-raed .main-content .btn--wishlist { display: none !important; }
 .theme-raed .s-comments, .theme-raed .s-comments-product { background: transparent !important; }
 /* Salla's own «منتجات مشابهة» block under the product: the page keeps «منتجات قد تعجبك» only */

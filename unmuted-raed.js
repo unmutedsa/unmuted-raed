@@ -835,6 +835,151 @@
     });
   }
 
+  /* «مساعد المقاس» under the size tiles: height and weight (with a live guess), how tees usually sit on you, how you like
+     this one to sit, then a size with the reasons and the chart (cm or inch); «اختر» picks that tile. The idea is the
+     owner's reference (a «Find my size» advisor); the numbers come from CHART. Answers stay in this browser only. */
+  var FIT_KEY = 'um-fit';
+  var fitLoad = function () { try { return JSON.parse(localStorage.getItem(FIT_KEY)) || {}; } catch (e) { return {}; } };
+  var fitSave = function (s) { try { localStorage.setItem(FIT_KEY, JSON.stringify(s)); } catch (e) {} };
+  var arNum = function (n) { return ar ? String(n).replace(/[0-9]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'[d]; }) : String(n); };
+  // body chest round (cm) from height and weight, then the tee that leaves the room this cut is made for
+  function fitSize(s) {
+    var chest = s.g === 'w' ? 60 + 0.45 * s.w + 0.05 * (s.h - 165) : 64 + 0.42 * s.w + 0.08 * (s.h - 175);
+    var ease = { slim: 10, over: 18, more: 26 }[s.like || 'over'];
+    var adj = { loose: -4, fine: 0, tight: 6 }[s.usual || 'fine'];
+    var need = chest + ease + adj, i = 0;
+    while (i < CHART.length - 1 && CHART[i][1] * 2 < need) i++;
+    var tall = s.g === 'w' ? (s.h >= 186 ? 3 : s.h >= 178 ? 2 : 0) : (s.h >= 195 ? 3 : s.h >= 188 ? 2 : 0);
+    var byLength = Math.max(i, Math.min(tall, CHART.length - 1)) > i;
+    if (byLength) i = Math.min(tall, CHART.length - 1);
+    return { i: i, size: CHART[i][0], tight: CHART[CHART.length - 1][1] * 2 < need, roomy: i === 0 && CHART[0][1] * 2 - need > 10, byLength: byLength };
+  }
+  function fitHelper() {
+    var row = $('.product-form .um-tiles');
+    if (!row || row.parentNode.querySelector('.um-fit-open')) return;
+    var open = el('button', 'um-fit-open', '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5 15.5 3l5.5 5.5L8.5 21z"/><path d="M7 11.5l2 2M10 8.5l2 2M13 5.5l2 2"/></svg><span></span>');
+    open.type = 'button';
+    var label = function () {
+      var s = fitLoad();
+      $('span', open).textContent = s.size ? t('مقاسك حسب إجاباتك: ', 'Your size from your answers: ') + s.size : t('ما تدري وش مقاسك؟ نختاره معك', 'Not sure of your size? Find it here');
+    };
+    label();
+    row.parentNode.insertBefore(open, row.nextSibling);
+    open.addEventListener('click', function () { fitOpen(open, label); });
+    var fold = $('#um-size .um-fbody');
+    if (fold && !$('.um-fit-link', fold)) {
+      var l = el('button', 'um-fit-link', t('ما تدري وش مقاسك؟ جرّب مساعد المقاس', 'Not sure? Try the size advisor'));
+      l.type = 'button';
+      l.addEventListener('click', function () { fitOpen(open, label); });
+      fold.appendChild(l);
+    }
+  }
+  function fitOpen(opener, relabel) {
+    var s = fitLoad();
+    s.g = s.g || 'm'; s.h = s.h || (s.g === 'w' ? 163 : 175); s.w = s.w || (s.g === 'w' ? 60 : 75);
+    s.hu = s.hu || 'cm'; s.wu = s.wu || 'kg'; s.cu = s.cu || 'cm';
+    var step = 1;
+    var name = ($('[data-testid="store-product-title"]') || {}).textContent || '';
+    // the price as shown (Salla keeps a hidden sale block beside it), with its riyal icon
+    var priceEl = $('[data-testid="store-product-price"]');
+    if (priceEl) priceEl = $$('p, span', priceEl).filter(function (n) { return n.offsetParent && $('i[class^="sicon-"]', n); })[0] || priceEl;
+    var thumb = $('salla-slider.details-slider .swiper-slide img');
+    var veil = el('div', 'um-fit-veil');
+    var box = el('div', 'um-fit');
+    box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', t('مساعد المقاس', 'Size advisor'));
+    veil.appendChild(box);
+    document.body.appendChild(veil);
+    document.documentElement.classList.add('um-fit-lock');
+    var close = function () { veil.remove(); document.documentElement.classList.remove('um-fit-lock'); removeEventListener('keydown', key); relabel(); opener.focus(); };
+    var key = function (e) { if (e.key === 'Escape') close(); };
+    addEventListener('keydown', key);
+    veil.addEventListener('click', function (e) { if (e.target === veil) close(); });
+    var hTxt = function () { if (s.hu === 'cm') return arNum(s.h) + ' <small>' + t('سم', 'cm') + '</small>'; var i = Math.round(s.h / 2.54); return arNum(Math.floor(i / 12)) + '′' + arNum(i % 12) + '″'; };
+    var wTxt = function () { return s.wu === 'kg' ? arNum(s.w) + ' <small>' + t('كجم', 'kg') + '</small>' : arNum(Math.round(s.w * 2.2046)) + ' <small>' + t('رطل', 'lb') + '</small>'; };
+    var seg = function (k, a, b) { return '<div class="um-fit-seg" data-k="' + k + '">' + [a, b].map(function (o) { return '<button type="button" data-v="' + o[0] + '" aria-pressed="' + (s[k] === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>'; };
+    var choice = function (k, list) { return '<div class="um-fit-choices" role="radiogroup">' + list.map(function (o) { return '<button type="button" role="radio" data-k="' + k + '" data-v="' + o[0] + '" aria-checked="' + (s[k] === o[0]) + '"><b>' + o[1] + '</b>' + (o[2] ? '<span>' + o[2] + '</span>' : '') + '</button>'; }).join('') + '</div>'; };
+    var figure = function () {
+      var wide = Math.max(.82, Math.min(1.3, 1 + (s.w - (s.g === 'w' ? 60 : 75)) / 90)), tall = Math.max(.86, Math.min(1.12, s.h / (s.g === 'w' ? 163 : 175)));
+      return '<svg class="um-fit-fig" viewBox="0 0 60 120" aria-hidden="true"><g transform="translate(30 118) scale(' + wide.toFixed(3) + ' ' + tall.toFixed(3) + ') translate(-30 -118)"><circle cx="30" cy="14" r="8"/><path d="M14 30h32l6 34h-8l-3-20v74h-9V82h-4v36h-9V44l-3 20H8z"/></g></svg>';
+    };
+    var draw = function () {
+      var r = fitSize(s), html = '<div class="um-fit-top"><b>' + t('مساعد المقاس', 'Size advisor') + '</b><button type="button" class="um-fit-x" aria-label="' + t('إغلاق', 'Close') + '">×</button></div>';
+      html += '<div class="um-fit-item">' + (thumb ? '<img src="' + esc(thumb.currentSrc || thumb.src) + '" alt="">' : '') + '<div><b>' + esc(name.trim()) + '</b><span></span></div></div>';
+      if (step < 4) html += '<div class="um-fit-steps" aria-hidden="true"><i class="on"></i><i' + (step > 1 ? ' class="on"' : '') + '></i><i' + (step > 2 ? ' class="on"' : '') + '></i></div><p class="um-fit-count">' + t('خطوة ' + arNum(step) + ' من ' + arNum(3), 'Step ' + step + ' of 3') + '</p>';
+      if (step === 1) {
+        html += '<h3>' + t('نعرفك بثانيتين', 'Two measurements, ten seconds') + '</h3><p class="um-fit-sub">' + t('طولك ووزنك بس.', 'Just your height and weight.') + '</p>' +
+          seg('g', ['m', t('شباب', 'Men')], ['w', t('بنات', 'Women')]) +
+          '<div class="um-fit-body">' + figure() + '<div class="um-fit-dials">' +
+          '<label class="um-fit-dial"><span class="um-fit-dial-top">' + t('الطول', 'Height') + seg('hu', ['cm', t('سم', 'cm')], ['ft', t('قدم', 'ft')]) + '</span><output>' + hTxt() + '</output>' +
+          '<span class="um-fit-range"><button type="button" data-step="h" data-d="-1" aria-label="−">−</button><input type="range" min="140" max="205" step="1" value="' + s.h + '" data-f="h" aria-label="' + t('الطول', 'Height') + '"><button type="button" data-step="h" data-d="1" aria-label="+">+</button></span></label>' +
+          '<label class="um-fit-dial"><span class="um-fit-dial-top">' + t('الوزن', 'Weight') + seg('wu', ['kg', t('كجم', 'kg')], ['lb', t('رطل', 'lb')]) + '</span><output>' + wTxt() + '</output>' +
+          '<span class="um-fit-range"><button type="button" data-step="w" data-d="-1" aria-label="−">−</button><input type="range" min="40" max="140" step="1" value="' + s.w + '" data-f="w" aria-label="' + t('الوزن', 'Weight') + '"><button type="button" data-step="w" data-d="1" aria-label="+">+</button></span></label>' +
+          '</div></div><div class="um-fit-live" aria-live="polite"><span>' + t('تقديرنا الحين', 'Our guess so far') + '<small>' + t('يتأكد في الخطوتين الجاية', 'Firms up in the next two steps') + '</small></span><b lang="en">' + r.size + '</b></div>' +
+          '<button type="button" class="um-fit-go" data-to="2">' + t('كمّل', 'Continue') + '</button>';
+      } else if (step === 2) {
+        html += '<h3>' + t('التيشيرتات العادية عليك كيف تجي؟', 'How do regular tees fit you?') + '</h3><p class="um-fit-sub">' + t('عند الصدر والأكتاف.', 'Across the chest and shoulders.') + '</p>' +
+          choice('usual', [['loose', t('واسعة عليّ', 'Loose'), t('غالباً أحس فيها مجال زيادة', 'They usually feel roomy')], ['fine', t('مضبوطة', 'Just right'), t('مقاسي المعتاد يركب', 'My usual size fits')], ['tight', t('ضيقة عليّ', 'Tight'), t('تشد عند الصدر أو الأكتاف', 'They pull at the chest or shoulders')]]) +
+          '<div class="um-fit-nav"><button type="button" class="um-fit-back" data-to="1">' + t('رجوع', 'Back') + '</button><button type="button" class="um-fit-go" data-to="3"' + (s.usual ? '' : ' disabled') + '>' + t('كمّل', 'Continue') + '</button></div>';
+      } else if (step === 3) {
+        html += '<h3>' + t('وش تحب في اللبسة؟', 'How do you like it to sit?') + '</h3><p class="um-fit-sub">' + t('تيشيرتاتنا قصّة واسعة من الأساس.', 'Our tees are cut oversized to begin with.') + '</p>' +
+          choice('like', [['over', t('أوفرسايز زي ما انقصّت', 'Oversized, as cut'), t('ننصح فيها', 'Our pick')], ['slim', t('أقرب للجسم', 'Closer to the body'), t('أقل اتساع', 'Less room')], ['more', t('أوسع بعد', 'Even roomier'), t('تنزل على الكتف أكثر', 'Drops further off the shoulder')]]) +
+          '<div class="um-fit-nav"><button type="button" class="um-fit-back" data-to="2">' + t('رجوع', 'Back') + '</button><button type="button" class="um-fit-go" data-to="4"' + (s.like ? '' : ' disabled') + '>' + t('شوف مقاسي', 'See my size') + '</button></div>';
+      } else {
+        var why = [];
+        var plain = function (x) { return x.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); };
+        why.push(t('طولك ' + plain(hTxt()) + ' ووزنك ' + plain(wTxt()) + '.', 'You are ' + plain(hTxt()) + ' and ' + plain(wTxt()) + '.'));
+        if (s.usual === 'tight') why.push(t('قلت التيشيرتات تضيق عليك، فأعطيناك مجال زيادة.', 'Tees tend to pull on you, so we added room.'));
+        if (s.usual === 'loose') why.push(t('قلت التيشيرتات تجي واسعة عليك، فقلّلنا الاتساع شوي.', 'Tees tend to be roomy on you, so we took a little off.'));
+        why.push({ over: t('تبيها أوفرسايز زي ما انقصّت، وهذا المقاس يعطيك هالقصّة.', 'You want it oversized as cut; this size gives you that.'), slim: t('تبيها أقرب للجسم، فاخترنا اتساع أقل.', 'You want it closer; we chose less room.'), more: t('تبيها أوسع، فكبّرنا لك.', 'You want it roomier; we went up.') }[s.like]);
+        if (r.byLength) why.push(t('وطولك يناسبه طول هالمقاس (' + arNum(CHART[r.i][2]) + ' سم).', 'Your height suits this size’s length (' + CHART[r.i][2] + ' cm).'));
+        if (r.tight) why.push(t(CHART[r.i][0] + ' أكبر مقاس عندنا، وبيجيك أقرب للجسم من الأوفرسايز.', CHART[r.i][0] + ' is our largest; it will sit closer than oversized.'));
+        if (r.roomy) why.push(t(CHART[0][0] + ' أصغر مقاس عندنا، وبيجيك واسع شوي.', CHART[0][0] + ' is our smallest; it will be a little roomy.'));
+        var u = s.cu === 'in' ? function (v) { return arNum((v / 2.54).toFixed(1)); } : arNum;
+        var sold = $$('.product-form .um-tile').filter(function (b) { return b.textContent.trim() === r.size && b.disabled; }).length;
+        html += '<p class="um-fit-count">' + t('مقاسك', 'Your size') + '</p><div class="um-fit-size"><b lang="en">' + r.size + '</b></div>' +
+          '<ul class="um-fit-why">' + why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
+          '<div class="um-fit-chart-top"><b>' + t('جدول المقاسات', 'Size chart') + '</b>' + seg('cu', ['cm', t('سم', 'cm')], ['in', t('إنش', 'in')]) + '</div>' +
+          '<table class="um-chart um-fit-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر', 'Chest width') + '</th><th>' + t('الطول', 'Length') + '</th></tr></thead><tbody>' +
+          CHART.map(function (c, k) { return '<tr' + (k === r.i ? ' class="on"' : '') + '><td lang="en">' + c[0] + '</td><td>' + u(c[1]) + '</td><td>' + u(c[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+          (sold ? '<p class="um-fit-sub">' + t('مقاس ' + r.size + ' خلص حالياً.', 'Size ' + r.size + ' is sold out right now.') + '</p>' : '<button type="button" class="um-fit-go um-fit-pick">' + t('اختر مقاس ' + r.size, 'Choose ' + r.size) + '</button>') +
+          '<button type="button" class="um-fit-back um-fit-again" data-to="1">' + t('أعد الأسئلة', 'Start again') + '</button>';
+        s.size = r.size;
+        fitSave(s);
+      }
+      html += '<p class="um-fit-note">' + t('إجاباتك تبقى في جهازك بس.', 'Your answers stay on this device.') + '</p>';
+      box.innerHTML = html;
+      if (priceEl) copyText($('.um-fit-item span', box), priceEl);
+      fitSave(s);
+    };
+    var live = function () {
+      var r = fitSize({ g: s.g, h: s.h, w: s.w });
+      var b = $('.um-fit-live b', box), o = $$('.um-fit-dial output', box), fig = $('.um-fit-fig', box);
+      if (b) b.textContent = r.size;
+      if (o[0]) o[0].innerHTML = hTxt();
+      if (o[1]) o[1].innerHTML = wTxt();
+      if (fig) fig.outerHTML = figure();
+    };
+    box.addEventListener('input', function (e) { var f = e.target.getAttribute('data-f'); if (f) { s[f] = +e.target.value; live(); fitSave(s); } });
+    box.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (!b) return;
+      if (b.classList.contains('um-fit-x')) return close();
+      if (b.hasAttribute('data-step')) { var f = b.getAttribute('data-step'), inp = $('input[data-f="' + f + '"]', box); s[f] = Math.max(+inp.min, Math.min(+inp.max, s[f] + +b.getAttribute('data-d'))); inp.value = s[f]; live(); fitSave(s); return; }
+      var sg = b.parentNode.getAttribute('data-k');
+      if (sg) { s[sg] = b.getAttribute('data-v'); if (sg === 'g' && !fitLoad().h) { s.h = s.g === 'w' ? 163 : 175; s.w = s.g === 'w' ? 60 : 75; } return draw(); }
+      if (b.getAttribute('role') === 'radio') { s[b.getAttribute('data-k')] = b.getAttribute('data-v'); return draw(); }
+      if (b.classList.contains('um-fit-pick')) {
+        var tile = $$('.product-form .um-tile').filter(function (x) { return x.textContent.trim() === s.size; })[0];
+        if (tile) tile.click();
+        return close();
+      }
+      if (b.hasAttribute('data-to')) { step = +b.getAttribute('data-to'); draw(); var h = $('h3, .um-fit-size', box); if (h) h.setAttribute('tabindex', '-1'), h.focus(); }
+    });
+    draw();
+    box.setAttribute('tabindex', '-1');
+    box.focus();
+  }
+
   /* the add button speaks like the store: «أضف صوتك للسلة» (only Salla's default label is swapped) */
   function addLabel() {
     $$('.product-form salla-add-product-button .s-button-text').forEach(function (s) {
@@ -920,11 +1065,11 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); addLabel(); cards(); modelCards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
