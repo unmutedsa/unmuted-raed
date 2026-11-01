@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c919237ead9dc45f8b816a4a09558543f58adf58/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d6e6b93fae8345fe9cc7c2e2f0a6eada9e5d2fd4/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -680,7 +680,14 @@
     dyrwMO13hZzfH2xfRWNGaXQplrvKSKCAzvodgafA: 'cherry-market/man-side.webp',
     CENIljFwsGsTpZbtKkQzP3Hsn91TNkBJ9mUYMEdc: 'cherry-market/woman-back.webp',
     id8VhWkdKHPgACvhPT9jFWhDAVVRSDT79VLBobeo: 'cherry-market/woman-front.webp',
-    '4AQYs7CYJopw1PkoouH9WcaRzQcbyEQ3SxfeJblZ': 'cherry-market/woman-side.webp'
+    '4AQYs7CYJopw1PkoouH9WcaRzQcbyEQ3SxfeJblZ': 'cherry-market/woman-side.webp',
+    s1RngmvTuUOKUMu7YkQ1K9rmqqInfymur7JBPxP4: 'caution/duo-front.webp',
+    Arkb8Uu3OdyD5D1MOKCG0L1O1mmoekwjm8MLQF6M: 'caution/man-back.webp',
+    sYnxcMJE9XlsVJYG0jSMUVnZGgyV5w8rpSmeXAcE: 'caution/man-front.webp',
+    llQZWWgb73X47wA8XnxzAFwTfUqY8Qm5De8NjyyB: 'caution/man-side.webp',
+    hzCKTuXGKWyrcZJo7jOjk4ZyLH4kl1iymMoj383y: 'caution/woman-back.webp',
+    ufzjzwvi5KTxq9A2x0urBeNLzpLF6xaDIO7MPPjj: 'caution/woman-front.webp',
+    QfHhSnfWw4GgbGhtz79hgQ8rvQdOtpB9huHYJQMw: 'caution/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
