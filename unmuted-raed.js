@@ -1,7 +1,7 @@
 /* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → JavaScript).
    Adds what unmuted-raed.css can't: size tiles over Salla's dropdown, the VOL / «voice» / tagline block read from the
    product description, fold-outs, a search button, the home sections, the VOLUME 01 page title,
-   each card's voice and its turn to the other side on hover, 4K copies of product photos, the «الأمام / الخلف» photo switch, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
+   each card's voice and its turn to the other side on hover, 4K copies of product photos, «منتجات قد تعجبك» from the category, the info pages' cards, «Wear your voice.» in the footer and the store's empty-bag words. Every part checks for Raed's markup first and does nothing without it. */
 (function () {
   if (window.__umRaed) return;
   window.__umRaed = true;
@@ -647,7 +647,7 @@
     links.forEach(function (a) { var hd = hdOf(a.getAttribute('href')); if (hd) { a.setAttribute('href', hd); swapped = true; } });
     if (swapped && typeof window.refreshFsLightbox === 'function') window.refreshFsLightbox();
     var upgrade = function (k) {
-      var slide = $$('.swiper-wrapper > .swiper-slide', box)[k];   // looked up each time: sides() may drop slides
+      var slide = $$('.swiper-wrapper > .swiper-slide', box)[k];   // looked up each time: hangers() may drop slides
       var img = slide && $('img', slide), hd = img && !img.hasAttribute('data-um-hd') && hdOf(img.getAttribute('src'));
       if (!hd) return;
       img.setAttribute('data-um-hd', '');
@@ -669,45 +669,16 @@
     });
   }
 
-  /* product photo: «الأمام / الخلف» over the slider (the Twilight theme's switch). A photo's alt text can say which side
-     it shows (Salla → product → photo); otherwise the first two photos are front then back, or back then front for the
-     tees whose first photo is the back print (the Twilight theme's um_pdp_back_first list). */
-  var BACK_FIRST = ['03', '04', '07', '09', '10', '11', '13', '14'];
-  function sides() {
+  /* product photos: the «شماعة» photos are for the home rail, so the gallery leaves them out (never all of them).
+     (The «الأمام / الخلف» switch that sat over the photo was removed at the owner's request, 2026-11-01.) */
+  function hangers() {
     var slider = $('salla-slider.details-slider');
     var box = slider && $('.swiper.s-slider-container', slider);
-    if (!box || !box.swiper || $('.um-sides', box)) return;
-    var sw = box.swiper;
-    // the «شماعة» photos are for the home rail: the gallery leaves them out (never all of them)
-    if (!slider.hasAttribute('data-um-hangers')) {
-      slider.setAttribute('data-um-hangers', '');
-      var thumbs = $('.swiper.s-slider-thumbs-container', slider), all = $$('.swiper-wrapper > .swiper-slide img', box), drop = [];
-      all.forEach(function (img, i) { if (HANGER.test(img.alt || '')) drop.push(i); });
-      if (drop.length < all.length) drop.reverse().forEach(function (i) { sw.removeSlide(i); if (thumbs && thumbs.swiper) thumbs.swiper.removeSlide(i); });
-    }
-    var imgs = $$('.swiper-wrapper > .swiper-slide img', box);
-    if (imgs.length < 2) return;
-    var side = function (img) { var alt = (img.alt || '').toLowerCase(); return /خلف|back/.test(alt) ? 'back' : /أمام|امام|front/.test(alt) ? 'front' : ''; };
-    var a = imgs[0].alt === imgs[1].alt ? '' : side(imgs[0]), b = imgs[0].alt === imgs[1].alt ? '' : side(imgs[1]);
-    var backFirst = a === 'back' || b === 'front';
-    if (!a && !b) {
-      var vol = ((($('.um-pvol') || {}).textContent || '').match(/\d+/) || [])[0] || '';
-      backFirst = BACK_FIRST.indexOf(('0' + vol).slice(-2)) >= 0;
-    }
-    var group = el('div', 'um-sides swiper-no-swiping');
-    group.setAttribute('role', 'group');
-    group.setAttribute('aria-label', t('وجه التيشيرت', 'Side of the tee'));
-    [[backFirst ? 1 : 0, t('الأمام', 'Front')], [backFirst ? 0 : 1, t('الخلف', 'Back')]].forEach(function (s) {
-      var btn = el('button', '', s[1]);
-      btn.type = 'button';
-      btn.dataset.i = s[0];
-      group.appendChild(btn);
-    });
-    var mark = function () { $$('button', group).forEach(function (btn) { btn.setAttribute('aria-pressed', String(Number(btn.dataset.i) === sw.activeIndex)); }); };
-    group.addEventListener('click', function (e) { var btn = e.target.closest('button'); if (btn) sw.slideTo(Number(btn.dataset.i)); });
-    sw.on('slideChange', mark);
-    mark();
-    box.appendChild(group);
+    if (!box || !box.swiper || slider.hasAttribute('data-um-hangers')) return;
+    slider.setAttribute('data-um-hangers', '');
+    var sw = box.swiper, thumbs = $('.swiper.s-slider-thumbs-container', slider), all = $$('.swiper-wrapper > .swiper-slide img', box), drop = [];
+    all.forEach(function (img, i) { if (HANGER.test(img.alt || '')) drop.push(i); });
+    if (drop.length < all.length) drop.reverse().forEach(function (i) { sw.removeSlide(i); if (thumbs && thumbs.swiper) thumbs.swiper.removeSlide(i); });
   }
 
   /* «منتجات قد تعجبك» under the product: Salla's related list comes back empty for these tees, so the slider shows the
@@ -886,7 +857,7 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); sides(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle

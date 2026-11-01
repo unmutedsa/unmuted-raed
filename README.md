@@ -18,8 +18,8 @@ from custom CSS, so the script adds the Google Fonts link (Alexandria, Bricolage
 
 - **Everywhere:** cream page, ink lines, orange pill buttons, the UNMUTED logo in the header, menu in the middle,
   «السلة» pill, search button, product cards with the tee on the wall colour, «Wear your voice.» in the footer.
-- **Product page:** «الأمام / الخلف» over the photo (a photo's alt text can name its side; otherwise the first two photos
-  are front then back, or back then front for the back-print tees in `BACK_FIRST`), VOL.xx, name, «voice» and tagline
+- **Product page:** the gallery without the «شماعة» photos, 4K copies of model photos (`HD` map → `cdn/photos/`), photos
+  whose ALT has «مودل» filling a 4:5 frame, VOL.xx, name, «voice» and tagline
   read from the description, chip, colour swatch, «منتجات قد تعجبك» filled from the tee's category when Salla's related
   list is empty (every tee when that album has fewer than five; never the tee itself), the empty reviews box hidden
   until there are reviews, sizes as tiles over Salla's own dropdown, «أضف صوتك للسلة», fold-outs (about / sizes), share.

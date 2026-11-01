@@ -219,11 +219,6 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .theme-raed .details-slider .swiper-slide, .theme-raed .details-slider .magnify-wrapper { background: var(--um-wall); }
 .theme-raed .details-slider .magnify-wrapper img { object-fit: contain !important; padding: 6% 6% 2%; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .25)); }
 .theme-raed .details-slider { border-radius: 0 !important; }
-/* «الأمام / الخلف» over the photo (unmuted-raed.js) */
-.um-sides { position: absolute; z-index: 5; top: 14px; inset-inline: 0; display: flex; width: max-content; margin-inline: auto; padding: 3px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-paper); }
-.um-sides button { padding: 6px 18px; border: 0; border-radius: 999px; background: none; color: var(--um-ink); font-weight: 700; font-size: 14px; cursor: pointer; }
-.um-sides button[aria-pressed="true"] { background: var(--um-ink); color: var(--um-paper); }
-.um-sides button:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .theme-raed .slide--one-fourth img { background: var(--um-wall) !important; object-fit: contain !important; border-radius: 10px; }
 /* model photos (the photo's ALT has «مودل»: Salla → product → photo → Alt): each one is a 4:5 frame the photo fills, in
    the gallery and the thumbnails, with no wall colour, padding or shadow around it */
