@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c32755fd16e4662f14a01f3df4c190373eff58cc/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c919237ead9dc45f8b816a4a09558543f58adf58/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -667,13 +667,20 @@
     Bu0rYUDdTIrzROmLcqywEfVxdst36cNLrkaaP6z6: 'love-pop/woman-back.webp',
     IV9fZM64ANdTYNrMPfwqvxJJJg1WsX2cb2v6Y6Ks: 'love-pop/woman-front.webp',
     UJjGi0At9A6MyfCzjwDfh7vWihSGl1So0Y2tCsb7: 'love-pop/woman-side.webp',
-    WT3sTKhDV0PEkRXRuzUZwrCosefII2BZtq6LuHv0: 'good-mood/duo-front.webp',
-    BgjTJQxxJs9qMjzJEG7offWUmdPkDSXzjbP4tf67: 'good-mood/man-back.webp',
-    AFGaxmHeu85CPg16Icd7lP2Oopp37vKu0b8fez04: 'good-mood/man-front.webp',
-    tJYvjOh6DYhN5wb1CaT43onVnaQ5LRHnl1LCpRLF: 'good-mood/man-side.webp',
-    hlmcNW0MryUanRqnyUahE4e4WfCCaBfmpkWBy8d0: 'good-mood/woman-back.webp',
-    AZOeig3nYpAUy0sUwUCk8ZtB9SUOFwu74wuW1aqe: 'good-mood/woman-front.webp',
-    '4VIIDuLE5bIxkcaAg02mJuw8ylt8lNmUUHQonlzs': 'good-mood/woman-side.webp'
+    yquX7h8EJf17Fy1KX5FDCkkWkrW2cKmAN4li2k8y: 'good-mood/duo-front.webp',
+    B0YoK0QZa6BKIIgld25p74SqUyiEzcveSUrQPlxv: 'good-mood/man-back.webp',
+    Sq9SvBYaIS2DJwySDk69ay3YSJzsTKSnmevDV23i: 'good-mood/man-front.webp',
+    jt693BawHnM6tbUO1N0tHmP6lRBUCwdHciekMvmK: 'good-mood/man-side.webp',
+    pRRKuvR5hwNrQEUVfQGFY8WlUzjlxeyuu2e8OESU: 'good-mood/woman-back.webp',
+    UxX3Docy5Rjcq4YSte5RRSJfkV8L0J5ri5fWlD3Q: 'good-mood/woman-front.webp',
+    '3rqKFuZS71sxSgM1R7flOKZ7rZupYTo9wd0DLOK0': 'good-mood/woman-side.webp',
+    XfOROzYs4Bgsxa7gA7EZib331t97LtKwxl1W6onT: 'cherry-market/duo-front.webp',
+    lL5vt5mX8XjrRBTpFaVD2pGHhatHIZC2v3RwyRJU: 'cherry-market/man-back.webp',
+    lp2PjlHLA0MB4T0jgqkAbYE9AAMFrxCU7cXfP8FE: 'cherry-market/man-front.webp',
+    dyrwMO13hZzfH2xfRWNGaXQplrvKSKCAzvodgafA: 'cherry-market/man-side.webp',
+    CENIljFwsGsTpZbtKkQzP3Hsn91TNkBJ9mUYMEdc: 'cherry-market/woman-back.webp',
+    id8VhWkdKHPgACvhPT9jFWhDAVVRSDT79VLBobeo: 'cherry-market/woman-front.webp',
+    '4AQYs7CYJopw1PkoouH9WcaRzQcbyEQ3SxfeJblZ': 'cherry-market/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
