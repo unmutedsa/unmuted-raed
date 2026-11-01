@@ -112,7 +112,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-title:has(+ .um-cvoice) { margin-bottom: 0; }
 .um-cvoice { margin: 4px 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--um-soft); }
 
-/* ---------- product list (VOLUME 01): the name as a poster title, the sort as a pill ---------- */
+/* ---------- product lists (the albums, «اختر صوتك», VOLUME 01): the name as a poster title, the sort as a pill ---------- */
 .theme-raed .um-plp-old { display: none !important; }
 /* the line under the title sets the size: one line on every screen, and the title is exactly as wide (in Alexandria the
    line is 4.21× as wide as «VOLUME 01» per pixel of type) */
@@ -120,7 +120,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .um-plp-name { display: contents; }
 .um-plp-title {
   grid-column: 1 / -1; justify-self: start; position: relative; display: inline-block; margin: 0; padding: .08em 0 .2em; transform: rotate(-2deg); transform-origin: right bottom;
-  font: 900 clamp(44px, 9vw, 110px)/1 var(--um-font); color: var(--um-orange); text-shadow: .035em .045em 0 var(--um-ink);
+  font: 900 clamp(30px, 3.6vw, 52px)/1 var(--um-font); color: var(--um-orange); text-shadow: .035em .045em 0 var(--um-ink);
 }
 .um-plp-title[lang="en"] { font-weight: 800; font-size: calc(var(--um-sub) * 4.21); line-height: .86; letter-spacing: -.01em; white-space: nowrap; }
 .um-plp-line { position: absolute; inset-inline: 2% 0; bottom: 0; width: 96%; height: .16em; overflow: visible; fill: none; stroke-linecap: round; }
