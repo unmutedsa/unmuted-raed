@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e34de64d89d6e03de70a39c36cf5427f766bf8e3/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@6411530ae7531e72f9b84af4dc42a298a192e51f/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -667,13 +667,13 @@
     Bu0rYUDdTIrzROmLcqywEfVxdst36cNLrkaaP6z6: 'love-pop/woman-back.webp',
     IV9fZM64ANdTYNrMPfwqvxJJJg1WsX2cb2v6Y6Ks: 'love-pop/woman-front.webp',
     UJjGi0At9A6MyfCzjwDfh7vWihSGl1So0Y2tCsb7: 'love-pop/woman-side.webp',
-    yquX7h8EJf17Fy1KX5FDCkkWkrW2cKmAN4li2k8y: 'good-mood/duo-front.webp',
-    B0YoK0QZa6BKIIgld25p74SqUyiEzcveSUrQPlxv: 'good-mood/man-back.webp',
-    Sq9SvBYaIS2DJwySDk69ay3YSJzsTKSnmevDV23i: 'good-mood/man-front.webp',
-    jt693BawHnM6tbUO1N0tHmP6lRBUCwdHciekMvmK: 'good-mood/man-side.webp',
-    pRRKuvR5hwNrQEUVfQGFY8WlUzjlxeyuu2e8OESU: 'good-mood/woman-back.webp',
-    '8Ca3NNlkveoYaQqbBvC8nkvnSglCyFwbnxvOK5FH': 'good-mood/woman-front.webp',
-    rSKz3pX0VdoFq3gSHDdy1pZ0tBtaBkY9BY7uoW8A: 'good-mood/woman-side.webp',
+    DpEq7lpVP6n0Rh8qoYEh4pV3KpJ0L3hb9QCuHZFn: 'good-mood/duo-front.webp',
+    ByhZB1R2kp7t1gGIpo0Wsqb2z8chOaV10lLOTmlR: 'good-mood/man-back.webp',
+    mBNgzkobEPkSgbNNhtz2t3zYI1T7vb53X3c3bSTK: 'good-mood/man-front.webp',
+    pX7k0I8NkJ2E4gddSR2erdLD3TSRye6UX7LKCvuI: 'good-mood/man-side.webp',
+    ByqbBtW2A7pk0msJBywAyhaM4d8Bpo7l0rdMFNIP: 'good-mood/woman-back.webp',
+    '3iHmX9xu6bgyIScN9vAD891tqQAL1QtwSzFWzyb9': 'good-mood/woman-front.webp',
+    SpYdqawuqhm5s5j2DKM8kPpoPBaf5gMCHeqi7ZL5: 'good-mood/woman-side.webp',
     Rt7BOpXQSeCrEmwvLcmTbEGx5OeO5fviikxZXDfJ: 'cherry-market/duo-front.webp',
     cstSlTd3Gj4wuGBAwImPpYVUo2ESzNzwfaNACCPp: 'cherry-market/man-back.webp',
     bnY9IrMqpwARQIuOoAdEQbQr2N51KzSLx46u1ivp: 'cherry-market/man-front.webp',
