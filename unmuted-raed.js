@@ -651,7 +651,7 @@
      (cdn/photos/, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fe9fc0f99bccd4cc52509e818355bb0c0104201f/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@0eb3666e52d7afbac66a1e113a957414300d0dfd/cdn/photos/';
   var HD = {
     ZHKr1xwBcqjn4PhV2sBf7GdedXuSdHN8vUFVq3rP: 'carnival/duo-front.jpg',
     '6maPE9bIuKJHIrCi9DEi5MdzBgy4PxuZzFsx8TGE': 'carnival/man-back.jpg',
@@ -659,7 +659,14 @@
     yRK6JbRtqM2PSeKNLkKL98Gw408w4p3pTLOzOhhR: 'carnival/man-side.jpg',
     SBiJ4SI7cmXZRtMnQNVT1VNpyBRlDVxh64gCrHvs: 'carnival/woman-back.jpg',
     VGwt08zFmP0jkVT29XRkV7NETQtryGLxdTyhynqH: 'carnival/woman-front.jpg',
-    f11fWsFMDntU5hIoZSVuIupK6xSHSGlCeE6kXIWu: 'carnival/woman-side.jpg'
+    f11fWsFMDntU5hIoZSVuIupK6xSHSGlCeE6kXIWu: 'carnival/woman-side.jpg',
+    X6EEMOxK1fS6grkmFKD87qlKWCrQMBEKcUvZ9WY3: 'love-pop/duo-front.jpg',
+    J2ZjbBJL7Duf54dQEUhardorNFMuPW7xenjjb2DT: 'love-pop/man-back.jpg',
+    b8LJXJFFH917GL164vylgjVCBTfg8LC4mj5I0yR3: 'love-pop/man-front.jpg',
+    iVm95Rn3s0mXh3W2BH5rFxxgdmghdtm231zbKdFC: 'love-pop/man-side.jpg',
+    Ky3e4JYv9AOwJWe7glNm383iakE3llygqxmSYpIC: 'love-pop/woman-back.jpg',
+    IVyWu7uq8N8aZFJ5vVO1aJW3iQjIseYzW1hbKvBH: 'love-pop/woman-front.jpg',
+    xDVzwuCCPOZaw9aOqMM2O40EagU0jucSpp5lDWaW: 'love-pop/woman-side.jpg'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
