@@ -245,7 +245,8 @@
   // the tee by itself from behind ({sm,md}/alone-back.webp), which the hover shows (owner's video, 2026-11-02)
   var ALONE = { '217344331': 'caution/', '1197022782': 'unmuted-sticker/', '862344853': 'riyadh/', '1501040588': 'just-padel/',
     '1223062065': 'dates-season/', '696581406': 'desert-club/', '2123593358': 'love-pop/',
-    '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/' };
+    '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
+    '17985496': 'play-unmuted/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -707,7 +708,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@182a7574977737b7a3c81763c0b6d31faa4b4ec1/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e8ab61f4518f54eaabacd9b9a78700e23143f087/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -805,7 +806,9 @@
     ljucOdieIQuCVS4XFOxhSKxs5OlhD83iaHU59e5U: 'good-mood/alone-front.webp',
     QilZr7nhbPdtKivOSvPd53lvpbcmAFzJFudPHVoq: 'good-mood/alone-back.webp',
     WK7q7NhfalE8R6zITVaoNJE9guHVOYtKi9sdQpoT: 'cherry-market/alone-front.webp',
-    OcMNzfsn7a764zL01gcWTQm2YySO6UPfo8AUJmZa: 'cherry-market/alone-back.webp'
+    OcMNzfsn7a764zL01gcWTQm2YySO6UPfo8AUJmZa: 'cherry-market/alone-back.webp',
+    W3sIAbo3PZXrxeGuG9wm9hfrI4ncoreBspM3CuXD: 'play-unmuted/alone-front.webp',
+    x59ZQJPoqC2Au7xDtRSuVeCkiierylFIQocUeCT1: 'play-unmuted/alone-back.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -853,7 +856,7 @@
   }
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
-  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860'];
+  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
