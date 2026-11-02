@@ -237,6 +237,12 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 /* its product page: the photos are on the page colour, so the gallery frame is too (no white around a photo) */
 html.um-paper .theme-raed salla-slider.details-slider .s-slider-container,
 html.um-paper .theme-raed salla-slider.details-slider .swiper-slide { background: var(--um-paper) !important; }
+/* …and every photo there fills its 4:5 frame with no shadow, even before Salla's cached page carries the «مودل» ALTs
+   (owner 2026-11-02: Dates Season showed grey bands in the thumbnails and a shadowed frame) */
+html.um-paper .theme-raed .details-slider .magnify-wrapper { aspect-ratio: 4 / 5; height: auto !important; }
+html.um-paper .theme-raed .details-slider .magnify-wrapper img { width: 100%; height: 100% !important; padding: 0 !important; object-fit: cover !important; filter: none !important; }
+html.um-paper .theme-raed .details-slider .s-slider-thumbs-container .swiper-slide { height: auto !important; aspect-ratio: 4 / 5; }
+html.um-paper .theme-raed .details-slider .s-slider-thumbs-container img { object-fit: cover !important; background: transparent !important; }
 /* …and on a phone a finger drags through its photos */
 .um-tracks .um-tl__img.um-alone { position: relative; }
 .um-swipe { grid-area: 1 / 1; align-self: stretch; justify-self: stretch; display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
