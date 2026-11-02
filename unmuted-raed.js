@@ -788,6 +788,13 @@
   function hdThumbs() {
     $$('salla-slider.details-slider .s-slider-thumbs img').forEach(function (img) { sharpen(img, img.getAttribute('src')); });
   }
+  // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
+  // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
+  var PAPER = ['217344331'];
+  function paperPage() {
+    var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
+    document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
+  }
 
   /* a product card whose photo is one of those model photos fills its frame like the gallery does (cards don't carry
      the photo's ALT, so the file name tells), and shows our sharp copy of it and of its hover photo */
@@ -1123,7 +1130,7 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
