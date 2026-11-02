@@ -700,7 +700,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d86e9d1c2f16e4079d678078ea98afb5c3767b2c/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@cae72a34c1c9b20af13485b18d12548754a4409c/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -771,7 +771,14 @@
     QUbTQiWGcefZ7Bi9tZda5EVId4hj24x2cLWho4AH: 'desert-club/man-side.webp',
     '4Bjru3owLRDfbQfOrvLmibu8rSWXbsgb2q0Sxs1T': 'desert-club/woman-back.webp',
     '8XN2MvsFvpKNCfCul35WRJ3iskNko9eNJVoOkWq6': 'desert-club/woman-front.webp',
-    OlQF6vFW7uwzWPphLaHdlJjFCIyh4x35k93uafKK: 'desert-club/woman-side.webp'
+    OlQF6vFW7uwzWPphLaHdlJjFCIyh4x35k93uafKK: 'desert-club/woman-side.webp',
+    LNFuCXSGhxNejYdU6Sa863T55IwMkKU1HOethr5W: 'just-padel/duo-front.webp',
+    dnhEkzo1VWm1edNoqHVTxxk5qQ9tTh67wyktZ7pj: 'just-padel/man-back.webp',
+    IdJcxkIYGNtgcUxbkL2W7M94nTG9CJtdHExYFJnR: 'just-padel/man-front.webp',
+    yrGjinGAP4TQEQzAKFm0qtLlYCpSKs9cdocp7XMq: 'just-padel/man-side.webp',
+    m6e4fkIAUNt7SeVhV0lQkG8WhFnIPIJIws2PkKLE: 'just-padel/woman-back.webp',
+    zpgsq7zZWsbmx6x25JE9d9lbsfi8WKPz8MkSO5Lx: 'just-padel/woman-front.webp',
+    tphlGE25u10sE7BMO2RLBE3jzCvqidWB7CcDS4cP: 'just-padel/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -819,7 +826,7 @@
   }
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
-  var PAPER = ['217344331', '1197022782', '862344853', '1223062065', '696581406'];
+  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
