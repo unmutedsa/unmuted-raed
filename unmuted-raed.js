@@ -784,6 +784,10 @@
     near();
     box.swiper.on('slideChange', near);
   }
+  // and the thumbnails under it: our 800-wide copy of the same photo (Caution's carries the page colour, 2026-11-02)
+  function hdThumbs() {
+    $$('salla-slider.details-slider .s-slider-thumbs img').forEach(function (img) { sharpen(img, img.getAttribute('src')); });
+  }
 
   /* a product card whose photo is one of those model photos fills its frame like the gallery does (cards don't carry
      the photo's ALT, so the file name tells), and shows our sharp copy of it and of its hover photo */
@@ -1119,11 +1123,11 @@
     })();
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdThumbs(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
