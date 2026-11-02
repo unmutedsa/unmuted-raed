@@ -240,9 +240,10 @@
     if (bar) bar.setAttribute('aria-valuemax', n);
   }
   // tees this list shows by themselves (owner, 2026-11-02): the tee without its hanger on the page's own colour, its
-  // model photo on hover, and no number on the picture; the folder under PHOTOS holds {sm,md}/alone-front.webp
+  // model photo on hover, and no number on the picture; the folder under PHOTOS holds {sm,md}/alone-front.webp, which is
+  // also the product's main (first) photo in Salla, so the product page and every card open on it
   var ALONE = { '217344331': 'caution/', '1197022782': 'unmuted-sticker/', '862344853': 'riyadh/', '1501040588': 'just-padel/',
-    '1223062065': 'dates-season/', '696581406': 'desert-club/' };
+    '1223062065': 'dates-season/', '696581406': 'desert-club/', '2123593358': 'love-pop/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -260,7 +261,7 @@
       var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p)), alone = ALONE[String(p.id)];
       $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
       li.classList.toggle('um-tl--alone', !!alone);
-      if (alone && pic) aloneTrack(pic, p, PHOTOS + alone, model);
+      if (alone && pic) aloneTrack(pic, p, PHOTOS + alone, PHOTOS + alone + 'md/duo-front.webp');
       else if (model && pic) modelTrack(pic, p, model);
       else if (back && pic) {
         var img = el('img', 'um-tl__back um-face-back');
@@ -313,7 +314,8 @@
       return;
     }
     photosOf(p.id).then(function (imgs) {
-      var urls = imgs.filter(function (i) { return !HANGER.test(i.alt || ''); }).map(function (i) { return smOf(i.url); }).filter(Boolean);
+      var urls = imgs.filter(function (i) { return !HANGER.test(i.alt || ''); }).map(function (i) { return smOf(i.url); })
+        .filter(function (u) { return u && u !== dir + 'sm/alone-front.webp'; });
       if (!urls.length || $('.um-swipe', pic)) return;
       var strip = el('span', 'um-swipe'), dots = el('span', 'um-swipe__dots');
       strip.appendChild(face);
@@ -700,7 +702,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@cae72a34c1c9b20af13485b18d12548754a4409c/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8ee2b859bf1580ef260d6493610891a4e0da9428/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -778,7 +780,14 @@
     yrGjinGAP4TQEQzAKFm0qtLlYCpSKs9cdocp7XMq: 'just-padel/man-side.webp',
     m6e4fkIAUNt7SeVhV0lQkG8WhFnIPIJIws2PkKLE: 'just-padel/woman-back.webp',
     zpgsq7zZWsbmx6x25JE9d9lbsfi8WKPz8MkSO5Lx: 'just-padel/woman-front.webp',
-    tphlGE25u10sE7BMO2RLBE3jzCvqidWB7CcDS4cP: 'just-padel/woman-side.webp'
+    tphlGE25u10sE7BMO2RLBE3jzCvqidWB7CcDS4cP: 'just-padel/woman-side.webp',
+    '24b6W4LZjWCyK9vd9tGXjBWCzB4Belt78mWBTtdm': 'caution/alone-front.webp',
+    H355mLT75W49woLNz0anXmrXtd6G5iiLBOFfOnKM: 'unmuted-sticker/alone-front.webp',
+    '7DRiVLGDCJNIFcLkTiPQ39cCbO0Eh6JCu64oxwKo': 'riyadh/alone-front.webp',
+    '4IJo184jOAE73r51shmw0c3dPbt7NyIj0AFwm7LI': 'just-padel/alone-front.webp',
+    zlzihxh836goIi6NJfkarqhUpMvNRRqMygZjcrYR: 'dates-season/alone-front.webp',
+    A192EFUQ9C0IvRIiTDFNuFP98z83lU7dhvtioee4: 'desert-club/alone-front.webp',
+    aTxCGA9h4hbFVjgbd7gqaPfbZyiy0UmHjn4xMM5l: 'love-pop/alone-front.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -826,7 +835,7 @@
   }
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
-  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406'];
+  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
