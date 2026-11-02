@@ -708,7 +708,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7c8bef8aaa442eb589a098ceb4aa3ca89e7e20fb/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@393056f57d7b082e1afdd5c165a74ffa860e5f34/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -817,9 +817,9 @@
     ygua2Tt1pynUhVktVXwgaw15RrKmoDsS12vjS1dN: 'play-unmuted/alone-front.webp',
     KYMpMZrzfMqDYOwpIOIuVYDfPQBUbOt5KmBd6ksk: 'play-unmuted/alone-back.webp',
     uSRTzc2GuYHJxkQxO6KwsfquzVR6IiLjOZdoFcus: 'vending/alone-front.webp',
-    EQGcoI9pp18rFvXXpFe0g96US3D0EKszk7Io6LUg: 'vending/alone-back.webp',
-    rZ9ikK4O4LCCkbtQ6xmn5f7w3WOsh13XsK9hTYTZ: 'call-me/alone-front.webp',
-    '249b6LAPqQrmjTtbbsKfK3j1TBy8XLmHotkauszN': 'call-me/alone-back.webp',
+    Q9bRHZxe0K5hPuNxwOV20E7xXmgnyhKx1oPpfBvL: 'vending/alone-back.webp',
+    rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
+    jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
     tbOWy7dj4MOch0oBxiAYJkd7ZDZzGeucukkrQt7y: 'kashta/alone-front.webp',
     ZW7gbVLhS8MhbsjyEARQAQw0K2kkVz4cLM2WJg6K: 'kashta/alone-back.webp'
   };
