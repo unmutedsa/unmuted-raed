@@ -249,10 +249,13 @@
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
+    // new rows copy the first row as it came (the rows are changed in place below: a copy made later would bring along a
+    // tee-by-itself row's picture, swipe strip and classes)
+    var proto = rows[0].cloneNode(true);
     rows.forEach(function (li) { var b = $('.um-tl__name bdi', li); if (b) byName[b.textContent.trim().toLowerCase()] = li; });
     var out = data.items.map(function (p, i) {
       var li = byName[String(p.name).toLowerCase()], v = voiceOf(p);
-      if (!li) { li = rows[0].cloneNode(true); $('.um-tl__img img', li).src = ((photos || {})[String(p.id)] || {}).front || imageOf(p); }
+      if (!li) { li = proto.cloneNode(true); $('.um-tl__img img', li).src = ((photos || {})[String(p.id)] || {}).front || imageOf(p); }
       $('a.um-tl__row', li).setAttribute('href', p.url);
       $('.um-tl__no', li).textContent = v.vol ? pad(v.vol) : pad(i + 1);
       $('.um-tl__name bdi', li).textContent = p.name;
