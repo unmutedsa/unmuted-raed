@@ -246,7 +246,7 @@
   var ALONE = { '217344331': 'caution/', '1197022782': 'unmuted-sticker/', '862344853': 'riyadh/', '1501040588': 'just-padel/',
     '1223062065': 'dates-season/', '696581406': 'desert-club/', '2123593358': 'love-pop/',
     '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
-    '17985496': 'play-unmuted/' };
+    '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -708,79 +708,86 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e8ab61f4518f54eaabacd9b9a78700e23143f087/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d389d2fe46527334d1734024087dda6a7e0fcbf7/cdn/photos/';
   var HD = {
-    bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
     smD5wPX1MvxhwT524DkIy8GVVN1oR1F8dJZKdPNA: 'carnival/man-side.webp',
     Jmjn5BWcCljfGe9DDfbYtplgCxReLeDLMX9lc0wu: 'carnival/woman-back.webp',
     BLmv8weJ6tnpakywSYncA0lh7hUUHBnpFJVmVvcL: 'carnival/woman-front.webp',
     a1Dp54xtX72Cs0V5rgyslfAnYL9A2ZbHubHsw3hV: 'carnival/woman-side.webp',
-    AHacurnYSVN4BRt6YGSkbO4IZDabeMrnDTXnOXQ2: 'love-pop/duo-front.webp',
     iA5xCfZAKON9Ca9OSvB0lty0QN9wJ7skcWs2aaJi: 'love-pop/man-back.webp',
     vZxP63LgOzPiKbt5BbgmbsTgr5mQWKmUqO72P3hQ: 'love-pop/man-front.webp',
     BkM8osa40ySvpeeSC6u3lU228Y4ljjVYYHTvHWQw: 'love-pop/man-side.webp',
     Bu0rYUDdTIrzROmLcqywEfVxdst36cNLrkaaP6z6: 'love-pop/woman-back.webp',
     IV9fZM64ANdTYNrMPfwqvxJJJg1WsX2cb2v6Y6Ks: 'love-pop/woman-front.webp',
     UJjGi0At9A6MyfCzjwDfh7vWihSGl1So0Y2tCsb7: 'love-pop/woman-side.webp',
-    DpEq7lpVP6n0Rh8qoYEh4pV3KpJ0L3hb9QCuHZFn: 'good-mood/duo-front.webp',
     ByhZB1R2kp7t1gGIpo0Wsqb2z8chOaV10lLOTmlR: 'good-mood/man-back.webp',
     mBNgzkobEPkSgbNNhtz2t3zYI1T7vb53X3c3bSTK: 'good-mood/man-front.webp',
     pX7k0I8NkJ2E4gddSR2erdLD3TSRye6UX7LKCvuI: 'good-mood/man-side.webp',
     ByqbBtW2A7pk0msJBywAyhaM4d8Bpo7l0rdMFNIP: 'good-mood/woman-back.webp',
     '3iHmX9xu6bgyIScN9vAD891tqQAL1QtwSzFWzyb9': 'good-mood/woman-front.webp',
     SpYdqawuqhm5s5j2DKM8kPpoPBaf5gMCHeqi7ZL5: 'good-mood/woman-side.webp',
-    Rt7BOpXQSeCrEmwvLcmTbEGx5OeO5fviikxZXDfJ: 'cherry-market/duo-front.webp',
     cstSlTd3Gj4wuGBAwImPpYVUo2ESzNzwfaNACCPp: 'cherry-market/man-back.webp',
     bnY9IrMqpwARQIuOoAdEQbQr2N51KzSLx46u1ivp: 'cherry-market/man-front.webp',
     JCeN1DTEs8ouob5hwBbdNMaa6va0JeRnpe9Kx1Fi: 'cherry-market/man-side.webp',
     USL8zoThjCPjKybpMmbS3a0p3ncDOQWCry0bARpr: 'cherry-market/woman-back.webp',
     yP55M6ypcIFJw9QPjKMbz0EaruV3XIpl6I7cFRMk: 'cherry-market/woman-front.webp',
     K4YZZ0m1LfH9hcufIm2PBtT9I32eAHFLiOyoNaBB: 'cherry-market/woman-side.webp',
-    s1RngmvTuUOKUMu7YkQ1K9rmqqInfymur7JBPxP4: 'caution/duo-front.webp',
     Arkb8Uu3OdyD5D1MOKCG0L1O1mmoekwjm8MLQF6M: 'caution/man-back.webp',
     sYnxcMJE9XlsVJYG0jSMUVnZGgyV5w8rpSmeXAcE: 'caution/man-front.webp',
     llQZWWgb73X47wA8XnxzAFwTfUqY8Qm5De8NjyyB: 'caution/man-side.webp',
     hzCKTuXGKWyrcZJo7jOjk4ZyLH4kl1iymMoj383y: 'caution/woman-back.webp',
     ufzjzwvi5KTxq9A2x0urBeNLzpLF6xaDIO7MPPjj: 'caution/woman-front.webp',
     WyDrT4zNinloFDSAzNXXXrRUi6LgSroW4lNvd1Es: 'caution/woman-side.webp',
-    NH7SfiCvfkswjYnVhFrCIJQb5T1lYmoL0QRThDi0: 'play-unmuted/duo-front.webp',
     '6pgJ2tDxrLYRPSnjYkBU3smxoRdwBMiqdEuSrmqs': 'play-unmuted/man-back.webp',
     rtdSBUtx7AeK22If2RLe9LgJRG43lxQzEUGYmqm5: 'play-unmuted/man-front.webp',
     V9n4VlOyPcGnY0WkBlnjk2C2LQ9AYlfQQ9mUrGHW: 'play-unmuted/man-side.webp',
     HjIxMZqOBaQkPq9ch6xCi2S7nLBpxVYXaxOS5RCG: 'play-unmuted/woman-back.webp',
     NGlg8TsAh4W7ZfinnPwKyDVbfgxZqhZ9h0BtU1XO: 'play-unmuted/woman-front.webp',
     AX1CZt0G4t1cJ9KUqhOzuQ9IP7Yi87yNXHxaEBSf: 'play-unmuted/woman-side.webp',
-    TwvccQRQAmtfu2SiqkmjmJ29JTYNCijIXm9nIfJX: 'unmuted-sticker/duo-front.webp',
+    '3w0uC4YwZBNnDHU3Gh39Yb8g6kVdt7MF2gX9TFgD': 'vending/man-back.webp',
+    QReF88U2eVej0UMPgcLpKs3aYklH9sRq2DgDk4XA: 'vending/man-front.webp',
+    j3I83fv6fXWDPFzl8iBOcitC2fTtFO0Ts39gGyWS: 'vending/man-side.webp',
+    Xdgxz9LzuzC0DDXvmTThhQ0eXLRJ2D0mS0QOjn02: 'vending/woman-back.webp',
+    N7SSbRtVMtf2Vj9d5b7jH24Ai2omswsKuUQJrZew: 'vending/woman-front.webp',
+    X0Y63bSz88Cha8e90GzmdXZgtWfvG4Cm5aKwckxZ: 'vending/woman-side.webp',
+    '0mHsiNaxfp3SAO61Ty35MHy4wLcvhURZscCHB0Gb': 'call-me/man-back.webp',
+    '6KGfT4nhFgjbjCvyNsQhn1ZMCjfoiEB9nU8v8Ic6': 'call-me/man-front.webp',
+    '3XI68GY7KqJXCUmsw9eOvlQfJNlQb8kxKgmNhgBW': 'call-me/man-side.webp',
+    htVip9wTpzTdD0Ky4fRX1BFLVaYWeN5WCiPb9Kvs: 'call-me/woman-back.webp',
+    SC9lADMT2f1QUc3q6gbxjo8oPKFmDnUxg6uOY2cA: 'call-me/woman-front.webp',
+    UqlgDBwCZUqyb6USFGAy2ZEiFm7QCQXNUrZMTmZb: 'call-me/woman-side.webp',
+    W0IiirBvpTsM1PNM8VxqXqzjEmvqbuktkeaF0ofd: 'kashta/man-back.webp',
+    q9GBmknGaBLIv8NpunXQQbYik2RSr5BZKoJHQEPN: 'kashta/man-front.webp',
+    '6jYI4I2rbxlSd57KPBoJRdMD7eJgzjH3B5ld4saJ': 'kashta/man-side.webp',
+    dj5DooBsDfOMdbIvIsVaR8QS8wEsn8xvmxvWhKVW: 'kashta/woman-back.webp',
+    sP9CiDfNugeakxLSKXloHKhcLAJQ9ohZkicrK3sa: 'kashta/woman-front.webp',
+    dpSWAyYYCYADpLLvFi8V4vPYdbxfDOUgtuAbSRg8: 'kashta/woman-side.webp',
     ydNcdgim5f5l02lH7a0ocOyp22LevKSTKpWLlZJm: 'unmuted-sticker/man-back.webp',
     '16etEZ7BIDyi5zVcVWaLwNvIWRNP8ItU6CmagbmJ': 'unmuted-sticker/man-front.webp',
     vyG1fatbBuooEFrczJ8mJur6DWQ1rOrSZsBhcG63: 'unmuted-sticker/man-side.webp',
     x968MfZB6OUVQFcRpx6yqKC0rYo9At8Jyg5Cgph0: 'unmuted-sticker/woman-back.webp',
     UcfiNy5AGseFstr3NMqxeaMr3zk4TOGW04Ffh0L2: 'unmuted-sticker/woman-front.webp',
     Ab2luijL2AFrl0rkFF8nOwtKZoXrEfGqJNBo2sos: 'unmuted-sticker/woman-side.webp',
-    QIw6rm2ykenRuzQbBE2aRo0WDoUFE4NxRpjcyuML: 'riyadh/duo-front.webp',
     jFp0RhU5xsVimOAFvo3keymD8rjtCycVi3rzmSJq: 'riyadh/man-back.webp',
     qVO4wP7nyodaxiBwHc5CQ7yIWEnvhYDmduzGvYIB: 'riyadh/man-front.webp',
     dlyO3AseGpmbrGDsWcWrS5n82OyrwYJdSJcGR5CB: 'riyadh/man-side.webp',
     O1elPhV54tqUjnbdzN0CE8ys8b3aJxWUKXF2JJEX: 'riyadh/woman-back.webp',
     nhJmJnsSgHutKzAHO1r2kI5i7RbdlZ4EDcgq2Yda: 'riyadh/woman-front.webp',
     lxmVanX96aa70bF15fahHhrwv6dhB68w26sF8lZR: 'riyadh/woman-side.webp',
-    UEN4oruJA5bAMndxU51S2fL38r2rOBhIZOZh0TKC: 'dates-season/duo-front.webp',
     IhkrWY4t0E90rzJxfGg3uCq69JMP9iElsdA84dEq: 'dates-season/man-back.webp',
     '8bofH7shScnmedv74dkLyHhQDDYC0GOLKBk3KfVQ': 'dates-season/man-front.webp',
     '3hn6AejzILJm3jeMo7q4D8RkUd7bMTNv7nzX0Xai': 'dates-season/man-side.webp',
     WQbZlns9FMJn2EgGQ6yqC6h4ocCC8Hq5aDofcbgR: 'dates-season/woman-back.webp',
     I1PQBUWvbRh4xkaZyNufpsfmBO8WYHVqL3ovV3hV: 'dates-season/woman-front.webp',
     SjeE40oPr1Oy4O2T9oozLMPjZV6vtpg2UClCSQua: 'dates-season/woman-side.webp',
-    koH3zKWVGv98KlQ2oaUUVflVtPxXHpC7MRANGBTB: 'desert-club/duo-front.webp',
     cjZBtOn8qF4rbKz4pJO2xcnaFbHzCmQaxcRyEHDw: 'desert-club/man-back.webp',
     qyvhrIZj4EZZLfsaz6cmnIirlcuz7ozug6YgbO6a: 'desert-club/man-front.webp',
     QUbTQiWGcefZ7Bi9tZda5EVId4hj24x2cLWho4AH: 'desert-club/man-side.webp',
     '4Bjru3owLRDfbQfOrvLmibu8rSWXbsgb2q0Sxs1T': 'desert-club/woman-back.webp',
     '8XN2MvsFvpKNCfCul35WRJ3iskNko9eNJVoOkWq6': 'desert-club/woman-front.webp',
     OlQF6vFW7uwzWPphLaHdlJjFCIyh4x35k93uafKK: 'desert-club/woman-side.webp',
-    LNFuCXSGhxNejYdU6Sa863T55IwMkKU1HOethr5W: 'just-padel/duo-front.webp',
     dnhEkzo1VWm1edNoqHVTxxk5qQ9tTh67wyktZ7pj: 'just-padel/man-back.webp',
     IdJcxkIYGNtgcUxbkL2W7M94nTG9CJtdHExYFJnR: 'just-padel/man-front.webp',
     yrGjinGAP4TQEQzAKFm0qtLlYCpSKs9cdocp7XMq: 'just-padel/man-side.webp',
@@ -807,8 +814,14 @@
     QilZr7nhbPdtKivOSvPd53lvpbcmAFzJFudPHVoq: 'good-mood/alone-back.webp',
     WK7q7NhfalE8R6zITVaoNJE9guHVOYtKi9sdQpoT: 'cherry-market/alone-front.webp',
     OcMNzfsn7a764zL01gcWTQm2YySO6UPfo8AUJmZa: 'cherry-market/alone-back.webp',
-    W3sIAbo3PZXrxeGuG9wm9hfrI4ncoreBspM3CuXD: 'play-unmuted/alone-front.webp',
-    x59ZQJPoqC2Au7xDtRSuVeCkiierylFIQocUeCT1: 'play-unmuted/alone-back.webp'
+    bbL2BjAumVGMKMcWxHyKR5G1SdC84swzdyQBJ7mB: 'play-unmuted/alone-front.webp',
+    bVxau6ei4ZAGz6755PcJZH6nYHIDqTR2O1dzX2o5: 'play-unmuted/alone-back.webp',
+    iFEyMZgZjduw493ZE3k9vKwgWitEI3qY3Kq1w57L: 'vending/alone-front.webp',
+    EQGcoI9pp18rFvXXpFe0g96US3D0EKszk7Io6LUg: 'vending/alone-back.webp',
+    rZ9ikK4O4LCCkbtQ6xmn5f7w3WOsh13XsK9hTYTZ: 'call-me/alone-front.webp',
+    '249b6LAPqQrmjTtbbsKfK3j1TBy8XLmHotkauszN': 'call-me/alone-back.webp',
+    tbOWy7dj4MOch0oBxiAYJkd7ZDZzGeucukkrQt7y: 'kashta/alone-front.webp',
+    ZW7gbVLhS8MhbsjyEARQAQw0K2kkVz4cLM2WJg6K: 'kashta/alone-back.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -856,7 +869,8 @@
   }
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
-  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496'];
+  var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496',
+    '226109447', '1987585855', '157439951'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
