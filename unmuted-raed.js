@@ -708,7 +708,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d389d2fe46527334d1734024087dda6a7e0fcbf7/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7c8bef8aaa442eb589a098ceb4aa3ca89e7e20fb/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -808,15 +808,15 @@
     NUJGang5rC2H9LYbyUHP59S45fSvXhWKghFnxAVy: 'just-padel/alone-back.webp',
     PsnBh7Eg0XVtZSwLpxTCZoqMy8GP4iuDRfC0Xodv: 'love-pop/alone-front.webp',
     qlJEBRmEKYR7iOWZ1SDpRt0g4xFL0i4yWSL5ClZb: 'love-pop/alone-back.webp',
-    LR1IaBvjifO5S8ejD6bJoZro1csVLQ6ZtmFKfmi7: 'carnival/alone-front.webp',
+    VGfYngwaE3iFwOSuiskVxOtqkIkGYVId3IiDmFck: 'carnival/alone-front.webp',
     uXqwvlSHMp3TYUDIFazB62PnaoIUWXOocw5L7vhK: 'carnival/alone-back.webp',
     ljucOdieIQuCVS4XFOxhSKxs5OlhD83iaHU59e5U: 'good-mood/alone-front.webp',
     QilZr7nhbPdtKivOSvPd53lvpbcmAFzJFudPHVoq: 'good-mood/alone-back.webp',
     WK7q7NhfalE8R6zITVaoNJE9guHVOYtKi9sdQpoT: 'cherry-market/alone-front.webp',
     OcMNzfsn7a764zL01gcWTQm2YySO6UPfo8AUJmZa: 'cherry-market/alone-back.webp',
-    bbL2BjAumVGMKMcWxHyKR5G1SdC84swzdyQBJ7mB: 'play-unmuted/alone-front.webp',
-    bVxau6ei4ZAGz6755PcJZH6nYHIDqTR2O1dzX2o5: 'play-unmuted/alone-back.webp',
-    iFEyMZgZjduw493ZE3k9vKwgWitEI3qY3Kq1w57L: 'vending/alone-front.webp',
+    ygua2Tt1pynUhVktVXwgaw15RrKmoDsS12vjS1dN: 'play-unmuted/alone-front.webp',
+    KYMpMZrzfMqDYOwpIOIuVYDfPQBUbOt5KmBd6ksk: 'play-unmuted/alone-back.webp',
+    uSRTzc2GuYHJxkQxO6KwsfquzVR6IiLjOZdoFcus: 'vending/alone-front.webp',
     EQGcoI9pp18rFvXXpFe0g96US3D0EKszk7Io6LUg: 'vending/alone-back.webp',
     rZ9ikK4O4LCCkbtQ6xmn5f7w3WOsh13XsK9hTYTZ: 'call-me/alone-front.webp',
     '249b6LAPqQrmjTtbbsKfK3j1TBy8XLmHotkauszN': 'call-me/alone-back.webp',
