@@ -651,7 +651,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@594c3714780fc85faa3cb8ab2d74ec6d049ddc9e/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f0a0b2d31014cfe7a44be65e7501bb0c0d5cbe59/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -689,12 +689,12 @@
     ufzjzwvi5KTxq9A2x0urBeNLzpLF6xaDIO7MPPjj: 'caution/woman-front.webp',
     WyDrT4zNinloFDSAzNXXXrRUi6LgSroW4lNvd1Es: 'caution/woman-side.webp',
     NH7SfiCvfkswjYnVhFrCIJQb5T1lYmoL0QRThDi0: 'play-unmuted/duo-front.webp',
-    ZgWHTb7La6onY8yKTvc2FjGKFZbN1D523MbZzPWq: 'play-unmuted/man-back.webp',
-    YxEic5BF8SyaAFCrwlWc39AxBxdNLOOPYFAPk5y5: 'play-unmuted/man-front.webp',
-    C0WHAUuIM0ERwEYMrsbbZ2UrOjNLuzfIHunYUzHO: 'play-unmuted/man-side.webp',
-    '5hdGAQgNzvmf4EXrGHyOEe02vlqg7joHQQJEojX0': 'play-unmuted/woman-back.webp',
-    IvjVHPcfEcA2uuKBbCvzc3HQcKDfuLpFJAMXRLRr: 'play-unmuted/woman-front.webp',
-    ZRGJ298IebDSMoemo64qxkzcu81uManHnzHbu3sd: 'play-unmuted/woman-side.webp'
+    '6pgJ2tDxrLYRPSnjYkBU3smxoRdwBMiqdEuSrmqs': 'play-unmuted/man-back.webp',
+    rtdSBUtx7AeK22If2RLe9LgJRG43lxQzEUGYmqm5: 'play-unmuted/man-front.webp',
+    V9n4VlOyPcGnY0WkBlnjk2C2LQ9AYlfQQ9mUrGHW: 'play-unmuted/man-side.webp',
+    HjIxMZqOBaQkPq9ch6xCi2S7nLBpxVYXaxOS5RCG: 'play-unmuted/woman-back.webp',
+    NGlg8TsAh4W7ZfinnPwKyDVbfgxZqhZ9h0BtU1XO: 'play-unmuted/woman-front.webp',
+    AX1CZt0G4t1cJ9KUqhOzuQ9IP7Yi87yNXHxaEBSf: 'play-unmuted/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
