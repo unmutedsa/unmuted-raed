@@ -1,4 +1,4 @@
-/* UNMUTED on Salla's free theme Raed (theme copy «UNMUTED على رائد», editor → تخصيص متقدم → CSS).
+/* UNMUTED on Salla's free theme Raed (theme copy \0000ABUNMUTED \000639\000644\000649 \000631\000627\000626\00062F\0000BB, editor \002192 \00062A\00062E\000635\00064A\000635 \000645\00062A\000642\00062F\000645 \002192 CSS).
    The look of the UNMUTED store (UNMUTED-Store/) on Raed's own markup: cream page, ink lines, orange pill buttons,
    Alexandria + Bricolage Grotesque, tees on the wall colour. unmuted-raed.js adds what CSS can't (size tiles, the
    VOL / voice block, folds, front / back switch, card voices, list title, info cards, footer line). build.py puts the logo in as a data URI (the LOGO placeholder). */
@@ -47,7 +47,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-form-control, .theme-raed .form-input { border-radius: 14px; border-color: rgba(16, 16, 16, .3); background: #fff; }
 .theme-raed .s-form-control:focus, .theme-raed .form-input:focus { border-color: var(--um-ink); box-shadow: 0 0 0 3px rgba(42, 172, 226, .35); }
 
-/* ---------- header: cream bar, logo, menu in the middle, «السلة» pill ---------- */
+/* ---------- header: cream bar, logo, menu in the middle, \0000AB\000627\000644\000633\000644\000629\0000BB pill ---------- */
 .theme-raed .store-header .top-navbar { display: none; }
 .theme-raed #mainnav, .theme-raed #mainnav .inner { background: var(--um-paper) !important; box-shadow: none !important; }
 .theme-raed #mainnav { border-bottom: 2px solid var(--um-ink); }
@@ -61,7 +61,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed salla-cart-summary .s-cart-summary-wrapper { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border: 2px solid var(--um-ink); border-radius: 999px; background: transparent; }
 .theme-raed salla-cart-summary .s-cart-summary-count { position: static; display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--um-ink); color: var(--um-paper); font: 800 12px/1 var(--um-latin); }
 .theme-raed salla-cart-summary .s-cart-summary-content { display: none; }
-.theme-raed salla-cart-summary .s-cart-summary-wrapper::after { content: 'السلة'; font-weight: 800; font-size: 15px; }
+.theme-raed salla-cart-summary .s-cart-summary-wrapper::after { content: '\000627\000644\000633\000644\000629'; font-weight: 800; font-size: 15px; }
 .theme-raed .um-hsearch { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: none; color: var(--um-ink); font-size: 20px; cursor: pointer; }
 /* phones: the bag pill shows the icon and count only, so the header fits */
 @media (max-width: 639px) {
@@ -112,10 +112,10 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .s-product-card-content-title:has(+ .um-cvoice) { margin-bottom: 0; }
 .um-cvoice { margin: 4px 0 8px; font-size: 14px; font-weight: 600; line-height: 1.5; color: var(--um-soft); }
 
-/* ---------- product lists (the albums, «اختر صوتك», VOLUME 01): the name as a poster title, the sort as a pill ---------- */
+/* ---------- product lists (the albums, \0000AB\000627\00062E\00062A\000631 \000635\000648\00062A\000643\0000BB, VOLUME 01): the name as a poster title, the sort as a pill ---------- */
 .theme-raed .um-plp-old { display: none !important; }
 /* the line under the title sets the size: one line on every screen, and the title is exactly as wide (in Alexandria the
-   line is 4.21× as wide as «VOLUME 01» per pixel of type) */
+   line is 4.21\0000D7 as wide as \0000ABVOLUME 01\0000BB per pixel of type) */
 .um-plp-head { --um-sub: min(clamp(16px, 1.5vw, 19px), calc((100vw - 20px) / 24.6)); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 32px; margin: 0 0 clamp(24px, 3vw, 40px); padding-bottom: clamp(20px, 2.6vw, 30px); border-bottom: 2px solid var(--um-ink); }
 .um-plp-name { display: contents; }
 .um-plp-title {
@@ -134,7 +134,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
   background-color: var(--um-paper) !important; color: var(--um-ink); font-weight: 700; font-size: 15px; box-shadow: none; cursor: pointer;
 }
 .theme-raed .um-plp-sort select#product-filter:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
-/* «عرض المزيد»: a paper pill under the grid */
+/* \0000AB\000639\000631\000636 \000627\000644\000645\000632\00064A\00062F\0000BB: a paper pill under the grid */
 .theme-raed .s-infinite-scroll-wrapper { display: flex; justify-content: center; margin-top: clamp(28px, 4vw, 48px); }
 .theme-raed .s-infinite-scroll-btn {
   min-width: 220px; min-height: 52px; padding: 0 28px; border: 2.5px solid var(--um-ink) !important; border-radius: 999px !important;
@@ -209,9 +209,9 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 }
 /* the rail is for looking (unmuted-raed.js takes the links off): the tees just hang and swing */
 .um-home .um-rls__swing { cursor: inherit; }
-/* the rail moves by dragging it (mouse or finger) and by its 01 —●— 17 bar: no arrow buttons */
+/* the rail moves by dragging it (mouse or finger) and by its 01 \002014\0025CF\002014 17 bar: no arrow buttons */
 .um-home .um-rls__nav { display: none !important; }
-/* a promise whose icon (picked in «مميزات المتجر») isn't one of the drawn ones shows Salla's own icon */
+/* a promise whose icon (picked in \0000AB\000645\000645\00064A\000632\000627\00062A \000627\000644\000645\00062A\00062C\000631\0000BB) isn't one of the drawn ones shows Salla's own icon */
 .um-promises .um-box__ic i { font-size: 22px; line-height: 1; }
 
 /* ---------- product page ---------- */
@@ -220,12 +220,12 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .theme-raed .details-slider .magnify-wrapper img { object-fit: contain !important; padding: 6% 6% 2%; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .25)); }
 .theme-raed .details-slider { border-radius: 0 !important; }
 .theme-raed .slide--one-fourth img { background: var(--um-wall) !important; object-fit: contain !important; border-radius: 10px; }
-/* model photos (the photo's ALT has «مودل»: Salla → product → photo → Alt): each one is a 4:5 frame the photo fills, in
+/* model photos (the photo's ALT has \0000AB\000645\000648\00062F\000644\0000BB: Salla \002192 product \002192 photo \002192 Alt): each one is a 4:5 frame the photo fills, in
    the gallery and the thumbnails, with no wall colour, padding or shadow around it */
-.theme-raed .details-slider .magnify-wrapper:has(img[alt*="مودل"]) { aspect-ratio: 4 / 5; height: auto !important; background: transparent; }
-.theme-raed .details-slider .magnify-wrapper img[alt*="مودل"] { width: 100%; height: 100% !important; padding: 0 !important; object-fit: cover !important; filter: none !important; }
-.theme-raed .details-slider .s-slider-thumbs-container .swiper-slide:has(img[alt*="مودل"]) { height: auto !important; aspect-ratio: 4 / 5; background: transparent; }
-.theme-raed .details-slider .s-slider-thumbs-container img[alt*="مودل"] { object-fit: cover !important; background: transparent !important; }
+.theme-raed .details-slider .magnify-wrapper:has(img[alt*="\000645\000648\00062F\000644"]) { aspect-ratio: 4 / 5; height: auto !important; background: transparent; }
+.theme-raed .details-slider .magnify-wrapper img[alt*="\000645\000648\00062F\000644"] { width: 100%; height: 100% !important; padding: 0 !important; object-fit: cover !important; filter: none !important; }
+.theme-raed .details-slider .s-slider-thumbs-container .swiper-slide:has(img[alt*="\000645\000648\00062F\000644"]) { height: auto !important; aspect-ratio: 4 / 5; background: transparent; }
+.theme-raed .details-slider .s-slider-thumbs-container img[alt*="\000645\000648\00062F\000644"] { object-fit: cover !important; background: transparent !important; }
 .theme-raed .s-product-card-image.um-model { background: transparent !important; }
 .theme-raed .s-product-card-image.um-model img { object-fit: cover !important; padding: 0; filter: none; }
 .um-tracks .um-tl__img.um-model { background: transparent; }
@@ -237,13 +237,13 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 /* its product page: the photos are on the page colour, so the gallery frame is too (no white around a photo) */
 html.um-paper .theme-raed salla-slider.details-slider .s-slider-container,
 html.um-paper .theme-raed salla-slider.details-slider .swiper-slide { background: var(--um-paper) !important; }
-/* …and every photo there fills its 4:5 frame with no shadow, even before Salla's cached page carries the «مودل» ALTs
+/* \002026and every photo there fills its 4:5 frame with no shadow, even before Salla's cached page carries the \0000AB\000645\000648\00062F\000644\0000BB ALTs
    (owner 2026-11-02: Dates Season showed grey bands in the thumbnails and a shadowed frame) */
 html.um-paper .theme-raed .details-slider .magnify-wrapper { aspect-ratio: 4 / 5; height: auto !important; }
 html.um-paper .theme-raed .details-slider .magnify-wrapper img { width: 100%; height: 100% !important; padding: 0 !important; object-fit: cover !important; filter: none !important; }
 html.um-paper .theme-raed .details-slider .s-slider-thumbs-container .swiper-slide { height: auto !important; aspect-ratio: 4 / 5; }
 html.um-paper .theme-raed .details-slider .s-slider-thumbs-container img { object-fit: cover !important; background: transparent !important; }
-/* …and on a phone a finger drags through its photos */
+/* \002026and on a phone a finger drags through its photos */
 .um-tracks .um-tl__img.um-alone { position: relative; }
 .um-swipe { grid-area: 1 / 1; align-self: stretch; justify-self: stretch; display: flex; width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
 .um-swipe::-webkit-scrollbar { display: none; }
@@ -259,7 +259,7 @@ html.um-paper .theme-raed .details-slider .s-slider-thumbs-container img { objec
 .um-pcolour { display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; font-size: 15px; }
 .um-pcolour i { width: 40px; height: 40px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px var(--um-paper), 0 0 0 5px var(--um-ink); margin-inline: 4px; }
 .theme-raed [data-testid="store-product-price"] p, .theme-raed [data-testid="store-product-price"] .font-bold { font-size: 24px !important; font-weight: 800 !important; color: var(--um-ink) !important; }
-/* the description becomes the name block + «عن هذا الصوت» (unmuted-raed.js) */
+/* the description becomes the name block + \0000AB\000639\000646 \000647\000630\000627 \000627\000644\000635\000648\00062A\0000BB (unmuted-raed.js) */
 .theme-raed .um-pdesc-done { display: none !important; }
 /* the separate price row and the quantity row: the store has neither (the price shows under the name) */
 .theme-raed .product-form > section.flex.p-5:has(.price-wrapper) { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
@@ -301,7 +301,7 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-folds summary { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; font-weight: 700; list-style: none; cursor: pointer; }
 .um-folds summary::-webkit-details-marker { display: none; }
 .um-folds summary::after { content: '+'; font: 700 22px/1 var(--um-latin); }
-.um-folds details[open] summary::after { content: '−'; }
+.um-folds details[open] summary::after { content: '\002212'; }
 .um-folds .um-fbody { display: grid; gap: 10px; padding: 0 0 18px; color: var(--um-soft); line-height: 1.7; }
 .um-folds .um-fbody p { margin: 0; }
 .um-folds .um-fbody a { color: var(--um-ink); text-decoration: underline; text-underline-offset: 3px; }
@@ -310,7 +310,7 @@ body.um-docked { padding-bottom: calc(var(--um-dock-h, 72px) + 12px) !important;
 .um-chart th { color: var(--um-ink); font-weight: 700; }
 .um-share { margin-top: 14px; padding: 6px 0; border: 0; background: none; color: var(--um-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 
-/* ---------- «مساعد المقاس» (unmuted-raed.js fitHelper): a sheet from the bottom on phones, a card on computers ---------- */
+/* ---------- \0000AB\000645\000633\000627\000639\00062F \000627\000644\000645\000642\000627\000633\0000BB (unmuted-raed.js fitHelper): a sheet from the bottom on phones, a card on computers ---------- */
 .um-fit-open, .um-fit-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 4px 0; border: 0; background: none; color: var(--um-ink); font: 600 14px/1.4 var(--um-font); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .um-fit-open svg { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linejoin: round; }
 .um-fit-link { margin-top: 2px; }
@@ -387,7 +387,7 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .um-fit button:focus-visible, .um-fit input:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .theme-raed salla-social-share, .theme-raed .main-content .btn--wishlist { display: none !important; }
 .theme-raed .s-comments, .theme-raed .s-comments-product { background: transparent !important; }
-/* Salla's own «منتجات مشابهة» block under the product: the page keeps «منتجات قد تعجبك» only */
+/* Salla's own \0000AB\000645\000646\00062A\00062C\000627\00062A \000645\000634\000627\000628\000647\000629\0000BB block under the product: the page keeps \0000AB\000645\000646\00062A\00062C\000627\00062A \000642\00062F \00062A\000639\00062C\000628\000643\0000BB only */
 .theme-raed .s-block--bundle-similar-products { display: none !important; }
 /* an empty reviews box (no reviews yet, no form) takes no space (unmuted-raed.js) */
 .theme-raed salla-comments.um-empty { display: none !important; }
@@ -401,7 +401,7 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .theme-raed .cart-item > span.absolute { top: auto !important; bottom: 14px; }
 .theme-raed .cart-item .btn--delete .s-button-element { width: auto; height: auto; padding: 4px 0; border: 0; background: none !important; color: var(--um-soft) !important; }
 .theme-raed .cart-item .btn--delete .s-button-text i { display: none; }
-.theme-raed .cart-item .btn--delete .s-button-text::after { content: 'احذف'; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+.theme-raed .cart-item .btn--delete .s-button-text::after { content: '\000627\00062D\000630\000641'; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
 .um-cmeta { margin: 2px 0 0; font-size: 13px; color: var(--um-soft); }
 .theme-raed .um-copts-done { display: none !important; }
 .theme-raed salla-quantity-input .s-quantity-input-container { width: max-content; border: 1.5px solid var(--um-ink) !important; border-radius: 999px !important; background: transparent; overflow: hidden; }
@@ -474,7 +474,7 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .theme-raed .um-info-btn:active { transform: translate(2px, 3px); box-shadow: none; }
 .theme-raed .um-info salla-comments:empty { display: none; }
 
-/* ---------- footer: cream, «Wear your voice.» (unmuted-raed.js), plain links ---------- */
+/* ---------- footer: cream, \0000ABWear your voice.\0000BB (unmuted-raed.js), plain links ---------- */
 .theme-raed .store-footer, .theme-raed .store-footer__inner { background: var(--um-paper) !important; color: var(--um-ink) !important; }
 .theme-raed .store-footer { border-top: 2px solid var(--um-ink); }
 .theme-raed .store-footer h3 { color: var(--um-ink); font-weight: 800; }
