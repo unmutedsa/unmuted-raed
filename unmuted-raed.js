@@ -485,6 +485,8 @@
         var back = el('img', 'um-cback um-face-back');
         back.alt = '';
         back.src = other.url;
+        back.setAttribute('data-um-url', other.url);
+        sharpen(back, other.url);
         front.classList.add('um-face');
         front.parentNode.appendChild(back);
         pic.classList.add('um-turn');
@@ -651,7 +653,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f0a0b2d31014cfe7a44be65e7501bb0c0d5cbe59/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@2654f46544b1b2becdb400a9967b1b51312689b6/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -702,6 +704,15 @@
   };
   // the same photo at 1600x2000 (cdn/photos/<tee>/md/, WebP), sharp enough for a card and light enough for the home page
   var mdOf = function (url) { var hd = hdOf(url); return hd ? hd.replace(/([^/]+)$/, 'md/$1') : ''; };
+  // and at 800x1000 (cdn/photos/<tee>/sm/) for the product cards: Salla's own copy there is 400x500, soft on phones
+  var smOf = function (url) { var hd = hdOf(url); return hd ? hd.replace(/([^/]+)$/, 'sm/$1') : ''; };
+  var sharpen = function (img, url) {   // a card photo from our copies: 800 wide, 1600 on sharper screens
+    var sm = smOf(url);
+    if (!img || !sm || img.getAttribute('src') === sm) return;
+    img.setAttribute('srcset', sm + ' 800w, ' + mdOf(url) + ' 1600w');
+    img.setAttribute('sizes', Math.max(160, Math.round(img.getBoundingClientRect().width || 300)) + 'px');
+    img.setAttribute('src', sm);
+  };
   function hdPhotos() {
     var box = $('salla-slider.details-slider .s-slider-container');
     if (!box || !box.swiper || box.hasAttribute('data-um-hd')) return;
@@ -711,24 +722,33 @@
     if (swapped && typeof window.refreshFsLightbox === 'function') window.refreshFsLightbox();
     var upgrade = function (k) {
       var slide = $$('.swiper-wrapper > .swiper-slide', box)[k];   // looked up each time: hangers() may drop slides
-      var img = slide && $('img', slide), hd = img && !img.hasAttribute('data-um-hd') && hdOf(img.getAttribute('src'));
+      var img = slide && $('img', slide), hd = img && !img.hasAttribute('data-um-hd') && hdOf(img.getAttribute('data-um-orig') || img.getAttribute('src'));
       if (!hd) return;
       img.setAttribute('data-um-hd', '');
       var pre = new Image();
       pre.onload = function () { img.src = hd; };
       pre.src = hd;
     };
+    // every slide starts from our 1600-wide copy (Salla's is 800); the one in view and its neighbours get the 4K
+    $$('.swiper-wrapper > .swiper-slide img', box).forEach(function (img) {
+      var src = img.getAttribute('src'), md = mdOf(src);
+      if (md && !img.hasAttribute('data-um-orig')) { img.setAttribute('data-um-orig', src); img.src = md; }
+    });
     var near = function () { var k = box.swiper.activeIndex; upgrade(k); upgrade(k + 1); upgrade(k - 1); };
     near();
     box.swiper.on('slideChange', near);
   }
 
   /* a product card whose photo is one of those model photos fills its frame like the gallery does (cards don't carry
-     the photo's ALT, so the file name tells) */
+     the photo's ALT, so the file name tells), and shows our sharp copy of it and of its hover photo */
   function modelCards() {
     $$('custom-salla-product-card').forEach(function (c) {
       var box = $('.s-product-card-image', c);
-      if (box && c.product && c.product.image && hdOf(c.product.image.url)) box.classList.add('um-model');
+      if (!box || !c.product || !c.product.image || !hdOf(c.product.image.url)) return;
+      box.classList.add('um-model');
+      sharpen($('a img:not(.um-cback)', box), c.product.image.url);
+      var back = $('img.um-cback', box);
+      if (back && back.getAttribute('data-um-url')) sharpen(back, back.getAttribute('data-um-url'));
     });
   }
 
