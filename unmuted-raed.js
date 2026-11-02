@@ -241,7 +241,8 @@
   }
   // tees this list shows by themselves (owner, 2026-11-02): the tee without its hanger on the page's own colour, its
   // model photo on hover, and no number on the picture; the folder under PHOTOS holds {sm,md}/alone-front.webp
-  var ALONE = { '217344331': 'caution/' };
+  var ALONE = { '217344331': 'caution/', '1197022782': 'unmuted-sticker/', '862344853': 'riyadh/', '1501040588': 'just-padel/',
+    '1223062065': 'dates-season/', '696581406': 'desert-club/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -699,7 +700,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@1bf20e728a8984aa2658c377b8ca774ec3c941f5/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d86e9d1c2f16e4079d678078ea98afb5c3767b2c/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
@@ -742,7 +743,35 @@
     V9n4VlOyPcGnY0WkBlnjk2C2LQ9AYlfQQ9mUrGHW: 'play-unmuted/man-side.webp',
     HjIxMZqOBaQkPq9ch6xCi2S7nLBpxVYXaxOS5RCG: 'play-unmuted/woman-back.webp',
     NGlg8TsAh4W7ZfinnPwKyDVbfgxZqhZ9h0BtU1XO: 'play-unmuted/woman-front.webp',
-    AX1CZt0G4t1cJ9KUqhOzuQ9IP7Yi87yNXHxaEBSf: 'play-unmuted/woman-side.webp'
+    AX1CZt0G4t1cJ9KUqhOzuQ9IP7Yi87yNXHxaEBSf: 'play-unmuted/woman-side.webp',
+    TwvccQRQAmtfu2SiqkmjmJ29JTYNCijIXm9nIfJX: 'unmuted-sticker/duo-front.webp',
+    ydNcdgim5f5l02lH7a0ocOyp22LevKSTKpWLlZJm: 'unmuted-sticker/man-back.webp',
+    '16etEZ7BIDyi5zVcVWaLwNvIWRNP8ItU6CmagbmJ': 'unmuted-sticker/man-front.webp',
+    vyG1fatbBuooEFrczJ8mJur6DWQ1rOrSZsBhcG63: 'unmuted-sticker/man-side.webp',
+    x968MfZB6OUVQFcRpx6yqKC0rYo9At8Jyg5Cgph0: 'unmuted-sticker/woman-back.webp',
+    UcfiNy5AGseFstr3NMqxeaMr3zk4TOGW04Ffh0L2: 'unmuted-sticker/woman-front.webp',
+    Ab2luijL2AFrl0rkFF8nOwtKZoXrEfGqJNBo2sos: 'unmuted-sticker/woman-side.webp',
+    QIw6rm2ykenRuzQbBE2aRo0WDoUFE4NxRpjcyuML: 'riyadh/duo-front.webp',
+    jFp0RhU5xsVimOAFvo3keymD8rjtCycVi3rzmSJq: 'riyadh/man-back.webp',
+    qVO4wP7nyodaxiBwHc5CQ7yIWEnvhYDmduzGvYIB: 'riyadh/man-front.webp',
+    dlyO3AseGpmbrGDsWcWrS5n82OyrwYJdSJcGR5CB: 'riyadh/man-side.webp',
+    O1elPhV54tqUjnbdzN0CE8ys8b3aJxWUKXF2JJEX: 'riyadh/woman-back.webp',
+    nhJmJnsSgHutKzAHO1r2kI5i7RbdlZ4EDcgq2Yda: 'riyadh/woman-front.webp',
+    lxmVanX96aa70bF15fahHhrwv6dhB68w26sF8lZR: 'riyadh/woman-side.webp',
+    UEN4oruJA5bAMndxU51S2fL38r2rOBhIZOZh0TKC: 'dates-season/duo-front.webp',
+    IhkrWY4t0E90rzJxfGg3uCq69JMP9iElsdA84dEq: 'dates-season/man-back.webp',
+    '8bofH7shScnmedv74dkLyHhQDDYC0GOLKBk3KfVQ': 'dates-season/man-front.webp',
+    '3hn6AejzILJm3jeMo7q4D8RkUd7bMTNv7nzX0Xai': 'dates-season/man-side.webp',
+    WQbZlns9FMJn2EgGQ6yqC6h4ocCC8Hq5aDofcbgR: 'dates-season/woman-back.webp',
+    I1PQBUWvbRh4xkaZyNufpsfmBO8WYHVqL3ovV3hV: 'dates-season/woman-front.webp',
+    SjeE40oPr1Oy4O2T9oozLMPjZV6vtpg2UClCSQua: 'dates-season/woman-side.webp',
+    koH3zKWVGv98KlQ2oaUUVflVtPxXHpC7MRANGBTB: 'desert-club/duo-front.webp',
+    cjZBtOn8qF4rbKz4pJO2xcnaFbHzCmQaxcRyEHDw: 'desert-club/man-back.webp',
+    qyvhrIZj4EZZLfsaz6cmnIirlcuz7ozug6YgbO6a: 'desert-club/man-front.webp',
+    QUbTQiWGcefZ7Bi9tZda5EVId4hj24x2cLWho4AH: 'desert-club/man-side.webp',
+    '4Bjru3owLRDfbQfOrvLmibu8rSWXbsgb2q0Sxs1T': 'desert-club/woman-back.webp',
+    '8XN2MvsFvpKNCfCul35WRJ3iskNko9eNJVoOkWq6': 'desert-club/woman-front.webp',
+    OlQF6vFW7uwzWPphLaHdlJjFCIyh4x35k93uafKK: 'desert-club/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -790,7 +819,7 @@
   }
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
-  var PAPER = ['217344331'];
+  var PAPER = ['217344331', '1197022782', '862344853', '1223062065', '696581406'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
