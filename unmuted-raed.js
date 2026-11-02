@@ -259,7 +259,7 @@
       var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p)), alone = ALONE[String(p.id)];
       $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
       li.classList.toggle('um-tl--alone', !!alone);
-      if (alone && pic) aloneTrack(pic, PHOTOS + alone, model);
+      if (alone && pic) aloneTrack(pic, p, PHOTOS + alone, model);
       else if (model && pic) modelTrack(pic, p, model);
       else if (back && pic) {
         var img = el('img', 'um-tl__back um-face-back');
@@ -292,7 +292,9 @@
       pic.classList.add('um-turn');
     });
   }
-  function aloneTrack(pic, dir, model) {
+  // on a computer the model photo comes in on hover; a phone has no hover, so a finger drags through the product's own
+  // photos after the tee (owner, 2026-11-02), with dots for where it is
+  function aloneTrack(pic, p, dir, model) {
     var face = $('img', pic);
     face.setAttribute('srcset', dir + 'sm/alone-front.webp 800w, ' + dir + 'md/alone-front.webp 1600w');
     face.setAttribute('sizes', '(min-width: 768px) 30vw, 46vw');
@@ -300,12 +302,36 @@
     face.classList.add('um-face');
     pic.classList.remove('um-model');
     pic.classList.add('um-alone');
-    if (!model) return;
-    var img = el('img', 'um-tl__back um-face-back');
-    img.alt = '';
-    img.src = model;
-    pic.appendChild(img);
-    pic.classList.add('um-turn');
+    if (hoverable) {
+      if (!model) return;
+      var img = el('img', 'um-tl__back um-face-back');
+      img.alt = '';
+      img.src = model;
+      pic.appendChild(img);
+      pic.classList.add('um-turn');
+      return;
+    }
+    photosOf(p.id).then(function (imgs) {
+      var urls = imgs.filter(function (i) { return !HANGER.test(i.alt || ''); }).map(function (i) { return smOf(i.url); }).filter(Boolean);
+      if (!urls.length || $('.um-swipe', pic)) return;
+      var strip = el('span', 'um-swipe'), dots = el('span', 'um-swipe__dots');
+      strip.appendChild(face);
+      urls.forEach(function (u) {
+        var im = el('img');
+        im.alt = '';
+        im.loading = 'lazy';
+        im.decoding = 'async';
+        im.src = u;
+        strip.appendChild(im);
+      });
+      $$('img', strip).forEach(function (im, i) { dots.appendChild(el('i', i ? '' : 'is-on')); });
+      pic.appendChild(strip);
+      pic.appendChild(dots);
+      strip.addEventListener('scroll', function () {
+        var k = Math.round(Math.abs(strip.scrollLeft) / (strip.clientWidth || 1));
+        $$('i', dots).forEach(function (d, i) { d.classList.toggle('is-on', i === k); });
+      }, { passive: true });
+    });
   }
   function bindPromises(box) {
     var feats = $$('#main-content > .s-block--features .s-block--features__item'), list = $('.um-promises ul.um-box', box);
@@ -673,7 +699,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@26820c9f0e198f37f34f513f72f2ee26e828b26d/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@1bf20e728a8984aa2658c377b8ca774ec3c941f5/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
