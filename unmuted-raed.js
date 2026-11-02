@@ -239,6 +239,9 @@
     if (ends[1]) ends[1].textContent = pad(n);
     if (bar) bar.setAttribute('aria-valuemax', n);
   }
+  // tees this list shows by themselves (owner, 2026-11-02): the tee without its hanger on the page's own colour, its
+  // model photo on hover, and no number on the picture; the folder under PHOTOS holds {sm,md}/alone-front.webp
+  var ALONE = { '217344331': 'caution/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -253,9 +256,11 @@
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
       // its back: the rail's back photo of the same tee (a cut-out, or its «شماعة خلف» photo)
       var hung = $$('.um-rail [data-um-qv]', box).filter(function (a) { return (a.getAttribute('data-name') || '').toLowerCase() === String(p.name).toLowerCase(); })[0];
-      var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p));
+      var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p)), alone = ALONE[String(p.id)];
       $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
-      if (model && pic) modelTrack(pic, p, model);
+      li.classList.toggle('um-tl--alone', !!alone);
+      if (alone && pic) aloneTrack(pic, PHOTOS + alone, model);
+      else if (model && pic) modelTrack(pic, p, model);
       else if (back && pic) {
         var img = el('img', 'um-tl__back um-face-back');
         img.alt = '';
@@ -286,6 +291,21 @@
       pic.appendChild(img);
       pic.classList.add('um-turn');
     });
+  }
+  function aloneTrack(pic, dir, model) {
+    var face = $('img', pic);
+    face.setAttribute('srcset', dir + 'sm/alone-front.webp 800w, ' + dir + 'md/alone-front.webp 1600w');
+    face.setAttribute('sizes', '(min-width: 768px) 30vw, 46vw');
+    face.src = dir + 'sm/alone-front.webp';
+    face.classList.add('um-face');
+    pic.classList.remove('um-model');
+    pic.classList.add('um-alone');
+    if (!model) return;
+    var img = el('img', 'um-tl__back um-face-back');
+    img.alt = '';
+    img.src = model;
+    pic.appendChild(img);
+    pic.classList.add('um-turn');
   }
   function bindPromises(box) {
     var feats = $$('#main-content > .s-block--features .s-block--features__item'), list = $('.um-promises ul.um-box', box);
@@ -653,7 +673,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@2654f46544b1b2becdb400a9967b1b51312689b6/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@26820c9f0e198f37f34f513f72f2ee26e828b26d/cdn/photos/';
   var HD = {
     bAWyyiF6qdC8BGZwAGut0h0b3KqY8F447Qt5MR6W: 'carnival/duo-front.webp',
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
