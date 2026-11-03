@@ -549,3 +549,57 @@ html.um-wa-lock, html.um-wa-lock body { overflow: hidden !important; }
   .um-wa-stk small { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; }
 }
 @media (prefers-reduced-motion: reduce) { .um-wa-veil, .um-wa { animation: none; } .um-wa-go { transition: none; } }
+
+/* ---------- Duo: the packages (unmuted-raed.js packs / offerBar / duoPage) ---------- */
+.um-packs { margin: 18px 0 6px; }
+.um-packs__head { margin: 0 0 10px; font-weight: 800; font-size: 16px; }
+.um-packs__row, .um-duo-page__packs { display: grid; gap: 10px; }
+.um-packs__row { grid-template-columns: 1fr; }
+.um-pack { position: relative; display: grid; gap: 4px; justify-items: start; width: 100%; padding: 14px 16px; border: 2px solid var(--um-ink); border-radius: 16px; background: var(--um-paper); color: var(--um-ink); font-family: var(--um-font); text-align: start; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease; }
+button.um-pack:hover { transform: translate(-1px, -1px); box-shadow: 3px 4px 0 var(--um-ink); }
+.um-pack.is-on { background: #fff; box-shadow: var(--um-hard); }
+.um-pack.is-on::after { content: ''; position: absolute; top: 14px; inset-inline-end: 14px; width: 22px; height: 22px; border-radius: 50%; background: var(--um-orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23101010' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat; border: 2px solid var(--um-ink); }
+button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; inset-inline-end: 14px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--um-ink); background: var(--um-paper); }
+.um-pack:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-pack__title { font-size: 16px; font-weight: 800; padding-inline-end: 30px; }
+.um-pack__price { font-size: 20px; font-weight: 800; }
+.um-pack__price s { margin-inline-start: 6px; font-size: 14px; font-weight: 500; color: var(--um-soft); }
+.um-pack__note, .um-pack__sub { font-size: 13px; color: var(--um-soft); }
+.um-pack__note b { color: var(--um-ink); }
+.um-money { white-space: nowrap; }
+.um-money .sicon-sar { font-size: .85em; }
+.um-pack.is-best { border-color: var(--um-ink); background-color: #FFF4EC; }
+.um-pack.is-best.is-on { background: #FFE7D6; }
+.um-pack__tag { position: absolute; top: -11px; inset-inline-start: 14px; padding: 3px 10px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font: 800 12px/1.2 var(--um-font); font-style: normal; }
+.um-pack.is-best { margin-top: 8px; }
+.um-packs__fine { margin: 10px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--um-soft); }
+/* on a tee's page: full-width rows, the pick on the start side, the price on the end */
+.um-packs .um-pack { grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; row-gap: 2px; padding: 14px 16px; padding-inline-start: 50px; }
+.um-packs .um-pack::after { top: 50% !important; inset-inline-end: auto !important; inset-inline-start: 16px; margin-top: -11px; }
+.um-packs .um-pack__title { padding-inline-end: 0; }
+.um-packs .um-pack__price { grid-column: 2; grid-row: 1; justify-self: end; text-align: end; }
+.um-packs .um-pack__note { grid-column: 1 / -1; }
+.um-packs .um-pack__sub { display: none; }
+.um-packs .um-pack.is-best { margin-top: 12px; }
+@media (prefers-reduced-motion: reduce) { .um-pack { transition: none; } }
+/* the cart */
+.um-offer { margin: 6px 0 22px; padding: 16px 18px; border: 2px solid var(--um-ink); border-radius: 18px; background: #fff; box-shadow: var(--um-hard); }
+.um-offer__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 12px; }
+.um-offer__steps i { display: grid; place-items: center; height: 26px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-paper); font: 800 13px/1 var(--um-font); font-style: normal; }
+.um-offer__steps i.is-on { background: var(--um-orange); }
+.um-offer__steps i:last-child.is-on { background: var(--um-blue); }
+.um-offer__msg { margin: 0 0 4px; font-size: 17px; font-weight: 800; }
+.um-offer__sum { margin: 0; font-size: 14px; color: var(--um-soft); }
+.um-offer__sum b { color: var(--um-ink); }
+.um-offer__go { display: inline-block; margin-top: 12px; padding: 9px 18px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 14px; box-shadow: 2px 3px 0 var(--um-ink); }
+/* the Duo page */
+.um-duo-page { max-width: 1180px; margin: 0 auto; padding: 28px 16px 10px; }
+.um-duo-page__head { margin-bottom: 22px; }
+.um-duo-page__head h1 { margin: 0 0 8px; font: 800 clamp(48px, 9vw, 104px)/.95 var(--um-latin); letter-spacing: -.02em; }
+.um-duo-page__head p { max-width: 560px; margin: 0; font-size: 16px; line-height: 1.8; color: var(--um-soft); }
+.um-duo-page__packs { grid-template-columns: 1fr; }
+.um-duo-page__packs .um-pack { cursor: default; padding: 18px 20px; }
+.um-duo-page__packs .um-pack__title { padding-inline-end: 0; font-size: 18px; }
+.um-duo-page__packs .um-pack__price { font-size: 26px; }
+.um-duo-page__pick { margin: 34px 0 6px; font: 800 24px/1.3 var(--um-font); }
+@media (min-width: 900px) { .um-duo-page__packs { grid-template-columns: repeat(3, 1fr); align-items: stretch; } .um-duo-page__packs .um-pack.is-best { margin-top: 0; } }

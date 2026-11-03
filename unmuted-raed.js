@@ -1272,6 +1272,117 @@
     });
   }
 
+  /* Duo: the packages (owner, 2026-11-03, «ملخص تنفيذ عرض Unmuted على الموقع»). The prices themselves come from Salla: the
+     cart offer «باقات UNMUTED» (#1573603771: 2 tees 15% off, 3 tees full price, 4 tees 149 off: the 4th is free; no
+     coupon with it) and free shipping from 400 SAR (3 tees and up). This only shows them: three package cards on each
+     tee's page (picking one sets the quantity), a bar in the cart that says what the next tee gets, and the Duo page
+     (its own page in the header) with the packages and every tee under them. */
+  var PACK = { price: 149, ship: 40, page: '72145634' };
+  var PACKS = [
+    { n: 1, title: t('قطعة واحدة', 'One tee'), total: 149, was: 0, free: false },
+    { n: 2, title: t('قطعتين', 'Two tees'), total: 253.30, was: 298, free: false },
+    { n: 4, title: t('اشترِ ٣ والرابعة مجاناً', 'Buy 3, the 4th is free'), total: 447, was: 596, free: true, best: true }
+  ];
+  var money = function (v) {
+    var s = Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v));
+    return '<span class="um-money">' + (ar ? arNum(s).replace('.', '٫') : s) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
+  };
+  var packNote = function (p) {
+    var bits = [];
+    if (p.was) bits.push(t('وفّرت ', 'You save ') + money(p.was - p.total));
+    bits.push(p.free ? '<b>' + t('شحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship));
+    return bits.join(' · ');
+  };
+  var packCard = function (p, tag) {
+    return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
+      (p.best ? '<i class="um-pack__tag">' + t('الأكثر توفيراً', 'Best value') + '</i>' : '') +
+      '<b class="um-pack__title">' + p.title + '</b>' +
+      '<span class="um-pack__price">' + money(p.total) + (p.was ? ' <s>' + money(p.was) + '</s>' : '') + '</span>' +
+      '<span class="um-pack__note">' + packNote(p) + '</span>' +
+      (p.n === 4 ? '<span class="um-pack__sub">' + t('٤ قطع', '4 tees') + '</span>' : '') +
+    '</' + tag + '>';
+  };
+  // a tee's page: the three packages above the add button; the quantity follows the pick
+  function packs() {
+    var form = $('.product-form'), bar = form && $('.sticky-product-bar', form), qty = form && $('salla-quantity-input', form);
+    if (!bar || !qty || $('.um-packs', form)) return;
+    var box = el('div', 'um-packs',
+      '<p class="um-packs__head">' + t('اختر باقتك', 'Pick your pack') + '</p>' +
+      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('اختر باقتك', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>' +
+      '<p class="um-packs__fine">' + t('العرض يحسب كل التيشيرتات في سلتك، تقدر تجمع أصوات مختلفة. ما يتجمع مع أكواد الخصم.', 'It counts every tee in your bag, mix any voices. Not with discount codes.') + '</p>');
+    bar.parentNode.insertBefore(box, bar);
+    var input = $('input[name="quantity"]', qty) || $('input', qty);
+    var pick = function (n) {
+      $$('.um-pack', box).forEach(function (b) { var on = +b.getAttribute('data-n') === n; b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; });
+      if (!input) return;
+      var set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+      set.call(input, String(n));
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      qty.setAttribute('value', String(n));
+    };
+    $$('.um-pack', box).forEach(function (b, i, all) {
+      b.addEventListener('click', function () { pick(+b.getAttribute('data-n')); });
+      b.addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowLeft' ? (ar ? 1 : -1) : e.key === 'ArrowRight' ? (ar ? -1 : 1) : 0;
+        if (!d) return;
+        e.preventDefault();
+        var nx = all[(i + d + all.length) % all.length];
+        nx.focus(); pick(+nx.getAttribute('data-n'));
+      });
+    });
+    var v = parseInt(input && input.value, 10) || 1;
+    pick(v >= 4 ? 4 : v === 2 ? 2 : 1);
+  }
+  // the cart: how many tees, what the next one gets, what's saved, and the shipping
+  var cartCount = function () {
+    return $$('form[id^="item-"] salla-quantity-input').reduce(function (n, q) {
+      var i = $('input', q); return n + (parseInt((i && i.value) || q.getAttribute('value'), 10) || 0);
+    }, 0);
+  };
+  function offerBar() {
+    if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
+    var n = cartCount(), box = $('.um-offer');
+    if (!n) { if (box) box.remove(); return; }
+    if (!box) {
+      var anchor = $('.um-cart-title');
+      if (!anchor) return;
+      box = el('section', 'um-offer');
+      box.setAttribute('aria-live', 'polite');
+      anchor.parentNode.insertBefore(box, anchor.nextSibling);
+    }
+    var save = n >= 4 ? PACK.price : n === 2 ? PACK.price * 2 * 0.15 : 0, free = n >= 3;
+    var msg = n === 1 ? t('أضف قطعة ثانية واحصل على خصم ١٥٪', 'Add a second tee for 15% off')
+      : n === 2 ? t('أضف قطعة ثالثة: الرابعة مجانية والشحن مجاني', 'Add a third: the 4th is free, and shipping too')
+      : n === 3 ? t('باقي لك تختار قطعتك المجانية', 'Now pick your free tee')
+      : t('تم تفعيل العرض: قطعة مجانية وشحن مجاني', 'Offer on: a free tee and free shipping');
+    var key = n + '|' + ar;
+    if (box.getAttribute('data-k') === key) return;
+    box.setAttribute('data-k', key);
+    var steps = [1, 2, 3, 4].map(function (k) { return '<i class="' + (k <= n ? 'is-on' : '') + '"><span>' + arNum(k) + '</span></i>'; }).join('');
+    box.innerHTML = '<div class="um-offer__steps" aria-hidden="true">' + steps + '</div>' +
+      '<p class="um-offer__msg">' + msg + '</p>' +
+      '<p class="um-offer__sum">' + (save ? t('وفّرت ', 'You save ') + money(save) + ' · ' : '') +
+        (free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني من ٣ قطع', ', free from 3 tees')) + '</p>' +
+      (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('اختر قطعتك المجانية', 'Pick your free tee') : t('أضف صوت', 'Add a voice')) + '</a>' : '');
+  }
+  // the Duo page (Salla's info page #72145634, linked in the header): the packages, then every tee
+  function duoPage() {
+    if (location.pathname.indexOf('page-' + PACK.page) < 0) return;
+    var main = $('#main-content');
+    if (!main || $('.um-duo-page')) return;
+    var entry = $('.content--single-page .content-entry') || $('.content-entry');
+    document.body.classList.add('um-duo-on');
+    var page = el('section', 'um-duo-page',
+      '<header class="um-duo-page__head"><h1 lang="en">Duo</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
+      '<div class="um-duo-page__packs">' + PACKS.map(function (p) { return packCard(p, 'div'); }).join('') + '</div>' +
+      '<p class="um-packs__fine">' + t('ما يتجمع مع أكواد الخصم أو عروض المشاهير.', 'Not combined with discount or creator codes.') + '</p>' +
+      '<h2 class="um-duo-page__pick">' + t('اختر أصواتك', 'Pick your voices') + '</h2>' +
+      '<salla-products-list source="categories" source-value="' + ALL_CAT + '" limit="40"></salla-products-list>');
+    main.insertBefore(page, main.firstChild);
+    if (entry) entry.closest('section, .container, article') && (entry.closest('section, .container, article').style.display = 'none');
+  }
+
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
      on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;
      the code itself is never on the site. Off until WA.url is set. It opens once the visitor has looked around a while
@@ -1399,11 +1510,11 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); duoPage(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
