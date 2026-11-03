@@ -1,0 +1,9 @@
+{
+ "saved": "2026-11-03, the UNMUTED rewrite, saved and read back (التسويق → السلات المتروكة → التذكيرات التلقائية → #682339137)",
+ "settings_unchanged": "after 1 hour, no discount, min cart 50 SAR, free shipping off, channels: email + store notifications",
+ "variables": [
+  "{name}"
+ ],
+ "title": "صوتك لسا في السلة",
+ "body": "هلا {name}، صوتك لسا ينتظرك في السلة. كمّل طلبك متى ما كنت جاهز، ولو واجهتك أي مشكلة في الطلب أو محتار في المقاس تواصل معنا ونساعدك."
+}

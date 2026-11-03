@@ -1,0 +1,8 @@
+{
+ "saved": "2026-11-03, the UNMUTED rewrite, saved and read back (الإعدادات → الطلبات → صفحة تأكيد الطلب)",
+ "note": "Salla strips <br> when the merchant saves (the old defaults had it from Salla's seed), so each text is one line with a full stop between sentences",
+ "after_order": "شكراً لأنك اخترت صوتك من UNMUTED 🧡",
+ "awaiting_payment": "طلبك بانتظار الدفع. كمّل الدفع من الرابط اللي وصلك على جوالك، وأول ما يتأكد نبدأ نجهّزه لك.",
+ "under_review": "وصلنا طلبك بنجاح. نراجعه الحين ونأكده لك في أقرب وقت، وبتوصلك رسالة مع كل خطوة.",
+ "confirmed_epay": "تم تأكيد طلبك. صوتك يتجهّز لك الحين، وبنعلمك أول ما يطلع للشحن."
+}

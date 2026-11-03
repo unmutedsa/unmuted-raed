@@ -1,0 +1,64 @@
+{
+ "saved": "2026-11-03, the UNMUTED rewrite, saved and read back from Salla (الطلبات → حالات الطلب, /orders/statuses)",
+ "rules": "SMS: one Arabic part each (≤70 chars with a 9-digit order number), no promotional words, no links or emojis (Salla blocks those); empty = no message (محذوف)",
+ "variables": [
+  "{order.id}",
+  "{status}",
+  "{customer.name}",
+  "{store.name}"
+ ],
+ "statuses": [
+  {
+   "name": "محذوف",
+   "msg": ""
+  },
+  {
+   "name": "بإنتظار الدفع",
+   "msg": "UNMUTED\nطلبك #{order.id} ينتظر الدفع، وأول ما يتأكد نبدأ نجهّزه لك."
+  },
+  {
+   "name": "بإنتظار المراجعة",
+   "msg": "UNMUTED\nهلا {customer.name}، وصلنا طلبك #{order.id} وبنأكده لك قريب."
+  },
+  {
+   "name": "قيد التنفيذ",
+   "msg": "UNMUTED\nطلبك #{order.id} قيد التجهيز، وصوتك يتجهّز لك بعناية."
+  },
+  {
+   "name": "تم التنفيذ",
+   "msg": "UNMUTED\nطلبك #{order.id} جاهز ومغلّف، وقريب يطلع للشحن."
+  },
+  {
+   "name": "جاري التوصيل",
+   "msg": "UNMUTED\nطلبك #{order.id} مع المندوب وفي الطريق لك، خلّ جوالك قريب."
+  },
+  {
+   "name": "تم التوصيل",
+   "msg": "UNMUTED\nوصل صوتك! تم توصيل طلبك #{order.id}. البسه وخلّ صوتك يُسمع."
+  },
+  {
+   "name": "تم الشحن",
+   "msg": "UNMUTED\nطلبك #{order.id} انشحن وصار في الطريق. تابعه من «طلباتي»."
+  },
+  {
+   "name": "ملغي",
+   "msg": "UNMUTED\nتم إلغاء طلبك #{order.id}. لأي سؤال تواصل معنا من المتجر."
+  },
+  {
+   "name": "مسترجع",
+   "msg": "UNMUTED\nتم استرجاع طلبك #{order.id}. لأي سؤال تواصل معنا من المتجر."
+  },
+  {
+   "name": "قيد الإسترجاع",
+   "msg": "UNMUTED\nاستلمنا طلب استرجاع #{order.id}، وبنعلمك أول ما يكتمل."
+  },
+  {
+   "name": "طلب عرض سعر",
+   "msg": "UNMUTED\nوصلنا طلب عرض السعر #{order.id}، وبنرسل لك التفاصيل قريب."
+  },
+  {
+   "name": "مكتمل",
+   "msg": "UNMUTED\nطلبك #{order.id} مكتمل. شكراً لأنك اخترت صوتك معنا."
+  }
+ ]
+}

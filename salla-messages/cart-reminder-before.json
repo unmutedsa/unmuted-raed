@@ -1,0 +1,5 @@
+{"saved": "2026-11-03, before the UNMUTED rewrite (Salla → التسويق → السلات المتروكة → التذكيرات التلقائية → #682339137)",
+ "settings": "after 1 hour, no discount, min cart 50 SAR, free shipping off, channels: email + store notifications (SMS, WhatsApp off)",
+ "variables": ["{name}"],
+ "title": "أكمل طلبك قبل نفاد الكمية",
+ "body": "ياهلا {name} وجدنا انك قد تركت السلة الخاص بك ولم تكملها هل تواجه مشكلة ما او انت بحاجة الى مساعدة لاتتردد بالتواصل معنا"}
