@@ -198,22 +198,30 @@
     else if ($('.um-hero__sub', hero)) $('.um-hero__sub', hero).remove();
   }
   // the hero's photo is the owner's \u00abCity Frequency\u00bb banner (3 Nov): the wide one on computers, the tall one on phones,
-  // whole since it carries its own words (a blurred copy fills the screen around it), no link (owner: not tied to a
-  // product). The scroll stays as it was (owner: \u00ab\u0645\u0639 scroll animation\u00bb): the banner holds still and the words and the
-  // button come up over it as the page scrolls (sections.js)
+  // at its own size and edge to edge (it carries its own words, so never cropped; held full-screen it left blurred bands
+  // the owner didn't want), no link (owner: not tied to a product). The words and the button still come up over it as
+  // the page scrolls (owner: \u00ab\u0645\u0639 scroll animation\u00bb), here as the banner moves up rather than on a pinned stage: from
+  // the first scroll, fully in once a fifth of it has gone by (it is the first thing on the page, so by scrollY: the
+  // header hiding on scroll doesn't shift it)
   var HERO_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8662dfa2d19b8272922c10d6b5afb4c1f54cdef2/cdn/photos/hero/';
   function heroBanner(box) {
-    var hero = $('.um-hero', box), photo = hero && $('.um-hero__photo', hero);
+    var hero = $('.um-hero', box), stage = hero && $('[data-um-poster]', hero), photo = stage && $('.um-hero__photo', stage);
     if (!photo) return;
-    var pic = function (cls, img) {
-      return '<picture class="' + cls + '"><source media="(max-width: 599px)" srcset="' + HERO_PICS + 'city-frequency-tall.webp" width="941" height="1672">' +
-        '<img src="' + HERO_PICS + 'city-frequency-wide.webp" width="1983" height="793" ' + img + '></picture>';
-    };
-    photo.insertAdjacentHTML('beforebegin', pic('um-hero__fill', 'alt="" aria-hidden="true"') +
-      pic('um-hero__pic', 'class="um-hero__photo" fetchpriority="high" alt="' +
-        t('UNMUTED City Frequency: \u062a\u064a\u0634\u064a\u0631\u062a \u0627\u0644\u0631\u064a\u0627\u0636\u060c DROP 01', 'UNMUTED City Frequency: the Riyadh tee, DROP 01') + '"'));
+    photo.insertAdjacentHTML('beforebegin', '<picture class="um-hero__pic">' +
+      '<source media="(max-width: 599px)" srcset="' + HERO_PICS + 'city-frequency-tall.webp" width="941" height="1672">' +
+      '<img src="' + HERO_PICS + 'city-frequency-wide.webp" width="1983" height="793" class="um-hero__photo" fetchpriority="high" alt="' +
+        t('UNMUTED City Frequency: \u062a\u064a\u0634\u064a\u0631\u062a \u0627\u0644\u0631\u064a\u0627\u0636\u060c DROP 01', 'UNMUTED City Frequency: the Riyadh tee, DROP 01') + '"></picture>');
     photo.remove();
+    stage.removeAttribute('data-um-poster');   // sections.js's pinned reveal steps aside for the one below
     hero.classList.add('has-banner');
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return stage.style.setProperty('--cap', 1);
+    var busy = false;
+    var reveal = function () {
+      busy = false;
+      stage.style.setProperty('--cap', Math.min(1, Math.max(0, scrollY / Math.max(80, stage.offsetHeight / 5))).toFixed(3));
+    };
+    addEventListener('scroll', function () { if (!busy) { busy = true; requestAnimationFrame(reveal); } }, { passive: true });
+    requestAnimationFrame(reveal);
   }
   var imageOf = function (p) { return (p.image && p.image.url) || ''; };
   var priceOf = function (p) { return p.is_on_sale && p.sale_price ? p.sale_price : p.price; };
