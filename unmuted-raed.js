@@ -1456,7 +1456,7 @@
       var opt = need[0], chosen = null;
       var pic = (d.image && d.image.url) || (d.images && d.images[0] && d.images[0].url) || '';
       var box = el('div', 'um-pick',
-        '<div class="um-pick__box" role="dialog" aria-modal="true" aria-labelledby="um-pick-t">' +
+        '<div class="um-pick__box" role="dialog" aria-modal="true" aria-labelledby="um-pick-t" tabindex="-1">' +
           '<button type="button" class="um-pick__x" aria-label="' + t('إغلاق', 'Close') + '">&times;</button>' +
           '<div class="um-pick__head">' + (pic ? '<img src="' + esc(pic) + '" alt="">' : '') + '<p class="um-pick__name" id="um-pick-t">' + esc(d.name || '') + '</p></div>' +
           '<p class="um-pick__label" id="um-pick-l">' + esc(opt.name || t('المقاس', 'Size')) + '</p>' +
@@ -1505,7 +1505,7 @@
       document.addEventListener('keydown', key, true);
       document.body.appendChild(box);
       document.documentElement.classList.add('um-pick-on');
-      (tiles.filter(function (x) { return !x.disabled; })[0] || add).focus();
+      $('.um-pick__box', box).focus();   // the box, not a size: no size may look picked before the customer picks one
     }, function () { btn.removeAttribute('aria-busy'); page(); });
   }
   document.addEventListener('click', function (e) {
