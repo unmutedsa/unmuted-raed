@@ -1437,6 +1437,87 @@
     }
   }
 
+  // a tee's card in a list (اختر صوتك, the albums, the home, «you may like»): Salla's add button put the tee in the bag
+  // with a size Salla picked itself (owner 2026-11-03: «لازم اختيار المقاس بالأول»). Now the button opens a size picker
+  // and the tee goes in only with the size chosen. A product with no required option, or more than one, opens its page
+  var OPTS = {};
+  var detailsOf = function (id) {
+    return OPTS[id] || (OPTS[id] = salla.api.product.getDetails(id, ['options']).then(function (r) { return r.data; }, function (e) { delete OPTS[id]; throw e; }));
+  };
+  function sizePick(btn) {
+    var id = btn.getAttribute('product-id');
+    var link = $('a[href*="/p' + id + '"]');
+    var page = function (d) { var u = (d && d.url) || (link && link.href); if (u) location.href = u; };
+    btn.setAttribute('aria-busy', 'true');
+    detailsOf(id).then(function (d) {
+      btn.removeAttribute('aria-busy');
+      var need = (d.options || []).filter(function (o) { return o.required; });
+      if (need.length !== 1 || !(need[0].details || []).length) return page(d);
+      var opt = need[0], chosen = null;
+      var pic = (d.image && d.image.url) || (d.images && d.images[0] && d.images[0].url) || '';
+      var box = el('div', 'um-pick',
+        '<div class="um-pick__box" role="dialog" aria-modal="true" aria-labelledby="um-pick-t">' +
+          '<button type="button" class="um-pick__x" aria-label="' + t('إغلاق', 'Close') + '">&times;</button>' +
+          '<div class="um-pick__head">' + (pic ? '<img src="' + esc(pic) + '" alt="">' : '') + '<p class="um-pick__name" id="um-pick-t">' + esc(d.name || '') + '</p></div>' +
+          '<p class="um-pick__label" id="um-pick-l">' + esc(opt.name || t('المقاس', 'Size')) + '</p>' +
+          '<div class="um-pick__sizes" role="radiogroup" aria-labelledby="um-pick-l">' + opt.details.map(function (v) {
+            return '<button type="button" class="um-tile" role="radio" aria-checked="false" data-v="' + v.id + '"' + (v.is_out ? ' disabled' : '') + '>' + esc(v.name) + '</button>';
+          }).join('') + '</div>' +
+          '<p class="um-pick__err" role="alert"></p>' +
+          '<button type="button" class="um-pick__add" aria-disabled="true">' + t('أضف للسلة', 'Add to bag') + '</button>' +
+        '</div>');
+      var err = $('.um-pick__err', box), add = $('.um-pick__add', box), tiles = $$('.um-tile', box);
+      var close = function () { box.remove(); document.removeEventListener('keydown', key, true); document.documentElement.classList.remove('um-pick-on'); btn.focus && (btn.querySelector('button') || btn).focus(); };
+      var key = function (e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+      box.addEventListener('click', function (e) { if (e.target === box || e.target.closest('.um-pick__x')) close(); });
+      tiles.forEach(function (b) {
+        b.addEventListener('click', function () {
+          chosen = b.getAttribute('data-v');
+          tiles.forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+          add.setAttribute('aria-disabled', 'false');
+          err.textContent = '';
+        });
+      });
+      add.addEventListener('click', function () {
+        if (!chosen) { err.textContent = t('اختر المقاس أولاً', 'Pick a size first'); (tiles.filter(function (x) { return !x.disabled; })[0] || add).focus(); return; }
+        if (add.classList.contains('is-busy')) return;
+        add.classList.add('is-busy');
+        var options = {}; options[opt.id] = +chosen;
+        salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () {
+          close();
+          // Salla's «added to your bag» popup only listens to its own button: open it for the line just added
+          var toast = $('salla-add-product-toast');
+          if (!toast || !toast.handleProductAdded) return;
+          salla.cart.api.details(null, ['options']).then(function (r) {
+            var items = ((r.data && (r.data.cart || r.data)) || {}).items || [];
+            var it = items.filter(function (i) {
+              return String(i.product_id) === String(id) && (i.options || []).some(function (o) {
+                return (o.details || []).some(function (x) { return x.is_selected && String(x.id) === String(chosen); });
+              });
+            })[0];
+            if (it) toast.handleProductAdded([{ cart_item_id: it.id }]);
+          });
+        }, function () {
+          add.classList.remove('is-busy');
+          err.textContent = t('ما انضاف، جرّب مرة ثانية', 'It was not added, try again');
+        });
+      });
+      document.addEventListener('keydown', key, true);
+      document.body.appendChild(box);
+      document.documentElement.classList.add('um-pick-on');
+      (tiles.filter(function (x) { return !x.disabled; })[0] || add).focus();
+    }, function () { btn.removeAttribute('aria-busy'); page(); });
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('salla-add-product-button');
+    if (!btn || btn.closest('.product-form, .um-dock')) return;
+    if (btn.getAttribute('product-status') !== 'sale' || (btn.getAttribute('product-type') || 'product') !== 'product') return;
+    if (!btn.getAttribute('product-id') || !(window.salla && salla.api && salla.cart)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if (btn.getAttribute('aria-busy') !== 'true') sizePick(btn);
+  }, true);
+
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
      on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;
      the code itself is never on the site. Off until WA.url is set. It opens once the visitor has looked around a while
