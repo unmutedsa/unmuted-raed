@@ -1366,21 +1366,48 @@
         (free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني من ٣ قطع', ', free from 3 tees')) + '</p>' +
       (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('اختر قطعتك المجانية', 'Pick your free tee') : t('أضف صوت', 'Add a voice')) + '</a>' : '');
   }
-  // the Duo page (Salla's info page #72145634, linked in the header): the packages, then every tee
+  // the Duo page (Salla's info page #72145634, linked in the header): each offer as the UNMUTED store's Duo card (a
+  // tilted photo of our couple shots, a big line, the price and one button), as bordered cards one under the other
+  // (owner: no products on this page, our own couple photos, cards with a border). Two tees: one couple; buy 3 get the
+  // 4th: two couples in different colours, each in its own frame, four voices
+  var DUO_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e4a1e42404b44ff875112a268dd835a8512db142/cdn/photos/duo/';
+  var DUO_CARDS = [
+    { pack: PACKS[1], tone: 'blue', pics: ['unmuted-sticker'], badge: t('خصم<br>١٥٪', '15%<br>off'),
+      title: t('صوتين. واحد لك وواحد لصاحبك.', 'Two voices. One for you, one for a friend.'),
+      deal: t('أي تيشيرتين تختارهم بخصم ١٥٪.', 'Any two tees you pick, 15% off.'), go: t('اختر صوتين', 'Pick two voices') },
+    { pack: PACKS[2], tone: 'orange', pics: ['cherry-market', 'caution'], badge: t('الرابع<br>مجاناً', '4th<br>free'),
+      title: t('أربعة أصوات. الرابع علينا.', 'Four voices. The fourth is on us.'),
+      deal: t('اشترِ ٣ تيشيرتات والرابع مجاناً.', 'Buy 3 tees, the 4th is free.'), go: t('اختر ٤ أصوات', 'Pick four voices') }
+  ];
   function duoPage() {
     if (location.pathname.indexOf('page-' + PACK.page) < 0) return;
     var main = $('#main-content');
     if (!main || $('.um-duo-page')) return;
     var entry = $('.content--single-page .content-entry') || $('.content-entry');
     document.body.classList.add('um-duo-on');
-    var page = el('section', 'um-duo-page',
+    var shop = esc(allUrl());
+    var page = el('div', 'um-duo-page',
       '<header class="um-duo-page__head"><h1 lang="en">Duo</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
-      '<div class="um-duo-page__packs">' + PACKS.map(function (p) { return packCard(p, 'div'); }).join('') + '</div>' +
-      '<p class="um-packs__fine">' + t('ما يتجمع مع أكواد الخصم أو عروض المشاهير.', 'Not combined with discount or creator codes.') + '</p>' +
-      '<h2 class="um-duo-page__pick">' + t('اختر أصواتك', 'Pick your voices') + '</h2>' +
-      '<salla-products-list source="categories" source-value="' + ALL_CAT + '" limit="40"></salla-products-list>');
+      DUO_CARDS.map(function (c, n) {
+        var p = c.pack;
+        return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +
+          '<div class="um-duo__pic' + (c.pics.length > 1 ? ' is-pair' : '') + '">' + c.pics.map(function (s) {
+            return '<figure class="um-duo__photo"><img src="' + DUO_PICS + s + '.webp" alt="" width="880" height="1100" loading="lazy"></figure>';
+          }).join('') + '<span class="um-duo__badge" aria-hidden="true">' + c.badge + '</span></div>' +
+          '<div class="um-duo__text">' +
+            '<h2 id="um-duo-' + p.n + '">' + c.title + '</h2>' +
+            '<p class="um-duo__price">' + money(p.total) + '<s aria-label="' + t('بدل ', 'instead of ') + p.was + '">' + money(p.was) + '</s></p>' +
+            '<ul class="um-duo__facts"><li>' + t('توفّر ', 'You save ') + money(p.was - p.total) + '</li>' +
+              '<li' + (p.free ? ' class="is-free"' : '') + '>' + (p.free ? t('شحن مجاني', 'Free shipping') : t('الشحن ', 'Shipping ') + money(PACK.ship)) + '</li></ul>' +
+            '<p class="um-duo__deal">' + c.deal + ' ' + t('الخصم يتطبّق تلقائياً في السلة.', 'It comes off by itself in your bag.') + '</p>' +
+            '<a class="um-duo__go" href="' + shop + '">' + c.go + '</a>' +
+          '</div>' +
+        '</section>';
+      }).join('') +
+      '<p class="um-duo-page__fine">' + t('العرض يحسب كل التيشيرتات في سلتك، تقدر تجمع أصوات مختلفة. ما يتجمع مع أكواد الخصم أو عروض المشاهير.', 'It counts every tee in your bag, mix any voices. Not combined with discount or creator codes.') + '</p>');
     main.insertBefore(page, main.firstChild);
-    if (entry) entry.closest('section, .container, article') && (entry.closest('section, .container, article').style.display = 'none');
+    var box = entry && entry.closest('section, .container, article');
+    if (box) box.style.display = 'none';
   }
 
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer

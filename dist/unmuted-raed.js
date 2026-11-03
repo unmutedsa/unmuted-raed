@@ -1366,21 +1366,48 @@
         (free ? '<b>' + t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') + '</b>' : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship) + t('\u060c \u0648\u0645\u062c\u0627\u0646\u064a \u0645\u0646 \u0663 \u0642\u0637\u0639', ', free from 3 tees')) + '</p>' +
       (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('\u0627\u062e\u062a\u0631 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629', 'Pick your free tee') : t('\u0623\u0636\u0641 \u0635\u0648\u062a', 'Add a voice')) + '</a>' : '');
   }
-  // the Duo page (Salla's info page #72145634, linked in the header): the packages, then every tee
+  // the Duo page (Salla's info page #72145634, linked in the header): each offer as the UNMUTED store's Duo card (a
+  // tilted photo of our couple shots, a big line, the price and one button), as bordered cards one under the other
+  // (owner: no products on this page, our own couple photos, cards with a border). Two tees: one couple; buy 3 get the
+  // 4th: two couples in different colours, each in its own frame, four voices
+  var DUO_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@e4a1e42404b44ff875112a268dd835a8512db142/cdn/photos/duo/';
+  var DUO_CARDS = [
+    { pack: PACKS[1], tone: 'blue', pics: ['unmuted-sticker'], badge: t('\u062e\u0635\u0645<br>\u0661\u0665\u066a', '15%<br>off'),
+      title: t('\u0635\u0648\u062a\u064a\u0646. \u0648\u0627\u062d\u062f \u0644\u0643 \u0648\u0648\u0627\u062d\u062f \u0644\u0635\u0627\u062d\u0628\u0643.', 'Two voices. One for you, one for a friend.'),
+      deal: t('\u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u064a\u0646 \u062a\u062e\u062a\u0627\u0631\u0647\u0645 \u0628\u062e\u0635\u0645 \u0661\u0665\u066a.', 'Any two tees you pick, 15% off.'), go: t('\u0627\u062e\u062a\u0631 \u0635\u0648\u062a\u064a\u0646', 'Pick two voices') },
+    { pack: PACKS[2], tone: 'orange', pics: ['cherry-market', 'caution'], badge: t('\u0627\u0644\u0631\u0627\u0628\u0639<br>\u0645\u062c\u0627\u0646\u0627\u064b', '4th<br>free'),
+      title: t('\u0623\u0631\u0628\u0639\u0629 \u0623\u0635\u0648\u0627\u062a. \u0627\u0644\u0631\u0627\u0628\u0639 \u0639\u0644\u064a\u0646\u0627.', 'Four voices. The fourth is on us.'),
+      deal: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u0648\u0627\u0644\u0631\u0627\u0628\u0639 \u0645\u062c\u0627\u0646\u0627\u064b.', 'Buy 3 tees, the 4th is free.'), go: t('\u0627\u062e\u062a\u0631 \u0664 \u0623\u0635\u0648\u0627\u062a', 'Pick four voices') }
+  ];
   function duoPage() {
     if (location.pathname.indexOf('page-' + PACK.page) < 0) return;
     var main = $('#main-content');
     if (!main || $('.um-duo-page')) return;
     var entry = $('.content--single-page .content-entry') || $('.content-entry');
     document.body.classList.add('um-duo-on');
-    var page = el('section', 'um-duo-page',
+    var shop = esc(allUrl());
+    var page = el('div', 'um-duo-page',
       '<header class="um-duo-page__head"><h1 lang="en">Duo</h1><p>' + t('\u0643\u0644 \u0645\u0627 \u0632\u0627\u062f\u062a \u0623\u0635\u0648\u0627\u062a\u0643 \u0632\u0627\u062f \u062a\u0648\u0641\u064a\u0631\u0643. \u0627\u0644\u0639\u0631\u0636 \u064a\u062a\u0637\u0628\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629 \u0639\u0644\u0649 \u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u062a\u062e\u062a\u0627\u0631\u0647\u0627.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
-      '<div class="um-duo-page__packs">' + PACKS.map(function (p) { return packCard(p, 'div'); }).join('') + '</div>' +
-      '<p class="um-packs__fine">' + t('\u0645\u0627 \u064a\u062a\u062c\u0645\u0639 \u0645\u0639 \u0623\u0643\u0648\u0627\u062f \u0627\u0644\u062e\u0635\u0645 \u0623\u0648 \u0639\u0631\u0648\u0636 \u0627\u0644\u0645\u0634\u0627\u0647\u064a\u0631.', 'Not combined with discount or creator codes.') + '</p>' +
-      '<h2 class="um-duo-page__pick">' + t('\u0627\u062e\u062a\u0631 \u0623\u0635\u0648\u0627\u062a\u0643', 'Pick your voices') + '</h2>' +
-      '<salla-products-list source="categories" source-value="' + ALL_CAT + '" limit="40"></salla-products-list>');
+      DUO_CARDS.map(function (c, n) {
+        var p = c.pack;
+        return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +
+          '<div class="um-duo__pic' + (c.pics.length > 1 ? ' is-pair' : '') + '">' + c.pics.map(function (s) {
+            return '<figure class="um-duo__photo"><img src="' + DUO_PICS + s + '.webp" alt="" width="880" height="1100" loading="lazy"></figure>';
+          }).join('') + '<span class="um-duo__badge" aria-hidden="true">' + c.badge + '</span></div>' +
+          '<div class="um-duo__text">' +
+            '<h2 id="um-duo-' + p.n + '">' + c.title + '</h2>' +
+            '<p class="um-duo__price">' + money(p.total) + '<s aria-label="' + t('\u0628\u062f\u0644 ', 'instead of ') + p.was + '">' + money(p.was) + '</s></p>' +
+            '<ul class="um-duo__facts"><li>' + t('\u062a\u0648\u0641\u0651\u0631 ', 'You save ') + money(p.was - p.total) + '</li>' +
+              '<li' + (p.free ? ' class="is-free"' : '') + '>' + (p.free ? t('\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship)) + '</li></ul>' +
+            '<p class="um-duo__deal">' + c.deal + ' ' + t('\u0627\u0644\u062e\u0635\u0645 \u064a\u062a\u0637\u0628\u0651\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629.', 'It comes off by itself in your bag.') + '</p>' +
+            '<a class="um-duo__go" href="' + shop + '">' + c.go + '</a>' +
+          '</div>' +
+        '</section>';
+      }).join('') +
+      '<p class="um-duo-page__fine">' + t('\u0627\u0644\u0639\u0631\u0636 \u064a\u062d\u0633\u0628 \u0643\u0644 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u0641\u064a \u0633\u0644\u062a\u0643\u060c \u062a\u0642\u062f\u0631 \u062a\u062c\u0645\u0639 \u0623\u0635\u0648\u0627\u062a \u0645\u062e\u062a\u0644\u0641\u0629. \u0645\u0627 \u064a\u062a\u062c\u0645\u0639 \u0645\u0639 \u0623\u0643\u0648\u0627\u062f \u0627\u0644\u062e\u0635\u0645 \u0623\u0648 \u0639\u0631\u0648\u0636 \u0627\u0644\u0645\u0634\u0627\u0647\u064a\u0631.', 'It counts every tee in your bag, mix any voices. Not combined with discount or creator codes.') + '</p>');
     main.insertBefore(page, main.firstChild);
-    if (entry) entry.closest('section, .container, article') && (entry.closest('section, .container, article').style.display = 'none');
+    var box = entry && entry.closest('section, .container, article');
+    if (box) box.style.display = 'none';
   }
 
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
