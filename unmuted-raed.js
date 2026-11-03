@@ -14,8 +14,11 @@
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
   var CDN_REF = 'db6b0a06c52f42f34460008b367f434bbb60b1f5';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8' };
-  // the size chart and fit note from the store (placeholders until the owner confirms the numbers)
-  var CHART = [['S', 54, 70], ['M', 57, 72], ['L', 60, 74], ['XL', 63, 76]];
+  // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
+  var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
+  // the same in cm (inch × 2.54, to the half): [size, chest width, total length, sleeve length]
+  var cmOf = function (i) { return Math.round(i * 5.08) / 2; };
+  var CHART = SPEC.map(function (r) { return [r[0], cmOf(r[1]), cmOf(r[3]), cmOf(r[2])]; });
   // a tee's «voice» and VOL number, as written in its Salla description («صوت المدينة»، الصوت رقم 03 من إصدار VOLUME 01)
   var latin = function (s) { return String(s).replace(/[٠-٩]/g, function (d) { return d.charCodeAt(0) - 0x660; }); };
   var voiceOf = function (p) {
@@ -480,8 +483,8 @@
     var aboutHtml = box ? box.innerHTML : '';
     if (box) box.classList.add('um-pdesc-done');
     // fold-outs + share, after the form
-    var chart = '<table class="um-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر (سم)', 'Chest (cm)') + '</th><th>' + t('الطول (سم)', 'Length (cm)') + '</th></tr></thead><tbody>' +
-      CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
+    var chart = '<table class="um-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر (سم)', 'Chest width (cm)') + '</th><th>' + t('طول الكم (سم)', 'Sleeve (cm)') + '</th><th>' + t('الطول الكلي (سم)', 'Length (cm)') + '</th></tr></thead><tbody>' +
+      CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[3] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
     var folds = el('div', 'um-folds',
       (aboutHtml ? '<details><summary>' + t('عن هذا الصوت', 'About this voice') + '</summary><div class="um-fbody">' + aboutHtml + '</div></details>' : '') +
       '<details id="um-size"><summary>' + t('المقاسات والقصّة', 'Sizes and fit') + '</summary><div class="um-fbody"><p>' + t('قصّة واسعة (Oversized) بنفس المقاسات للبنات والشباب. اختر مقاسك المعتاد للّبسة الواسعة، أو أصغر بمقاس لو تبيه أقرب للجسم.', 'One oversized cut, the same sizes for everyone. Take your usual size for a loose fit, or one down for a closer one.') + '</p>' + chart + '</div></details>');
@@ -1029,7 +1032,8 @@
   // body chest round (cm) from height and weight, then the tee that leaves the room this cut is made for
   function fitSize(s) {
     var chest = s.g === 'w' ? 60 + 0.45 * s.w + 0.05 * (s.h - 165) : 64 + 0.42 * s.w + 0.08 * (s.h - 175);
-    var ease = { slim: 10, over: 18, more: 26 }[s.like || 'over'];
+    // room the tee leaves round the chest (cm): the maker's chart runs wide, so a usual M person still gets M (owner's note: «اختر مقاسك المعتاد»)
+    var ease = { slim: 18, over: 24, more: 30 }[s.like || 'over'];
     var need = chest + ease, i = 0;
     while (i < CHART.length - 1 && CHART[i][1] * 2 < need) i++;
     var tall = s.g === 'w' ? (s.h >= 186 ? 3 : s.h >= 178 ? 2 : 0) : (s.h >= 195 ? 3 : s.h >= 188 ? 2 : 0);
@@ -1107,13 +1111,13 @@
         if (r.byLength) why.push(t('وطولك يناسبه طول هالمقاس (' + arNum(CHART[r.i][2]) + ' سم).', 'Your height suits this size’s length (' + CHART[r.i][2] + ' cm).'));
         if (r.tight) why.push(t(CHART[r.i][0] + ' أكبر مقاس عندنا، وبيجيك أقرب للجسم من الأوفرسايز.', CHART[r.i][0] + ' is our largest; it will sit closer than oversized.'));
         if (r.roomy) why.push(t(CHART[0][0] + ' أصغر مقاس عندنا، وبيجيك واسع شوي.', CHART[0][0] + ' is our smallest; it will be a little roomy.'));
-        var u = s.cu === 'in' ? function (v) { return arNum((v / 2.54).toFixed(1)); } : arNum;
+        var inch = s.cu === 'in';   // inches: the maker's own numbers (SPEC); cm: CHART
         var sold = $$('.product-form .um-tile').filter(function (b) { return b.textContent.trim() === r.size && b.disabled; }).length;
         html += '<p class="um-fit-count">' + t('مقاسك', 'Your size') + '</p><div class="um-fit-size"><b lang="en">' + r.size + '</b></div>' +
           '<ul class="um-fit-why">' + why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
           '<div class="um-fit-chart-top"><b>' + t('جدول المقاسات', 'Size chart') + '</b>' + seg('cu', ['cm', t('سم', 'cm')], ['in', t('إنش', 'in')]) + '</div>' +
-          '<table class="um-chart um-fit-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر', 'Chest width') + '</th><th>' + t('الطول', 'Length') + '</th></tr></thead><tbody>' +
-          CHART.map(function (c, k) { return '<tr' + (k === r.i ? ' class="on"' : '') + '><td lang="en">' + c[0] + '</td><td>' + u(c[1]) + '</td><td>' + u(c[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+          '<table class="um-chart um-fit-chart"><thead><tr><th>' + t('المقاس', 'Size') + '</th><th>' + t('عرض الصدر', 'Chest width') + '</th><th>' + t('طول الكم', 'Sleeve') + '</th><th>' + t('الطول الكلي', 'Length') + '</th></tr></thead><tbody>' +
+          CHART.map(function (c, k) { var v = inch ? [SPEC[k][1], SPEC[k][2], SPEC[k][3]] : [c[1], c[3], c[2]]; return '<tr' + (k === r.i ? ' class="on"' : '') + '><td lang="en">' + c[0] + '</td><td>' + arNum(v[0]) + '</td><td>' + arNum(v[1]) + '</td><td>' + arNum(v[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
           (sold ? '<p class="um-fit-sub">' + t('مقاس ' + r.size + ' خلص حالياً.', 'Size ' + r.size + ' is sold out right now.') + '</p>' : '<button type="button" class="um-fit-go um-fit-pick">' + t('اختر مقاس ' + r.size, 'Choose ' + r.size) + '</button>') +
           '<button type="button" class="um-fit-back um-fit-again" data-to="1">' + t('أعد الأسئلة', 'Start again') + '</button>';
         s.size = r.size;

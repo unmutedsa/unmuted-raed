@@ -14,8 +14,11 @@
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
   var CDN_REF = 'db6b0a06c52f42f34460008b367f434bbb60b1f5';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8' };
-  // the size chart and fit note from the store (placeholders until the owner confirms the numbers)
-  var CHART = [['S', 54, 70], ['M', 57, 72], ['L', 60, 74], ['XL', 63, 76]];
+  // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
+  var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
+  // the same in cm (inch \u00d7 2.54, to the half): [size, chest width, total length, sleeve length]
+  var cmOf = function (i) { return Math.round(i * 5.08) / 2; };
+  var CHART = SPEC.map(function (r) { return [r[0], cmOf(r[1]), cmOf(r[3]), cmOf(r[2])]; });
   // a tee's \u00abvoice\u00bb and VOL number, as written in its Salla description (\u00ab\u0635\u0648\u062a \u0627\u0644\u0645\u062f\u064a\u0646\u0629\u00bb\u060c \u0627\u0644\u0635\u0648\u062a \u0631\u0642\u0645 03 \u0645\u0646 \u0625\u0635\u062f\u0627\u0631 VOLUME 01)
   var latin = function (s) { return String(s).replace(/[\u0660-\u0669]/g, function (d) { return d.charCodeAt(0) - 0x660; }); };
   var voiceOf = function (p) {
@@ -480,8 +483,8 @@
     var aboutHtml = box ? box.innerHTML : '';
     if (box) box.classList.add('um-pdesc-done');
     // fold-outs + share, after the form
-    var chart = '<table class="um-chart"><thead><tr><th>' + t('\u0627\u0644\u0645\u0642\u0627\u0633', 'Size') + '</th><th>' + t('\u0639\u0631\u0636 \u0627\u0644\u0635\u062f\u0631 (\u0633\u0645)', 'Chest (cm)') + '</th><th>' + t('\u0627\u0644\u0637\u0648\u0644 (\u0633\u0645)', 'Length (cm)') + '</th></tr></thead><tbody>' +
-      CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
+    var chart = '<table class="um-chart"><thead><tr><th>' + t('\u0627\u0644\u0645\u0642\u0627\u0633', 'Size') + '</th><th>' + t('\u0639\u0631\u0636 \u0627\u0644\u0635\u062f\u0631 (\u0633\u0645)', 'Chest width (cm)') + '</th><th>' + t('\u0637\u0648\u0644 \u0627\u0644\u0643\u0645 (\u0633\u0645)', 'Sleeve (cm)') + '</th><th>' + t('\u0627\u0644\u0637\u0648\u0644 \u0627\u0644\u0643\u0644\u064a (\u0633\u0645)', 'Length (cm)') + '</th></tr></thead><tbody>' +
+      CHART.map(function (r) { return '<tr><td lang="en">' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[3] + '</td><td>' + r[2] + '</td></tr>'; }).join('') + '</tbody></table>';
     var folds = el('div', 'um-folds',
       (aboutHtml ? '<details><summary>' + t('\u0639\u0646 \u0647\u0630\u0627 \u0627\u0644\u0635\u0648\u062a', 'About this voice') + '</summary><div class="um-fbody">' + aboutHtml + '</div></details>' : '') +
       '<details id="um-size"><summary>' + t('\u0627\u0644\u0645\u0642\u0627\u0633\u0627\u062a \u0648\u0627\u0644\u0642\u0635\u0651\u0629', 'Sizes and fit') + '</summary><div class="um-fbody"><p>' + t('\u0642\u0635\u0651\u0629 \u0648\u0627\u0633\u0639\u0629 (Oversized) \u0628\u0646\u0641\u0633 \u0627\u0644\u0645\u0642\u0627\u0633\u0627\u062a \u0644\u0644\u0628\u0646\u0627\u062a \u0648\u0627\u0644\u0634\u0628\u0627\u0628. \u0627\u062e\u062a\u0631 \u0645\u0642\u0627\u0633\u0643 \u0627\u0644\u0645\u0639\u062a\u0627\u062f \u0644\u0644\u0651\u0628\u0633\u0629 \u0627\u0644\u0648\u0627\u0633\u0639\u0629\u060c \u0623\u0648 \u0623\u0635\u063a\u0631 \u0628\u0645\u0642\u0627\u0633 \u0644\u0648 \u062a\u0628\u064a\u0647 \u0623\u0642\u0631\u0628 \u0644\u0644\u062c\u0633\u0645.', 'One oversized cut, the same sizes for everyone. Take your usual size for a loose fit, or one down for a closer one.') + '</p>' + chart + '</div></details>');
@@ -1029,7 +1032,8 @@
   // body chest round (cm) from height and weight, then the tee that leaves the room this cut is made for
   function fitSize(s) {
     var chest = s.g === 'w' ? 60 + 0.45 * s.w + 0.05 * (s.h - 165) : 64 + 0.42 * s.w + 0.08 * (s.h - 175);
-    var ease = { slim: 10, over: 18, more: 26 }[s.like || 'over'];
+    // room the tee leaves round the chest (cm): the maker's chart runs wide, so a usual M person still gets M (owner's note: \u00ab\u0627\u062e\u062a\u0631 \u0645\u0642\u0627\u0633\u0643 \u0627\u0644\u0645\u0639\u062a\u0627\u062f\u00bb)
+    var ease = { slim: 18, over: 24, more: 30 }[s.like || 'over'];
     var need = chest + ease, i = 0;
     while (i < CHART.length - 1 && CHART[i][1] * 2 < need) i++;
     var tall = s.g === 'w' ? (s.h >= 186 ? 3 : s.h >= 178 ? 2 : 0) : (s.h >= 195 ? 3 : s.h >= 188 ? 2 : 0);
@@ -1107,13 +1111,13 @@
         if (r.byLength) why.push(t('\u0648\u0637\u0648\u0644\u0643 \u064a\u0646\u0627\u0633\u0628\u0647 \u0637\u0648\u0644 \u0647\u0627\u0644\u0645\u0642\u0627\u0633 (' + arNum(CHART[r.i][2]) + ' \u0633\u0645).', 'Your height suits this size\u2019s length (' + CHART[r.i][2] + ' cm).'));
         if (r.tight) why.push(t(CHART[r.i][0] + ' \u0623\u0643\u0628\u0631 \u0645\u0642\u0627\u0633 \u0639\u0646\u062f\u0646\u0627\u060c \u0648\u0628\u064a\u062c\u064a\u0643 \u0623\u0642\u0631\u0628 \u0644\u0644\u062c\u0633\u0645 \u0645\u0646 \u0627\u0644\u0623\u0648\u0641\u0631\u0633\u0627\u064a\u0632.', CHART[r.i][0] + ' is our largest; it will sit closer than oversized.'));
         if (r.roomy) why.push(t(CHART[0][0] + ' \u0623\u0635\u063a\u0631 \u0645\u0642\u0627\u0633 \u0639\u0646\u062f\u0646\u0627\u060c \u0648\u0628\u064a\u062c\u064a\u0643 \u0648\u0627\u0633\u0639 \u0634\u0648\u064a.', CHART[0][0] + ' is our smallest; it will be a little roomy.'));
-        var u = s.cu === 'in' ? function (v) { return arNum((v / 2.54).toFixed(1)); } : arNum;
+        var inch = s.cu === 'in';   // inches: the maker's own numbers (SPEC); cm: CHART
         var sold = $$('.product-form .um-tile').filter(function (b) { return b.textContent.trim() === r.size && b.disabled; }).length;
         html += '<p class="um-fit-count">' + t('\u0645\u0642\u0627\u0633\u0643', 'Your size') + '</p><div class="um-fit-size"><b lang="en">' + r.size + '</b></div>' +
           '<ul class="um-fit-why">' + why.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' +
           '<div class="um-fit-chart-top"><b>' + t('\u062c\u062f\u0648\u0644 \u0627\u0644\u0645\u0642\u0627\u0633\u0627\u062a', 'Size chart') + '</b>' + seg('cu', ['cm', t('\u0633\u0645', 'cm')], ['in', t('\u0625\u0646\u0634', 'in')]) + '</div>' +
-          '<table class="um-chart um-fit-chart"><thead><tr><th>' + t('\u0627\u0644\u0645\u0642\u0627\u0633', 'Size') + '</th><th>' + t('\u0639\u0631\u0636 \u0627\u0644\u0635\u062f\u0631', 'Chest width') + '</th><th>' + t('\u0627\u0644\u0637\u0648\u0644', 'Length') + '</th></tr></thead><tbody>' +
-          CHART.map(function (c, k) { return '<tr' + (k === r.i ? ' class="on"' : '') + '><td lang="en">' + c[0] + '</td><td>' + u(c[1]) + '</td><td>' + u(c[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
+          '<table class="um-chart um-fit-chart"><thead><tr><th>' + t('\u0627\u0644\u0645\u0642\u0627\u0633', 'Size') + '</th><th>' + t('\u0639\u0631\u0636 \u0627\u0644\u0635\u062f\u0631', 'Chest width') + '</th><th>' + t('\u0637\u0648\u0644 \u0627\u0644\u0643\u0645', 'Sleeve') + '</th><th>' + t('\u0627\u0644\u0637\u0648\u0644 \u0627\u0644\u0643\u0644\u064a', 'Length') + '</th></tr></thead><tbody>' +
+          CHART.map(function (c, k) { var v = inch ? [SPEC[k][1], SPEC[k][2], SPEC[k][3]] : [c[1], c[3], c[2]]; return '<tr' + (k === r.i ? ' class="on"' : '') + '><td lang="en">' + c[0] + '</td><td>' + arNum(v[0]) + '</td><td>' + arNum(v[1]) + '</td><td>' + arNum(v[2]) + '</td></tr>'; }).join('') + '</tbody></table>' +
           (sold ? '<p class="um-fit-sub">' + t('\u0645\u0642\u0627\u0633 ' + r.size + ' \u062e\u0644\u0635 \u062d\u0627\u0644\u064a\u0627\u064b.', 'Size ' + r.size + ' is sold out right now.') + '</p>' : '<button type="button" class="um-fit-go um-fit-pick">' + t('\u0627\u062e\u062a\u0631 \u0645\u0642\u0627\u0633 ' + r.size, 'Choose ' + r.size) + '</button>') +
           '<button type="button" class="um-fit-back um-fit-again" data-to="1">' + t('\u0623\u0639\u062f \u0627\u0644\u0623\u0633\u0626\u0644\u0629', 'Start again') + '</button>';
         s.size = r.size;
