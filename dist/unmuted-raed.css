@@ -506,3 +506,46 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .um-ftr-big p { margin: 0; }
 .um-ftr-big p:first-child { font: 800 clamp(48px, 11vw, 150px)/.9 var(--um-latin); font-stretch: 75%; letter-spacing: -.02em; color: var(--um-ink); }
 .um-ftr-big p + p { margin-top: 12px; font-weight: 800; font-size: clamp(18px, 2.4vw, 26px); color: var(--um-orange); }
+
+/* ---------- the welcome code on WhatsApp (unmuted-raed.js waOffer): a sheet from the bottom on phones, a card with a
+   photo beside the form on computers; the size advisor's look (ink line, hard shadow, orange pill) ---------- */
+html.um-wa-lock, html.um-wa-lock body { overflow: hidden !important; }
+.um-wa-veil { position: fixed; inset: 0; z-index: 9998; display: flex; align-items: flex-end; justify-content: center; background: rgba(16, 16, 16, .45); animation: um-fit-fade .2s ease; }
+.um-wa { position: relative; display: flex; width: 100%; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; border: 2px solid var(--um-ink); border-bottom: 0; border-radius: 24px 24px 0 0; background: var(--um-paper); color: var(--um-ink); font-family: var(--um-font); animation: um-fit-up .28s cubic-bezier(.2, .8, .2, 1); }
+.um-wa-body { flex: 1; min-width: 0; padding: 28px 20px calc(20px + env(safe-area-inset-bottom)); }
+.um-wa-pic { display: none; }
+.um-wa h2 { margin: 0 0 8px; padding-inline-end: 40px; font: 800 26px/1.3 var(--um-font); color: var(--um-ink); }
+.um-wa-sub { margin: 0 0 18px; font-size: 15px; line-height: 1.75; color: var(--um-soft); }
+.um-wa-sub b { color: var(--um-ink); font-family: var(--um-latin); white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
+.um-wa-label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+.um-wa-field { display: flex; align-items: stretch; overflow: hidden; border: 2px solid var(--um-ink); border-radius: 14px; background: #fff; }
+.um-wa-field:focus-within { box-shadow: 0 0 0 3px var(--um-blue); }
+.um-wa-field span { display: flex; align-items: center; padding: 0 12px; border-right: 2px solid var(--um-ink); background: var(--um-wall); font: 700 16px/1 var(--um-latin); }
+.um-wa-field input { flex: 1; min-width: 0; padding: 14px 12px; border: 0; outline: 0; background: transparent; color: var(--um-ink); font: 600 18px/1 var(--um-latin); letter-spacing: .04em; }
+.um-wa-field input::placeholder { color: rgba(16, 16, 16, .35); }
+.um-wa-err { margin: 8px 0 0; color: #B3261E; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.um-wa-ts { margin-top: 10px; }
+.um-wa-ts:empty { display: none; }
+.um-wa-go { width: 100%; margin-top: 16px; padding: 15px 18px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font: 800 16px/1.2 var(--um-font); box-shadow: var(--um-hard); cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
+.um-wa-go:hover { transform: translate(-1px, -1px); box-shadow: 4px 5px 0 var(--um-ink); }
+.um-wa-go:active { transform: translate(2px, 3px); box-shadow: 1px 1px 0 var(--um-ink); }
+.um-wa-go[disabled] { opacity: .65; cursor: progress; transform: none; }
+.um-wa-fine { margin: 12px 0 0; font-size: 12px; line-height: 1.7; color: var(--um-soft); }
+.um-wa-no { display: block; margin: 8px auto 0; padding: 6px 10px; border: 0; background: none; color: var(--um-ink); font: 600 14px/1.2 var(--um-font); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.um-wa-x { position: absolute; top: 12px; inset-inline-end: 12px; z-index: 2; display: grid; place-items: center; width: 38px; height: 38px; padding: 0 0 2px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-paper); color: var(--um-ink); font: 400 24px/1 var(--um-latin); cursor: pointer; }
+.um-wa :focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-wa-done { padding: 12px 0 4px; text-align: center; }
+.um-wa-done:focus { outline: none; }
+.um-wa-done h2 { padding-inline-end: 0; }
+@media (min-width: 720px) {
+  .um-wa-veil { align-items: center; }
+  .um-wa { width: 780px; max-width: calc(100vw - 48px); overflow: hidden; border-bottom: 2px solid var(--um-ink); border-radius: 24px; box-shadow: 6px 8px 0 var(--um-ink); }
+  .um-wa-body { align-self: center; padding: 48px 38px 34px; }
+  .um-wa h2 { font-size: 32px; }
+  .um-wa-pic { position: relative; display: block; flex: 0 0 42%; border-inline-start: 2px solid var(--um-ink); background: var(--um-wall); }
+  .um-wa-pic { overflow: hidden; }
+  .um-wa-pic img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transform: scale(1.55); transform-origin: 50% 22%; }   /* the photo has room round her: in on the tee */
+  .um-wa-stk { position: absolute; bottom: 22px; inset-inline-start: 22px; display: grid; place-content: center; width: 92px; height: 92px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-orange); color: var(--um-ink); font: 800 24px/1 var(--um-font); box-shadow: var(--um-hard); transform: rotate(-10deg); text-align: center; }
+  .um-wa-stk small { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; }
+}
+@media (prefers-reduced-motion: reduce) { .um-wa-veil, .um-wa { animation: none; } .um-wa-go { transition: none; } }

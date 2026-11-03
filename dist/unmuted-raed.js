@@ -1272,7 +1272,134 @@
     });
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
+  /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
+     on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;
+     the code itself is never on the site. Off until WA.url is set. It opens once the visitor has looked around a while
+     (or, on a computer, heads for the tabs), never on the cart, checkout or account pages, not over the home's loader or
+     another dialog; closed \u2192 not again for 14 days, sent \u2192 never again. */
+  var WA = { url: '', site: '', pct: 0 };   // url: the Worker's \u2026/coupon; site: the Turnstile site key; pct: the discount (title)
+  var WA_KEY = 'um-wa';
+  // a Saudi mobile in any common writing \u2192 9665XXXXXXXX, else '' (the Worker checks it the same way)
+  var waPhone = function (raw) {
+    var d = String(raw || '').replace(/[\u0660-\u0669]/g, function (c) { return c.charCodeAt(0) - 0x660; }).replace(/\D/g, '');
+    if (d.indexOf('00') === 0) d = d.slice(2);
+    if (d.indexOf('966') === 0) d = d.slice(3);
+    if (d.charAt(0) === '0') d = d.slice(1);
+    return /^5\d{8}$/.test(d) ? '966' + d : '';
+  };
+  function waOffer() {
+    if (!WA.url || window.__umWa) return;
+    window.__umWa = true;
+    if (/\/(cart|checkout|profile|orders|wishlist|notifications|login|register|payment|thank)/i.test(location.pathname)) return;
+    var st = {};
+    try { st = JSON.parse(localStorage.getItem(WA_KEY)) || {}; } catch (e) { /* private mode */ }
+    if (st.s === 'sent' || (st.s === 'closed' && Date.now() - (st.at || 0) < 14 * 864e5)) return;
+    try { if (sessionStorage.getItem(WA_KEY)) return; } catch (e) { /* private mode */ }
+    var shown = false, root = document.documentElement;
+    var go = function () {
+      if (shown) return;
+      if (root.classList.contains('um-fit-lock') || (document.body.classList.contains('index') && !root.classList.contains('um-ready'))) return void setTimeout(go, 1500);
+      shown = true;
+      waOpen();
+    };
+    setTimeout(go, 12000);
+    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0 && performance.now() > 6000) go(); });
+  }
+  function waOpen() {
+    var root = document.documentElement, prev = document.activeElement;
+    var keep = function (s) { try { localStorage.setItem(WA_KEY, JSON.stringify({ s: s, at: Date.now() })); } catch (e) { /* private mode */ } };
+    try { sessionStorage.setItem(WA_KEY, '1'); } catch (e) { /* private mode */ }
+    var pct = WA.pct ? arNum(WA.pct) + (ar ? '\u066a' : '%') : '';
+    var veil = el('div', 'um-wa-veil'), box = el('div', 'um-wa');
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-labelledby', 'um-wa-title');
+    box.innerHTML = '<button type="button" class="um-wa-x" aria-label="' + t('\u0625\u063a\u0644\u0627\u0642', 'Close') + '">\u00d7</button>' +
+      '<div class="um-wa-body"><form class="um-wa-form" novalidate>' +
+        '<h2 id="um-wa-title">' + (pct ? t('\u062e\u0635\u0645 ' + pct + ' \u0639\u0644\u0649 \u0623\u0648\u0644 \u0635\u0648\u062a \u062a\u062e\u062a\u0627\u0631\u0647', pct + ' off your first voice') : t('\u0643\u0648\u062f \u062e\u0635\u0645 \u0644\u0623\u0648\u0644 \u0635\u0648\u062a \u062a\u062e\u062a\u0627\u0631\u0647', 'A code for your first voice')) + '</h2>' +
+        '<p class="um-wa-sub">' + t('\u0627\u0643\u062a\u0628 \u0631\u0642\u0645 \u062c\u0648\u0627\u0644\u0643 \u0648\u0646\u0631\u0633\u0644 \u0644\u0643 \u0627\u0644\u0643\u0648\u062f \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628. \u0645\u0627 \u064a\u0638\u0647\u0631 \u0641\u064a \u0627\u0644\u0645\u0648\u0642\u0639\u060c \u064a\u0648\u0635\u0644\u0643 \u0623\u0646\u062a \u0628\u0633.', 'Leave your mobile number and we\u2019ll send the code on WhatsApp. It\u2019s not on the site; it\u2019s just for you.') + '</p>' +
+        '<label class="um-wa-label" for="um-wa-phone">' + t('\u0631\u0642\u0645 \u0627\u0644\u062c\u0648\u0627\u0644', 'Mobile number') + '</label>' +
+        '<div class="um-wa-field" dir="ltr"><span>+966</span><input id="um-wa-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="5X XXX XXXX" maxlength="18"></div>' +
+        '<p class="um-wa-err" role="alert" hidden></p>' +
+        '<div class="um-wa-ts"></div>' +
+        '<button type="submit" class="um-wa-go">' + t('\u0623\u0631\u0633\u0644 \u0627\u0644\u0643\u0648\u062f \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628', 'Send it on WhatsApp') + '</button>' +
+        '<p class="um-wa-fine">' + t('\u0628\u0625\u0631\u0633\u0627\u0644 \u0631\u0642\u0645\u0643 \u062a\u0648\u0627\u0641\u0642 \u0625\u0646 UNMUTED \u062a\u0631\u0633\u0644 \u0644\u0643 \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628\u060c \u0648\u062a\u0642\u062f\u0631 \u062a\u0648\u0642\u0641\u0647\u0627 \u0645\u062a\u0649 \u0645\u0627 \u062a\u0628\u064a.', 'By sending your number you agree to hear from UNMUTED on WhatsApp; you can stop it any time.') + '</p>' +
+        '<button type="button" class="um-wa-no">' + t('\u0644\u0627\u060c \u0634\u0643\u0631\u0627\u064b', 'No thanks') + '</button>' +
+      '</form></div>' +
+      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + PHOTOS + 'love-pop/md/woman-front.webp">' + (pct ? '<span class="um-wa-stk"><small>' + t('\u062e\u0635\u0645', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
+    veil.appendChild(box);
+    document.body.appendChild(veil);
+    root.classList.add('um-wa-lock');
+    var form = $('.um-wa-form', box), input = $('#um-wa-phone', box), errEl = $('.um-wa-err', box), goBtn = $('.um-wa-go', box);
+    var sent = false, token = '', wid = null;
+    var close = function () {
+      if (!sent) keep('closed');
+      veil.remove();
+      root.classList.remove('um-wa-lock');
+      removeEventListener('keydown', key, true);
+      if (prev && prev.focus) prev.focus();
+    };
+    var key = function (e) {
+      if (e.key === 'Escape') return close();
+      if (e.key !== 'Tab') return;
+      var f = $$('button, input, [tabindex="-1"]', box).filter(function (n) { return n.offsetParent; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    };
+    addEventListener('keydown', key, true);
+    veil.addEventListener('click', function (e) { if (e.target === veil) close(); });
+    $('.um-wa-x', box).addEventListener('click', close);
+    $('.um-wa-no', box).addEventListener('click', close);
+    // Turnstile: shows itself only if it needs the visitor; otherwise a token arrives quietly
+    var tsBox = $('.um-wa-ts', box);
+    var ts = function () {
+      if (!window.turnstile || wid !== null || !WA.site) return;
+      wid = turnstile.render(tsBox, { sitekey: WA.site, appearance: 'interaction-only', language: ar ? 'ar' : 'en',
+        callback: function (v) { token = v; }, 'expired-callback': function () { token = ''; }, 'error-callback': function () { token = ''; } });
+    };
+    if (window.turnstile) ts();
+    else if (WA.site && !$('script[data-um-ts]')) { var sc = el('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true; sc.setAttribute('data-um-ts', ''); sc.onload = ts; document.head.appendChild(sc); }
+    var err = function (m) { errEl.textContent = m; errEl.hidden = !m; };
+    var busy = function (on) { goBtn.disabled = on; goBtn.textContent = on ? t('\u0646\u0631\u0633\u0644\u2026', 'Sending\u2026') : t('\u0623\u0631\u0633\u0644 \u0627\u0644\u0643\u0648\u062f \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628', 'Send it on WhatsApp'); };
+    var again = function () { busy(false); token = ''; if (window.turnstile && wid !== null) turnstile.reset(wid); };
+    var done = function (already, phone) {
+      sent = true;
+      keep('sent');
+      var n = phone.slice(3), shown = '\u2066+966 ' + n.slice(0, 2) + ' \u2022\u2022\u2022 \u2022\u2022' + n.slice(-2) + '\u2069';   // kept left-to-right inside the Arabic line
+      $('.um-wa-body', box).innerHTML = '<div class="um-wa-done" tabindex="-1">' +
+        '<h2 id="um-wa-title">' + (already ? t('\u0627\u0644\u0643\u0648\u062f \u0648\u0635\u0644\u0643 \u0645\u0646 \u0642\u0628\u0644', 'You already have it') : t('\u062a\u0645! \u0634\u064a\u0651\u0643 \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628', 'Done! Check WhatsApp')) + '</h2>' +
+        '<p class="um-wa-sub">' + (already ? t('\u0623\u0631\u0633\u0644\u0646\u0627\u0647 \u0644\u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645 \u0642\u0628\u0644\u060c \u062f\u0648\u0651\u0631 \u0639\u0644\u064a\u0647 \u0641\u064a \u0645\u062d\u0627\u062f\u062b\u0629 UNMUTED \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628.', 'We sent it to this number before; look for the UNMUTED chat on WhatsApp.')
+          : t('\u0623\u0631\u0633\u0644\u0646\u0627 \u0627\u0644\u0643\u0648\u062f \u0644\u0631\u0642\u0645 ', 'We sent the code to ') + '<b dir="ltr">' + shown + '</b>' + t('. \u0627\u0633\u062a\u062e\u062f\u0645\u0647 \u0639\u0646\u062f \u0627\u0644\u062f\u0641\u0639.', '. Use it at checkout.')) + '</p>' +
+        '<button type="button" class="um-wa-go">' + t('\u0643\u0645\u0651\u0644 \u0627\u0644\u062a\u0633\u0648\u0651\u0642', 'Keep shopping') + '</button></div>';
+      $('.um-wa-done .um-wa-go', box).addEventListener('click', close);
+      $('.um-wa-done', box).focus();
+    };
+    input.addEventListener('input', function () { err(''); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var phone = waPhone(input.value);
+      if (!phone) return err(t('\u0627\u0643\u062a\u0628 \u062c\u0648\u0627\u0644 \u0633\u0639\u0648\u062f\u064a \u064a\u0628\u062f\u0623 \u0628\u0640 5\u060c \u0645\u062b\u0644 5X XXX XXXX.', 'Enter a Saudi mobile that starts with 5, like 5X XXX XXXX.'));
+      busy(true);
+      var tries = 0;
+      (function send() {
+        if (WA.site && !token && tries++ < 24) return void setTimeout(send, 250);   // the check is still on its way
+        fetch(WA.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ phone: phone, token: token }) })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (j) {
+            if (j.ok) return done(j.already, phone);
+            err({ phone: t('\u0627\u0643\u062a\u0628 \u062c\u0648\u0627\u0644 \u0633\u0639\u0648\u062f\u064a \u064a\u0628\u062f\u0623 \u0628\u0640 5\u060c \u0645\u062b\u0644 5X XXX XXXX.', 'Enter a Saudi mobile that starts with 5, like 5X XXX XXXX.'),
+              bot: t('\u0645\u0627 \u0642\u062f\u0631\u0646\u0627 \u0646\u062a\u0623\u0643\u062f \u0625\u0646\u0643 \u0645\u0648 \u0631\u0648\u0628\u0648\u062a\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629.', 'We couldn\u2019t check you\u2019re not a bot; try again.'),
+              slow: t('\u0645\u062d\u0627\u0648\u0644\u0627\u062a \u0643\u062b\u064a\u0631\u0629\u060c \u062c\u0631\u0651\u0628 \u0628\u0639\u062f \u0634\u0648\u064a.', 'Too many tries; give it a little while.'),
+              send: t('\u0645\u0627 \u0642\u062f\u0631\u0646\u0627 \u0646\u0631\u0633\u0644 \u0644\u0647\u0630\u0627 \u0627\u0644\u0631\u0642\u0645. \u062a\u0623\u0643\u062f \u0625\u0646 \u0639\u0644\u064a\u0647 \u0648\u0627\u062a\u0633\u0627\u0628.', 'We couldn\u2019t send to this number. Check it\u2019s on WhatsApp.') }[j.error] || t('\u0635\u0627\u0631 \u062e\u0644\u0644\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629.', 'Something went wrong; try again.'));
+            again();
+          })
+          .catch(function () { err(t('\u0635\u0627\u0631 \u062e\u0644\u0644 \u0641\u064a \u0627\u0644\u0627\u062a\u0635\u0627\u0644\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629.', 'Connection trouble; try again.')); again(); });
+      })();
+    });
+    setTimeout(function () { input.focus(); }, 60);
+  }
+
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle

@@ -1,0 +1,20 @@
+# The WhatsApp welcome-code Worker (see worker.js and README.md). Secrets are not here: wrangler secret put …
+name = "unmuted-whatsapp-coupon"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+# KV for the numbers that got the code (and the per-address try counts). Fill in the id from:
+#   npx wrangler kv namespace create SENT
+[[kv_namespaces]]
+binding = "SENT"
+id = "REPLACE_WITH_KV_ID"
+
+[vars]
+ALLOWED_ORIGINS = "https://unmutedsa.com,https://www.unmutedsa.com"
+WA_PHONE_ID = "REPLACE_WITH_PHONE_NUMBER_ID"
+TEMPLATE_NAME = "unmuted_welcome_code"
+TEMPLATE_LANG = "ar"
+TEMPLATE_BODY_CODE = "1"
+TEMPLATE_COPY_BUTTON = "1"
+GRAPH_VERSION = "v21.0"
+DRY_RUN = "0"

@@ -1272,7 +1272,134 @@
     });
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
+  /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
+     on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;
+     the code itself is never on the site. Off until WA.url is set. It opens once the visitor has looked around a while
+     (or, on a computer, heads for the tabs), never on the cart, checkout or account pages, not over the home's loader or
+     another dialog; closed → not again for 14 days, sent → never again. */
+  var WA = { url: '', site: '', pct: 0 };   // url: the Worker's …/coupon; site: the Turnstile site key; pct: the discount (title)
+  var WA_KEY = 'um-wa';
+  // a Saudi mobile in any common writing → 9665XXXXXXXX, else '' (the Worker checks it the same way)
+  var waPhone = function (raw) {
+    var d = String(raw || '').replace(/[٠-٩]/g, function (c) { return c.charCodeAt(0) - 0x660; }).replace(/\D/g, '');
+    if (d.indexOf('00') === 0) d = d.slice(2);
+    if (d.indexOf('966') === 0) d = d.slice(3);
+    if (d.charAt(0) === '0') d = d.slice(1);
+    return /^5\d{8}$/.test(d) ? '966' + d : '';
+  };
+  function waOffer() {
+    if (!WA.url || window.__umWa) return;
+    window.__umWa = true;
+    if (/\/(cart|checkout|profile|orders|wishlist|notifications|login|register|payment|thank)/i.test(location.pathname)) return;
+    var st = {};
+    try { st = JSON.parse(localStorage.getItem(WA_KEY)) || {}; } catch (e) { /* private mode */ }
+    if (st.s === 'sent' || (st.s === 'closed' && Date.now() - (st.at || 0) < 14 * 864e5)) return;
+    try { if (sessionStorage.getItem(WA_KEY)) return; } catch (e) { /* private mode */ }
+    var shown = false, root = document.documentElement;
+    var go = function () {
+      if (shown) return;
+      if (root.classList.contains('um-fit-lock') || (document.body.classList.contains('index') && !root.classList.contains('um-ready'))) return void setTimeout(go, 1500);
+      shown = true;
+      waOpen();
+    };
+    setTimeout(go, 12000);
+    document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0 && performance.now() > 6000) go(); });
+  }
+  function waOpen() {
+    var root = document.documentElement, prev = document.activeElement;
+    var keep = function (s) { try { localStorage.setItem(WA_KEY, JSON.stringify({ s: s, at: Date.now() })); } catch (e) { /* private mode */ } };
+    try { sessionStorage.setItem(WA_KEY, '1'); } catch (e) { /* private mode */ }
+    var pct = WA.pct ? arNum(WA.pct) + (ar ? '٪' : '%') : '';
+    var veil = el('div', 'um-wa-veil'), box = el('div', 'um-wa');
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-modal', 'true');
+    box.setAttribute('aria-labelledby', 'um-wa-title');
+    box.innerHTML = '<button type="button" class="um-wa-x" aria-label="' + t('إغلاق', 'Close') + '">×</button>' +
+      '<div class="um-wa-body"><form class="um-wa-form" novalidate>' +
+        '<h2 id="um-wa-title">' + (pct ? t('خصم ' + pct + ' على أول صوت تختاره', pct + ' off your first voice') : t('كود خصم لأول صوت تختاره', 'A code for your first voice')) + '</h2>' +
+        '<p class="um-wa-sub">' + t('اكتب رقم جوالك ونرسل لك الكود على الواتساب. ما يظهر في الموقع، يوصلك أنت بس.', 'Leave your mobile number and we’ll send the code on WhatsApp. It’s not on the site; it’s just for you.') + '</p>' +
+        '<label class="um-wa-label" for="um-wa-phone">' + t('رقم الجوال', 'Mobile number') + '</label>' +
+        '<div class="um-wa-field" dir="ltr"><span>+966</span><input id="um-wa-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="5X XXX XXXX" maxlength="18"></div>' +
+        '<p class="um-wa-err" role="alert" hidden></p>' +
+        '<div class="um-wa-ts"></div>' +
+        '<button type="submit" class="um-wa-go">' + t('أرسل الكود على الواتساب', 'Send it on WhatsApp') + '</button>' +
+        '<p class="um-wa-fine">' + t('بإرسال رقمك توافق إن UNMUTED ترسل لك على الواتساب، وتقدر توقفها متى ما تبي.', 'By sending your number you agree to hear from UNMUTED on WhatsApp; you can stop it any time.') + '</p>' +
+        '<button type="button" class="um-wa-no">' + t('لا، شكراً', 'No thanks') + '</button>' +
+      '</form></div>' +
+      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + PHOTOS + 'love-pop/md/woman-front.webp">' + (pct ? '<span class="um-wa-stk"><small>' + t('خصم', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
+    veil.appendChild(box);
+    document.body.appendChild(veil);
+    root.classList.add('um-wa-lock');
+    var form = $('.um-wa-form', box), input = $('#um-wa-phone', box), errEl = $('.um-wa-err', box), goBtn = $('.um-wa-go', box);
+    var sent = false, token = '', wid = null;
+    var close = function () {
+      if (!sent) keep('closed');
+      veil.remove();
+      root.classList.remove('um-wa-lock');
+      removeEventListener('keydown', key, true);
+      if (prev && prev.focus) prev.focus();
+    };
+    var key = function (e) {
+      if (e.key === 'Escape') return close();
+      if (e.key !== 'Tab') return;
+      var f = $$('button, input, [tabindex="-1"]', box).filter(function (n) { return n.offsetParent; });
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    };
+    addEventListener('keydown', key, true);
+    veil.addEventListener('click', function (e) { if (e.target === veil) close(); });
+    $('.um-wa-x', box).addEventListener('click', close);
+    $('.um-wa-no', box).addEventListener('click', close);
+    // Turnstile: shows itself only if it needs the visitor; otherwise a token arrives quietly
+    var tsBox = $('.um-wa-ts', box);
+    var ts = function () {
+      if (!window.turnstile || wid !== null || !WA.site) return;
+      wid = turnstile.render(tsBox, { sitekey: WA.site, appearance: 'interaction-only', language: ar ? 'ar' : 'en',
+        callback: function (v) { token = v; }, 'expired-callback': function () { token = ''; }, 'error-callback': function () { token = ''; } });
+    };
+    if (window.turnstile) ts();
+    else if (WA.site && !$('script[data-um-ts]')) { var sc = el('script'); sc.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async = true; sc.setAttribute('data-um-ts', ''); sc.onload = ts; document.head.appendChild(sc); }
+    var err = function (m) { errEl.textContent = m; errEl.hidden = !m; };
+    var busy = function (on) { goBtn.disabled = on; goBtn.textContent = on ? t('نرسل…', 'Sending…') : t('أرسل الكود على الواتساب', 'Send it on WhatsApp'); };
+    var again = function () { busy(false); token = ''; if (window.turnstile && wid !== null) turnstile.reset(wid); };
+    var done = function (already, phone) {
+      sent = true;
+      keep('sent');
+      var n = phone.slice(3), shown = '\u2066+966 ' + n.slice(0, 2) + ' ••• ••' + n.slice(-2) + '\u2069';   // kept left-to-right inside the Arabic line
+      $('.um-wa-body', box).innerHTML = '<div class="um-wa-done" tabindex="-1">' +
+        '<h2 id="um-wa-title">' + (already ? t('الكود وصلك من قبل', 'You already have it') : t('تم! شيّك على الواتساب', 'Done! Check WhatsApp')) + '</h2>' +
+        '<p class="um-wa-sub">' + (already ? t('أرسلناه لهذا الرقم قبل، دوّر عليه في محادثة UNMUTED على الواتساب.', 'We sent it to this number before; look for the UNMUTED chat on WhatsApp.')
+          : t('أرسلنا الكود لرقم ', 'We sent the code to ') + '<b dir="ltr">' + shown + '</b>' + t('. استخدمه عند الدفع.', '. Use it at checkout.')) + '</p>' +
+        '<button type="button" class="um-wa-go">' + t('كمّل التسوّق', 'Keep shopping') + '</button></div>';
+      $('.um-wa-done .um-wa-go', box).addEventListener('click', close);
+      $('.um-wa-done', box).focus();
+    };
+    input.addEventListener('input', function () { err(''); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var phone = waPhone(input.value);
+      if (!phone) return err(t('اكتب جوال سعودي يبدأ بـ 5، مثل 5X XXX XXXX.', 'Enter a Saudi mobile that starts with 5, like 5X XXX XXXX.'));
+      busy(true);
+      var tries = 0;
+      (function send() {
+        if (WA.site && !token && tries++ < 24) return void setTimeout(send, 250);   // the check is still on its way
+        fetch(WA.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ phone: phone, token: token }) })
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (j) {
+            if (j.ok) return done(j.already, phone);
+            err({ phone: t('اكتب جوال سعودي يبدأ بـ 5، مثل 5X XXX XXXX.', 'Enter a Saudi mobile that starts with 5, like 5X XXX XXXX.'),
+              bot: t('ما قدرنا نتأكد إنك مو روبوت، جرّب مرة ثانية.', 'We couldn’t check you’re not a bot; try again.'),
+              slow: t('محاولات كثيرة، جرّب بعد شوي.', 'Too many tries; give it a little while.'),
+              send: t('ما قدرنا نرسل لهذا الرقم. تأكد إن عليه واتساب.', 'We couldn’t send to this number. Check it’s on WhatsApp.') }[j.error] || t('صار خلل، جرّب مرة ثانية.', 'Something went wrong; try again.'));
+            again();
+          })
+          .catch(function () { err(t('صار خلل في الاتصال، جرّب مرة ثانية.', 'Connection trouble; try again.')); again(); });
+      })();
+    });
+    setTimeout(function () { input.focus(); }, 60);
+  }
+
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
