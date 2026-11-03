@@ -188,31 +188,32 @@
       return front ? { id: String(p.id), front: front.url, back: back ? back.url : '' } : null;
     });
   }
+  // the hero's words come from Salla's slide 1 (its photo no longer: the banner below takes the photo's place)
   function bindHero(box) {
     var slide = $('#main-content > .s-block--hero-slider .swiper-slide'), hero = $('.um-hero', box);
     if (!slide || !hero) return;
-    var title = $('h2', slide), sub = $('p', slide), bg = $('[style*="background-image"]', slide);
+    var title = $('h2', slide), sub = $('p', slide);
     if (title && title.textContent.trim()) copyText($('.um-hero__title um-t', hero), title);
     if (sub && sub.textContent.trim()) copyText($('.um-hero__sub um-t', hero), sub);
     else if ($('.um-hero__sub', hero)) $('.um-hero__sub', hero).remove();
-    var url = bg && (bg.style.backgroundImage.match(/url\(["']?([^"')]+)/) || [])[1];
-    if (url) $('.um-hero__photo', hero).src = url;
   }
-  // the hero is the owner's «City Frequency» banner (3 Nov): the wide one on computers, the tall one on phones, shown
-  // whole since it carries its own words, and no link (owner: not tied to a product). It takes the place of the photo
-  // stage; the words and the button that came up over the photo (Salla's slide 1) stay, in the middle of it (CSS)
+  // the hero's photo is the owner's «City Frequency» banner (3 Nov): the wide one on computers, the tall one on phones,
+  // whole since it carries its own words (a blurred copy fills the screen around it), no link (owner: not tied to a
+  // product). The scroll stays as it was (owner: «مع scroll animation»): the banner holds still and the words and the
+  // button come up over it as the page scrolls (sections.js)
   var HERO_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8662dfa2d19b8272922c10d6b5afb4c1f54cdef2/cdn/photos/hero/';
   function heroBanner(box) {
-    var hero = $('.um-hero', box), stage = hero && $('.um-hero__stage', hero);
-    if (!stage) return;
-    var pic = el('div', 'um-hero__banner',
-      '<picture><source media="(max-width: 599px)" srcset="' + HERO_PICS + 'city-frequency-tall.webp" width="941" height="1672">' +
-      '<img src="' + HERO_PICS + 'city-frequency-wide.webp" width="1983" height="793" fetchpriority="high" alt="' +
-        t('UNMUTED City Frequency: تيشيرت الرياض، DROP 01', 'UNMUTED City Frequency: the Riyadh tee, DROP 01') + '"></picture>');
-    var cap = $('.um-hero__cap', stage);
+    var hero = $('.um-hero', box), photo = hero && $('.um-hero__photo', hero);
+    if (!photo) return;
+    var pic = function (cls, img) {
+      return '<picture class="' + cls + '"><source media="(max-width: 599px)" srcset="' + HERO_PICS + 'city-frequency-tall.webp" width="941" height="1672">' +
+        '<img src="' + HERO_PICS + 'city-frequency-wide.webp" width="1983" height="793" ' + img + '></picture>';
+    };
+    photo.insertAdjacentHTML('beforebegin', pic('um-hero__fill', 'alt="" aria-hidden="true"') +
+      pic('um-hero__pic', 'class="um-hero__photo" fetchpriority="high" alt="' +
+        t('UNMUTED City Frequency: تيشيرت الرياض، DROP 01', 'UNMUTED City Frequency: the Riyadh tee, DROP 01') + '"'));
+    photo.remove();
     hero.classList.add('has-banner');
-    stage.parentNode.replaceChild(pic, stage);
-    if (cap) hero.appendChild(cap);
   }
   var imageOf = function (p) { return (p.image && p.image.url) || ''; };
   var priceOf = function (p) { return p.is_on_sale && p.sale_price ? p.sale_price : p.price; };
@@ -1271,7 +1272,7 @@
   function homeReady(box) {
     var root = document.documentElement;
     if (root.classList.contains('um-ready')) return;
-    var img = box && $('.um-hero__banner img, .um-hero__photo', box);
+    var img = box && $('.um-hero__photo', box);
     new Promise(function (r) {
       if (!img || (img.complete && img.naturalWidth)) return r();
       img.addEventListener('load', r, { once: true });
