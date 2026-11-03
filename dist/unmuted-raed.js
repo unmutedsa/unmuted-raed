@@ -1308,8 +1308,7 @@
     if (!bar || !qty || $('.um-packs', form)) return;
     var box = el('div', 'um-packs',
       '<p class="um-packs__head">' + t('\u0627\u062e\u062a\u0631 \u0628\u0627\u0642\u062a\u0643', 'Pick your pack') + '</p>' +
-      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('\u0627\u062e\u062a\u0631 \u0628\u0627\u0642\u062a\u0643', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>' +
-      '<p class="um-packs__fine">' + t('\u0627\u0644\u0639\u0631\u0636 \u064a\u062d\u0633\u0628 \u0643\u0644 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u0641\u064a \u0633\u0644\u062a\u0643\u060c \u062a\u0642\u062f\u0631 \u062a\u062c\u0645\u0639 \u0623\u0635\u0648\u0627\u062a \u0645\u062e\u062a\u0644\u0641\u0629. \u0645\u0627 \u064a\u062a\u062c\u0645\u0639 \u0645\u0639 \u0623\u0643\u0648\u0627\u062f \u0627\u0644\u062e\u0635\u0645.', 'It counts every tee in your bag, mix any voices. Not with discount codes.') + '</p>');
+      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('\u0627\u062e\u062a\u0631 \u0628\u0627\u0642\u062a\u0643', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>');
     bar.parentNode.insertBefore(box, bar);
     var input = $('input[name="quantity"]', qty) || $('input', qty);
     var pick = function (n) {

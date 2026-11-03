@@ -1308,8 +1308,7 @@
     if (!bar || !qty || $('.um-packs', form)) return;
     var box = el('div', 'um-packs',
       '<p class="um-packs__head">' + t('اختر باقتك', 'Pick your pack') + '</p>' +
-      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('اختر باقتك', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>' +
-      '<p class="um-packs__fine">' + t('العرض يحسب كل التيشيرتات في سلتك، تقدر تجمع أصوات مختلفة. ما يتجمع مع أكواد الخصم.', 'It counts every tee in your bag, mix any voices. Not with discount codes.') + '</p>');
+      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('اختر باقتك', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>');
     bar.parentNode.insertBefore(box, bar);
     var input = $('input[name="quantity"]', qty) || $('input', qty);
     var pick = function (n) {

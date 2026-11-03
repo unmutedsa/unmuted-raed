@@ -572,7 +572,6 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-pack.is-best.is-on { background: #FFE7D6; }
 .um-pack__tag { position: absolute; top: -11px; inset-inline-start: 14px; padding: 3px 10px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font: 800 12px/1.2 var(--um-font); font-style: normal; }
 .um-pack.is-best { margin-top: 8px; }
-.um-packs__fine { margin: 10px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--um-soft); }
 /* on a tee's page: full-width rows, the pick on the start side, the price on the end */
 .um-packs .um-pack { grid-template-columns: 1fr auto; align-items: center; column-gap: 12px; row-gap: 2px; padding: 14px 16px; padding-inline-start: 50px; }
 .um-packs .um-pack::after { top: 50% !important; inset-inline-end: auto !important; inset-inline-start: 16px; margin-top: -11px; }
