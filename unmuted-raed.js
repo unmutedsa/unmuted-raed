@@ -1305,8 +1305,9 @@
   }
 
   /* Duo: the packages (owner, 2026-11-03, «ملخص تنفيذ عرض Unmuted على الموقع»). The prices themselves come from Salla: the
-     cart offer «باقات UNMUTED» (#1573603771: 2 tees 15% off, 3 tees full price, 4 tees 149 off: the 4th is free; no
-     coupon with it) and free shipping from 400 SAR (3 tees and up). This only shows them: three package cards on each
+     cart offer «باقات UNMUTED» (#1573603771: 2 tees 15% off; 3 tees full price (a 0.001 SAR step, Salla takes no 0 and
+     rounds it away); 4 tees and up 129.56 off, 149 with VAT: one free tee per order, the price split over the tees as the
+     PDF has it (111.75 each with 4); no coupon with it) and free shipping from 400 SAR (3 tees and up). This only shows them: three package cards on each
      tee's page (information, marked by the bag's count), a bar in the cart that says what the next tee gets, and the Duo page
      (its own page in the header) with the packages and every tee under them. */
   var PACK = { price: 149, ship: 40, page: '72145634' };
@@ -1319,19 +1320,17 @@
     var s = Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v));
     return '<span class="um-money">' + (ar ? arNum(s).replace('.', '٫') : s) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
+  // each card's line as the PDF has it: «الشحن 40 ريال» · «خصم 15% · الشحن 40 ريال» · «4 قطع · شحن مجاني»
   var packNote = function (p) {
-    var bits = [];
-    if (p.was) bits.push(t('وفّرت ', 'You save ') + money(p.was - p.total));
-    bits.push(p.free ? '<b>' + t('شحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship));
-    return bits.join(' · ');
+    var ship = p.free ? '<b>' + t('شحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship);
+    return p.n === 2 ? t('خصم ١٥٪', '15% off') + ' · ' + ship : p.n === 4 ? t('٤ قطع', '4 tees') + ' · ' + ship : ship;
   };
   var packCard = function (p, tag) {
     return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
       (p.best ? '<i class="um-pack__tag">' + t('الأكثر توفيراً', 'Best value') + '</i>' : '') +
       '<b class="um-pack__title">' + p.title + '</b>' +
-      '<span class="um-pack__price">' + money(p.total) + (p.was ? ' <s>' + money(p.was) + '</s>' : '') + '</span>' +
+      '<span class="um-pack__price">' + money(p.total) + '</span>' +
       '<span class="um-pack__note">' + packNote(p) + '</span>' +
-      (p.n === 4 ? '<span class="um-pack__sub">' + t('٤ قطع', '4 tees') + '</span>' : '') +
     '</' + tag + '>';
   };
   // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a
@@ -1380,9 +1379,10 @@
     }
     var save = n >= 4 ? PACK.price : n === 2 ? PACK.price * 2 * 0.15 : 0, free = n >= 3;
     var msg = n === 1 ? t('أضف قطعة ثانية واحصل على خصم ١٥٪', 'Add a second tee for 15% off')
-      : n === 2 ? t('أضف قطعة ثالثة: الرابعة مجانية والشحن مجاني', 'Add a third: the 4th is free, and shipping too')
+      : n === 2 ? t('أضف قطعة ثالثة: القطعة الرابعة مجانية والشحن مجاني', 'Add a third: the 4th is free, and shipping too')
       : n === 3 ? t('باقي لك تختار قطعتك المجانية', 'Now pick your free tee')
-      : t('تم تفعيل العرض: قطعة مجانية وشحن مجاني', 'Offer on: a free tee and free shipping');
+      : n === 4 ? t('تم تفعيل العرض: قطعة مجانية وشحن مجاني', 'Offer on: a free tee and free shipping')
+      : t('قطعة مجانية وحدة لكل طلب', 'One free tee per order');
     var key = n + '|' + ar;
     if (box.getAttribute('data-k') === key) return;
     box.setAttribute('data-k', key);
@@ -1649,10 +1649,7 @@
           add.classList.add('is-busy');
           var options = {}; options[opt.id] = +chosen;
           // the bag page draws its rows once, so it comes back with the 4th tee in (the bar then says the offer is on)
-          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () {
-            var back = function () { location.reload(); };
-            return giftFirst(id, chosen).then(back, back);
-          }, function () {
+          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () { location.reload(); }, function () {
             add.classList.remove('is-busy');
             err.textContent = t('ما انضاف، جرّب مرة ثانية', 'It was not added, try again');
           });
@@ -1670,32 +1667,6 @@
     document.documentElement.classList.add('um-pick-on');
     $('.um-pick__box', box).focus();
   }
-  // the tee picked here must be the one that comes free (owner). Salla's «الرابع علينا» frees the bag's oldest line when
-  // the tees cost the same, so the other lines go out and come back in, in their order, behind it. Not when the pick
-  // joined a line already there (same tee and size): Salla then frees one of that line
-  var giftFirst = function (id, chosen) {
-    var picked = function (i) {
-      var m = {};
-      (i.options || []).forEach(function (o) { (o.details || []).forEach(function (x) { if (x.is_selected) m[o.id] = x.id; }); });
-      return m;
-    };
-    var again = function (i) {
-      var add = function () { return salla.cart.addItem({ id: +i.product_id, quantity: i.quantity, options: picked(i) }); };
-      return add().catch(add);
-    };
-    return salla.cart.api.details(null, ['options']).then(function (r) {
-      var items = ((r.data && (r.data.cart || r.data)) || {}).items || [];
-      var gift = items.filter(function (i) {
-        return String(i.product_id) === String(id) && (i.options || []).some(function (o) {
-          return (o.details || []).some(function (x) { return x.is_selected && String(x.id) === String(chosen); });
-        });
-      })[0];
-      if (!gift || gift.quantity > 1) return;
-      return items.filter(function (i) { return i !== gift; }).reduce(function (p, i) {
-        return p.then(function () { return salla.cart.deleteItem(i.id); }).then(function () { return again(i); });
-      }, Promise.resolve());
-    });
-  };
   // once a visit, by itself, when the bag reaches 3 (no storage, no asking by itself: only the bar's button)
   var freeOnce = function () {
     try { if (sessionStorage.getItem('um-free-asked')) return; sessionStorage.setItem('um-free-asked', '1'); } catch (e) { return; }
