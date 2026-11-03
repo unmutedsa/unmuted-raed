@@ -128,8 +128,8 @@
       // this copy leaves out the hero's top line (\u00ab\u0647\u0630\u064a \u0625\u0634\u0627\u0631\u062a\u0643 \u0639\u0634\u0627\u0646 \u062a\u0631\u0641\u0639 \u0635\u0648\u062a\u0643.\u00bb) and the squiggle under it, and the rail's count line
       $$('.um-hero__eyebrow, .um-hero .um-fl.is-w, .um-rail .um-rls__sub', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
-      [function () { bindHero(box); }, function () { bindRail(box, res[1], res[3]); }, function () { bindTracks(box, res[1], res[3]); },
-        function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
+      [function () { bindHero(box); }, function () { heroBanner(box, res[1]); }, function () { bindRail(box, res[1], res[3]); },
+        function () { bindTracks(box, res[1], res[3]); }, function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       railTouch(box);
       links(box);
@@ -197,6 +197,23 @@
     else if ($('.um-hero__sub', hero)) $('.um-hero__sub', hero).remove();
     var url = bg && (bg.style.backgroundImage.match(/url\(["']?([^"')]+)/) || [])[1];
     if (url) $('.um-hero__photo', hero).src = url;
+  }
+  // the hero is the owner's \u00abCity Frequency\u00bb banner (3 Nov): the wide one on computers, the tall one on phones, shown
+  // whole since it carries its own words, the whole of it a link to the Riyadh tee (DROP 01). It takes the place of the
+  // photo stage and the words that came up over it
+  var HERO_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8662dfa2d19b8272922c10d6b5afb4c1f54cdef2/cdn/photos/hero/';
+  var HERO_TEE = '862344853';
+  function heroBanner(box, data) {
+    var hero = $('.um-hero', box), stage = hero && $('.um-hero__stage', hero);
+    if (!stage) return;
+    var tee = data && data.items.filter(function (p) { return String(p.id) === HERO_TEE; })[0];
+    var a = el('a', 'um-hero__banner',
+      '<picture><source media="(max-width: 599px)" srcset="' + HERO_PICS + 'city-frequency-tall.webp" width="941" height="1672">' +
+      '<img src="' + HERO_PICS + 'city-frequency-wide.webp" width="1983" height="793" fetchpriority="high" alt="' +
+        t('UNMUTED City Frequency: \u062a\u064a\u0634\u064a\u0631\u062a \u0627\u0644\u0631\u064a\u0627\u0636\u060c DROP 01', 'UNMUTED City Frequency: the Riyadh tee, DROP 01') + '"></picture>');
+    a.href = tee ? tee.url : allUrl();
+    hero.classList.add('has-banner');
+    stage.parentNode.replaceChild(a, stage);
   }
   var imageOf = function (p) { return (p.image && p.image.url) || ''; };
   var priceOf = function (p) { return p.is_on_sale && p.sale_price ? p.sale_price : p.price; };
@@ -1255,7 +1272,7 @@
   function homeReady(box) {
     var root = document.documentElement;
     if (root.classList.contains('um-ready')) return;
-    var img = box && $('.um-hero__photo', box);
+    var img = box && $('.um-hero__banner img, .um-hero__photo', box);
     new Promise(function (r) {
       if (!img || (img.complete && img.naturalWidth)) return r();
       img.addEventListener('load', r, { once: true });
