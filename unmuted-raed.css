@@ -606,6 +606,12 @@ button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointe
 .theme-raed salla-conditional-offer, .theme-raed salla-cart-item-offers[data-um-zero] { display: none !important; }
 .theme-raed form[data-um-same] .item-regular-price { display: none !important; }
 .theme-raed salla-cart-item-offers[data-um-free] .s-cart-item-offers-discount { display: none !important; }   /* the free 4th tee: no «خصم 129.57» */
+/* the free tee's line: «هديتك · مجاناً» instead of its 0 price, «مجاناً» as its total, no quantity buttons (unmuted-raed.js offerZero) */
+.um-gift-tag, .um-gift-total { display: none; }
+.theme-raed form[data-um-gift] .um-gift-tag { display: inline-block; margin-top: 2px; padding: 3px 12px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 13px; line-height: 1.4; }
+.theme-raed form[data-um-gift] .um-gift-total { display: inline; }
+.theme-raed form[data-um-gift] .item-regular-price, .theme-raed form[data-um-gift] [data-testid="store-cart-item-price"],
+.theme-raed form[data-um-gift] [data-testid="store-cart-item-total"], .theme-raed form[data-um-gift] salla-quantity-input { display: none !important; }
 .theme-raed form[data-um-same] [data-testid="store-cart-item-price"] { color: var(--um-ink) !important; }
 .theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-line--discount { display: none !important; }
 /* the bottom bar's «وفّرت …» and struck total, always: Salla counts the saving before VAT (2 tees: «وفّرت 38.87», 292.16

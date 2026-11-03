@@ -1410,9 +1410,15 @@
       flag(o, 'data-um-zero', !!d && amount(d.textContent) < 0.01);
       flag(o, 'data-um-free', !!now && amount(now.textContent) === 0);
     });
+    // the free tee's own line (price 0): «هديتك · مجاناً» instead of its price and total, and no quantity buttons (one
+    // gift; more tees go in as paid ones) (owner)
     $$('form[id^="item-"]').forEach(function (f) {
-      var was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f);
+      var was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f), tot = $('[data-testid="store-cart-item-total"]', f);
+      var gift = !!now && amount(now.textContent) === 0;
       flag(f, 'data-um-same', !!was && !!now && Math.abs(amount(was.textContent) - amount(now.textContent)) < 1);
+      flag(f, 'data-um-gift', gift);
+      if (gift && !$('.um-gift-tag', f)) now.insertAdjacentHTML('afterend', '<span class="um-gift-tag">' + t('هديتك · مجاناً', 'Your gift · free') + '</span>');
+      if (gift && tot && !$('.um-gift-total', f)) tot.insertAdjacentHTML('afterend', '<span class="um-gift-total">' + t('مجاناً', 'Free') + '</span>');
     });
     var card = $('salla-cart-summary-card');
     var save = card && ($('.s-cart-summary-card-line--discount b', card) || $('.s-cart-summary-card-bar-savings-badge', card));
@@ -1640,7 +1646,10 @@
           add.classList.add('is-busy');
           var options = {}; options[opt.id] = +chosen;
           // the bag page draws its rows once, so it comes back with the 4th tee in (the bar then says the offer is on)
-          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () { location.reload(); }, function () {
+          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () {
+            var back = function () { location.reload(); };
+            return giftFirst(id, chosen).then(back, back);
+          }, function () {
             add.classList.remove('is-busy');
             err.textContent = t('ما انضاف، جرّب مرة ثانية', 'It was not added, try again');
           });
@@ -1658,6 +1667,32 @@
     document.documentElement.classList.add('um-pick-on');
     $('.um-pick__box', box).focus();
   }
+  // the tee picked here must be the one that comes free (owner). Salla's «الرابع علينا» frees the bag's oldest line when
+  // the tees cost the same, so the other lines go out and come back in, in their order, behind it. Not when the pick
+  // joined a line already there (same tee and size): Salla then frees one of that line
+  var giftFirst = function (id, chosen) {
+    var picked = function (i) {
+      var m = {};
+      (i.options || []).forEach(function (o) { (o.details || []).forEach(function (x) { if (x.is_selected) m[o.id] = x.id; }); });
+      return m;
+    };
+    var again = function (i) {
+      var add = function () { return salla.cart.addItem({ id: +i.product_id, quantity: i.quantity, options: picked(i) }); };
+      return add().catch(add);
+    };
+    return salla.cart.api.details(null, ['options']).then(function (r) {
+      var items = ((r.data && (r.data.cart || r.data)) || {}).items || [];
+      var gift = items.filter(function (i) {
+        return String(i.product_id) === String(id) && (i.options || []).some(function (o) {
+          return (o.details || []).some(function (x) { return x.is_selected && String(x.id) === String(chosen); });
+        });
+      })[0];
+      if (!gift || gift.quantity > 1) return;
+      return items.filter(function (i) { return i !== gift; }).reduce(function (p, i) {
+        return p.then(function () { return salla.cart.deleteItem(i.id); }).then(function () { return again(i); });
+      }, Promise.resolve());
+    });
+  };
   // once a visit, by itself, when the bag reaches 3 (no storage, no asking by itself: only the bar's button)
   var freeOnce = function () {
     try { if (sessionStorage.getItem('um-free-asked')) return; sessionStorage.setItem('um-free-asked', '1'); } catch (e) { return; }
