@@ -1403,8 +1403,7 @@
             '<a class="um-duo__go" href="' + shop + '">' + c.go + '</a>' +
           '</div>' +
         '</section>';
-      }).join('') +
-      '<p class="um-duo-page__fine">' + t('العرض يحسب كل التيشيرتات في سلتك، تقدر تجمع أصوات مختلفة. ما يتجمع مع أكواد الخصم أو عروض المشاهير.', 'It counts every tee in your bag, mix any voices. Not combined with discount or creator codes.') + '</p>');
+      }).join(''));
     main.insertBefore(page, main.firstChild);
     var box = entry && entry.closest('section, .container, article');
     if (box) box.style.display = 'none';

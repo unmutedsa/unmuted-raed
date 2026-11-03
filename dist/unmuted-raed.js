@@ -1403,8 +1403,7 @@
             '<a class="um-duo__go" href="' + shop + '">' + c.go + '</a>' +
           '</div>' +
         '</section>';
-      }).join('') +
-      '<p class="um-duo-page__fine">' + t('\u0627\u0644\u0639\u0631\u0636 \u064a\u062d\u0633\u0628 \u0643\u0644 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u0641\u064a \u0633\u0644\u062a\u0643\u060c \u062a\u0642\u062f\u0631 \u062a\u062c\u0645\u0639 \u0623\u0635\u0648\u0627\u062a \u0645\u062e\u062a\u0644\u0641\u0629. \u0645\u0627 \u064a\u062a\u062c\u0645\u0639 \u0645\u0639 \u0623\u0643\u0648\u0627\u062f \u0627\u0644\u062e\u0635\u0645 \u0623\u0648 \u0639\u0631\u0648\u0636 \u0627\u0644\u0645\u0634\u0627\u0647\u064a\u0631.', 'It counts every tee in your bag, mix any voices. Not combined with discount or creator codes.') + '</p>');
+      }).join(''));
     main.insertBefore(page, main.firstChild);
     var box = entry && entry.closest('section, .container, article');
     if (box) box.style.display = 'none';
