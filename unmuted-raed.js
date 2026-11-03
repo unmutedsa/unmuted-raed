@@ -94,6 +94,13 @@
     b.addEventListener('click', function () { if (window.salla && salla.event) salla.event.dispatch('search::open'); });
     end.insertBefore(b, end.firstChild);
   }
+  // the phone menu opens with «الرئيسية», a way back home (owner's manager: some customers don't know how to get back)
+  function homeLink() {
+    var ul = $('#mobile-menu ul.main-menu');
+    if (!ul || $('.um-home-link', ul)) return;
+    var home = window.salla && salla.url && salla.url.get ? salla.url.get('') : '/';
+    ul.insertAdjacentHTML('afterbegin', '<li class="lg:hidden text-sm font-bold um-home-link"><a href="' + esc(home) + '" class="text-gray-500"><span>' + t('الرئيسية', 'Home') + '</span></a></li>');
+  }
 
   /* home: the UNMUTED theme's sections (hero poster, rail, tracklist, promises, FAQ) with their animations, built from the Twilight theme
      by build_sections.py and served from the public repo unmutedsa/unmuted-raed. Raed's own home sections stay on the
@@ -1300,7 +1307,7 @@
   /* Duo: the packages (owner, 2026-11-03, «ملخص تنفيذ عرض Unmuted على الموقع»). The prices themselves come from Salla: the
      cart offer «باقات UNMUTED» (#1573603771: 2 tees 15% off, 3 tees full price, 4 tees 149 off: the 4th is free; no
      coupon with it) and free shipping from 400 SAR (3 tees and up). This only shows them: three package cards on each
-     tee's page (picking one sets the quantity), a bar in the cart that says what the next tee gets, and the Duo page
+     tee's page (information, marked by the bag's count), a bar in the cart that says what the next tee gets, and the Duo page
      (its own page in the header) with the packages and every tee under them. */
   var PACK = { price: 149, ship: 40, page: '72145634' };
   var PACKS = [
@@ -1327,36 +1334,32 @@
       (p.n === 4 ? '<span class="um-pack__sub">' + t('٤ قطع', '4 tees') + '</span>' : '') +
     '</' + tag + '>';
   };
-  // a tee's page: the three packages above the add button; the quantity follows the pick
+  // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a
+  // package on every tee wore customers out; they just fill the bag and see what each count gives). The line on top
+  // says what this tee does to the bag they have now, and the card that count reaches is marked; the quantity stays theirs
+  var bagCount = function () {
+    var c = $('salla-cart-summary .s-cart-summary-count'), n = c ? amount(c.textContent) : 0;
+    return n > 0 ? n : 0;
+  };
   function packs() {
-    var form = $('.product-form'), bar = form && $('.sticky-product-bar', form), qty = form && $('salla-quantity-input', form);
-    if (!bar || !qty || $('.um-packs', form)) return;
-    var box = el('div', 'um-packs',
-      '<p class="um-packs__head">' + t('اختر باقتك', 'Pick your pack') + '</p>' +
-      '<div class="um-packs__row" role="radiogroup" aria-label="' + t('اختر باقتك', 'Pick your pack') + '">' + PACKS.map(function (p) { return packCard(p, 'button'); }).join('') + '</div>');
-    bar.parentNode.insertBefore(box, bar);
-    var input = $('input[name="quantity"]', qty) || $('input', qty);
-    var pick = function (n) {
-      $$('.um-pack', box).forEach(function (b) { var on = +b.getAttribute('data-n') === n; b.classList.toggle('is-on', on); b.setAttribute('aria-checked', on ? 'true' : 'false'); b.tabIndex = on ? 0 : -1; });
-      if (!input) return;
-      var set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
-      set.call(input, String(n));
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-      input.dispatchEvent(new Event('change', { bubbles: true }));
-      qty.setAttribute('value', String(n));
-    };
-    $$('.um-pack', box).forEach(function (b, i, all) {
-      b.addEventListener('click', function () { pick(+b.getAttribute('data-n')); });
-      b.addEventListener('keydown', function (e) {
-        var d = e.key === 'ArrowLeft' ? (ar ? 1 : -1) : e.key === 'ArrowRight' ? (ar ? -1 : 1) : 0;
-        if (!d) return;
-        e.preventDefault();
-        var nx = all[(i + d + all.length) % all.length];
-        nx.focus(); pick(+nx.getAttribute('data-n'));
-      });
-    });
-    var v = parseInt(input && input.value, 10) || 1;
-    pick(v >= 4 ? 4 : v === 2 ? 2 : 1);
+    var form = $('.product-form'), bar = form && $('.sticky-product-bar', form);
+    if (!bar) return;
+    var box = $('.um-packs', form), n = bagCount(), key = n + '|' + ar;
+    if (box && box.getAttribute('data-k') === key) return;
+    if (!box) {
+      box = el('div', 'um-packs');
+      box.setAttribute('aria-live', 'polite');
+      bar.parentNode.insertBefore(box, bar);
+    }
+    box.setAttribute('data-k', key);
+    var msg = n === 0 ? t('أي تيشيرتين بخصم ١٥٪، واشترِ ٣ والرابع مجاناً. العرض يتطبق في السلة لحاله.', 'Any two tees 15% off; buy 3 and the 4th is free. It applies in your bag by itself.')
+      : n === 1 ? t('في سلتك قطعة. أضف هذا التيشيرت وتصير القطعتين بخصم ١٥٪.', 'One tee in your bag. Add this one and the two are 15% off.')
+      : n === 2 ? t('في سلتك قطعتين. أضف هذا التيشيرت والشحن مجاني، والرابع بعده علينا.', 'Two tees in your bag. Add this one for free shipping; the 4th is then on us.')
+      : n === 3 ? t('في سلتك ٣ قطع. أضف هذا التيشيرت والرابع علينا.', 'Three tees in your bag. Add this one and the 4th is on us.')
+      : t('العرض مفعّل في سلتك: قطعة مجانية وشحن مجاني.', 'The offer is on in your bag: a free tee and free shipping.');
+    var at = n + 1 >= 3 ? 4 : n + 1;
+    box.innerHTML = '<p class="um-packs__head">' + msg + '</p>' +
+      '<div class="um-packs__row">' + PACKS.map(function (p) { return packCard(p, 'div').replace('class="um-pack', 'class="um-pack' + (p.n === at ? ' is-on' : '')); }).join('') + '</div>';
   }
   // the cart: how many tees, what the next one gets, what's saved, and the shipping
   var cartCount = function () {
@@ -1829,7 +1832,7 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); duoPage(); toastText(); }
+  function run() { previewLinks(); fonts(); header(); homeLink(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); duoPage(); toastText(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
