@@ -1365,6 +1365,29 @@
         (free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني من ٣ قطع', ', free from 3 tees')) + '</p>' +
       (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('اختر قطعتك المجانية', 'Pick your free tee') : t('أضف صوت', 'Add a voice')) + '</a>' : '');
   }
+  // Salla takes no 0 discount, so the offer's 3-tee step is 0.01 SAR (the PDF wants 3 tees at full price), and Salla's
+  // cart then shows «حصلت على عرض… خصم ٠٫٠٠», 149 struck by 149 (or 148.99), 447 struck by 446.99 and «وفّرت ٠٫٠١»
+  // (owner, 3 Nov). Under a riyal those go. Salla's own offer banner goes for good (CSS): at 2 tees it says «أضف منتج
+  // واحد واحصل على خصم ٠٫٠١», and the .um-offer bar above says it all already
+  var amount = function (s) {
+    var m = String(s || '').replace(/[٠-٩]/g, function (d) { return d.charCodeAt(0) - 0x660; }).replace(/٫/g, '.').replace(/[٬,]/g, '').match(/\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : NaN;
+  };
+  var flag = function (n, k, on) { if (n.hasAttribute(k) !== on) n.toggleAttribute(k, on); };
+  function offerZero() {
+    if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
+    $$('salla-cart-item-offers').forEach(function (o) {
+      var d = $('.s-cart-item-offers-discount', o);
+      flag(o, 'data-um-zero', !!d && amount(d.textContent) < 0.01);
+    });
+    $$('form[id^="item-"]').forEach(function (f) {
+      var was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f);
+      flag(f, 'data-um-same', !!was && !!now && Math.abs(amount(was.textContent) - amount(now.textContent)) < 1);
+    });
+    var card = $('salla-cart-summary-card');
+    var save = card && ($('.s-cart-summary-card-line--discount b', card) || $('.s-cart-summary-card-bar-savings-badge', card));
+    if (card) flag(card, 'data-um-nosave', !!save && amount(save.textContent) < 1);
+  }
   // the Duo page (Salla's info page #72145634, linked in the header): each offer as the UNMUTED store's Duo card (a
   // tilted photo of our couple shots, a big line, the price and one button), as bordered cards one under the other
   // (owner: no products on this page, our own couple photos, cards with a border). Two tees: one couple; buy 3 get the
@@ -1645,11 +1668,11 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); duoPage(); toastText(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); duoPage(); toastText(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); offerZero(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();

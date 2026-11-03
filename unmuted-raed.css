@@ -591,6 +591,14 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-offer__sum { margin: 0; font-size: 14px; color: var(--um-soft); }
 .um-offer__sum b { color: var(--um-ink); }
 .um-offer__go { display: inline-block; margin-top: 12px; padding: 9px 18px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 14px; box-shadow: 2px 3px 0 var(--um-ink); }
+/* Salla's offer bits worth under a riyal (the 3-tee step's 0.01 SAR: «خصم ٠٫٠٠», «وفّرت ٠٫٠١», 149 struck by 148.99;
+   unmuted-raed.js offerZero) and Salla's own offer banner (it shows the 0.01 step; the .um-offer bar says it all) */
+.theme-raed salla-conditional-offer, .theme-raed salla-cart-item-offers[data-um-zero] { display: none !important; }
+.theme-raed form[data-um-same] .item-regular-price { display: none !important; }
+.theme-raed form[data-um-same] [data-testid="store-cart-item-price"] { color: var(--um-ink) !important; }
+.theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-bar-original,
+.theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-bar-savings-badge,
+.theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-line--discount { display: none !important; }
 /* the Duo page: each offer as the UNMUTED store's Duo card (tilted couple photo, big line, price, one button), as
    bordered cards one under the other */
 .um-duo-page { max-width: none; margin: 0; padding: 0 16px 48px; }
