@@ -599,14 +599,18 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-offer__sum { margin: 0; font-size: 14px; color: var(--um-soft); }
 .um-offer__sum b { color: var(--um-ink); }
 .um-offer__go { display: inline-block; margin-top: 12px; padding: 9px 18px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 14px; box-shadow: 2px 3px 0 var(--um-ink); }
+button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointer; }
+.um-offer__go:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 3px; }
 /* Salla's offer bits worth under a riyal (the 3-tee step's 0.01 SAR: «خصم ٠٫٠٠», «وفّرت ٠٫٠١», 149 struck by 148.99;
    unmuted-raed.js offerZero) and Salla's own offer banner (it shows the 0.01 step; the .um-offer bar says it all) */
 .theme-raed salla-conditional-offer, .theme-raed salla-cart-item-offers[data-um-zero] { display: none !important; }
 .theme-raed form[data-um-same] .item-regular-price { display: none !important; }
 .theme-raed form[data-um-same] [data-testid="store-cart-item-price"] { color: var(--um-ink) !important; }
-.theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-bar-original,
-.theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-bar-savings-badge,
 .theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-line--discount { display: none !important; }
+/* the bottom bar's «وفّرت …» and struck total, always: Salla counts the saving before VAT (2 tees: «وفّرت 38.87», 292.16
+   struck, where the customer saves 44.70 off 298), and the .um-offer bar above shows the right one (owner) */
+.theme-raed salla-cart-summary-card .s-cart-summary-card-bar-original,
+.theme-raed salla-cart-summary-card .s-cart-summary-card-bar-savings-badge { display: none !important; }
 /* the Duo page: each offer as the UNMUTED store's Duo card (tilted couple photo, big line, price, one button), as
    bordered cards one under the other */
 .um-duo-page { max-width: none; margin: 0; padding: 0 16px 48px; }
@@ -670,4 +674,25 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
 @media (max-width: 599px) {
   .um-pick { place-items: end stretch; padding: 0; }
   .um-pick__box { width: 100%; border-width: 3px 0 0; border-radius: 24px 24px 0 0; box-shadow: none; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+}
+/* the free tee window at 3 tees (unmuted-raed.js freePick): the tees in a grid, then the chosen one's sizes */
+.um-free .um-pick__box { display: flex; flex-direction: column; width: min(640px, 100%); max-height: min(86vh, 780px); }
+.um-free__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.um-free__body[aria-busy="true"] { opacity: .6; cursor: progress; }
+.um-free__title { padding-inline-end: 40px; font-family: var(--um-font); }
+.um-free__sub { margin: 6px 0 16px; color: var(--um-soft); font-size: 15px; }
+.um-free__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.um-free__grid[aria-busy="true"] { min-height: 200px; }
+.um-free__tee { display: grid; gap: 6px; padding: 6px 6px 8px; border: 2px solid var(--um-ink); border-radius: 14px; background: #fff; color: var(--um-ink); font: 700 13px/1.25 var(--um-latin); text-align: center; cursor: pointer; }
+.um-free__tee img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 9px; background: var(--um-paper); }
+.um-free__tee:hover { background: var(--um-paper); }
+.um-free__tee:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-free__skip, .um-free__back { padding: 8px 4px; border: 0; background: none; color: var(--um-ink); font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.um-free__skip { align-self: center; margin-top: 10px; }
+.um-free__back { margin: 0 0 10px; padding-inline: 0; }
+.um-free__skip:focus-visible, .um-free__back:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-free .um-pick__add { margin-top: 4px; }
+@media (max-width: 599px) {
+  .um-free .um-pick__box { max-height: 88vh; }
+  .um-free__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 }

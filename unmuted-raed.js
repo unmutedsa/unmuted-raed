@@ -1388,7 +1388,9 @@
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (save ? t('وفّرت ', 'You save ') + money(save) + ' · ' : '') +
         (free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني من ٣ قطع', ', free from 3 tees')) + '</p>' +
-      (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('اختر قطعتك المجانية', 'Pick your free tee') : t('أضف صوت', 'Add a voice')) + '</a>' : '');
+      (n === 3 ? '<button type="button" class="um-offer__go" data-um-free>' + t('اختر قطعتك المجانية', 'Pick your free tee') + '</button>'
+        : n < 3 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + t('أضف صوت', 'Add a voice') + '</a>' : '');
+    if (n === 3) freeOnce();
   }
   // Salla takes no 0 discount, so the offer's 3-tee step is 0.01 SAR (the PDF wants 3 tees at full price), and Salla's
   // cart then shows «حصلت على عرض… خصم ٠٫٠٠», 149 struck by 149 (or 148.99), 447 struck by 446.99 and «وفّرت ٠٫٠١»
@@ -1565,6 +1567,102 @@
     e.stopImmediatePropagation();
     if (btn.getAttribute('aria-busy') !== 'true') sizePick(btn);
   }, true);
+
+  // the free tee (owner's PDF «ملخص تنفيذ عرض Unmuted»: at 3 tees a window to pick the free one, which the customer can
+  // skip): the tees in a grid, then the chosen one's sizes; it goes in the bag as the 4th and the offer makes it free.
+  // It opens by itself once a visit when the bag reaches 3 (offerBar), and from the bar's «اختر قطعتك المجانية»
+  var TEES = null;
+  var teesAll = function () {
+    return TEES || (TEES = salla.product.fetch({ source: 'categories', source_value: [ALL_CAT], limit: 30 }).then(function (r) {
+      return ((r && r.data) || []).filter(function (p) { return p.status === 'sale' && p.is_available !== false && (p.type || 'product') === 'product'; });
+    }, function (e) { TEES = null; throw e; }));
+  };
+  function freePick() {
+    if ($('.um-pick') || !(window.salla && salla.product && salla.cart)) return;
+    var opener = document.activeElement;
+    var box = el('div', 'um-pick um-free',
+      '<div class="um-pick__box" role="dialog" aria-modal="true" aria-labelledby="um-free-t" tabindex="-1">' +
+        '<button type="button" class="um-pick__x" aria-label="' + t('إغلاق', 'Close') + '">&times;</button>' +
+        '<div class="um-free__body"></div>' +
+        '<button type="button" class="um-free__skip">' + t('تخطَّ الحين', 'Skip for now') + '</button>' +
+      '</div>');
+    var body = $('.um-free__body', box);
+    var close = function () { box.remove(); document.removeEventListener('keydown', key, true); document.documentElement.classList.remove('um-pick-on'); if (opener && opener.focus) opener.focus(); };
+    var key = function (e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+    box.addEventListener('click', function (e) { if (e.target === box || e.target.closest('.um-pick__x, .um-free__skip')) close(); });
+    function grid() {
+      body.innerHTML = '<p class="um-pick__name um-free__title" id="um-free-t">' + t('اختر قطعتك المجانية', 'Pick your free tee') + '</p>' +
+        '<p class="um-free__sub">' + t('الرابعة علينا. اختر التيشيرت وبعدها المقاس.', 'The fourth is on us. Pick the tee, then its size.') + '</p>' +
+        '<div class="um-free__grid" aria-busy="true"></div><p class="um-pick__err" role="alert"></p>';
+      var g = $('.um-free__grid', body);
+      teesAll().then(function (list) {
+        g.removeAttribute('aria-busy');
+        g.innerHTML = list.map(function (p) {
+          return '<button type="button" class="um-free__tee" data-id="' + esc(p.id) + '"><img src="' + esc(imageOf(p)) + '" alt="" loading="lazy"><span>' + esc(p.name) + '</span></button>';
+        }).join('');
+        $$('.um-free__tee', g).forEach(function (b) { b.addEventListener('click', function () { sizes(b.getAttribute('data-id')); }); });
+      }, function () {
+        g.removeAttribute('aria-busy');
+        $('.um-pick__err', body).textContent = t('ما قدرنا نجيب التيشيرتات، جرّب مرة ثانية', 'The tees did not load, try again');
+      });
+    }
+    function sizes(id) {
+      body.setAttribute('aria-busy', 'true');
+      detailsOf(id).then(function (d) {
+        body.removeAttribute('aria-busy');
+        var need = (d.options || []).filter(function (o) { return o.required; });
+        if (need.length !== 1 || !(need[0].details || []).length) { if (d.url) location.href = d.url; return; }
+        var opt = need[0], chosen = null, pic = (d.image && d.image.url) || '';
+        body.innerHTML = '<button type="button" class="um-free__back">' + t('رجوع للتيشيرتات', 'Back to the tees') + '</button>' +
+          '<div class="um-pick__head">' + (pic ? '<img src="' + esc(pic) + '" alt="">' : '') + '<p class="um-pick__name" id="um-free-t">' + esc(d.name || '') + '</p></div>' +
+          '<p class="um-pick__label" id="um-free-l">' + esc(opt.name || t('المقاس', 'Size')) + '</p>' +
+          '<div class="um-pick__sizes" role="radiogroup" aria-labelledby="um-free-l">' + opt.details.map(function (v) {
+            return '<button type="button" class="um-tile" role="radio" aria-checked="false" data-v="' + v.id + '"' + (v.is_out ? ' disabled' : '') + '>' + esc(v.name) + '</button>';
+          }).join('') + '</div>' +
+          '<p class="um-pick__err" role="alert"></p>' +
+          '<button type="button" class="um-pick__add" aria-disabled="true">' + t('أضف قطعتك المجانية', 'Add your free tee') + '</button>';
+        var err = $('.um-pick__err', body), add = $('.um-pick__add', body), tiles = $$('.um-tile', body);
+        $('.um-free__back', body).addEventListener('click', function () { grid(); $('.um-pick__box', box).focus(); });
+        tiles.forEach(function (b) {
+          b.addEventListener('click', function () {
+            chosen = b.getAttribute('data-v');
+            tiles.forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+            add.setAttribute('aria-disabled', 'false');
+            err.textContent = '';
+          });
+        });
+        add.addEventListener('click', function () {
+          if (!chosen) { err.textContent = t('اختر المقاس أولاً', 'Pick a size first'); return; }
+          if (add.classList.contains('is-busy')) return;
+          add.classList.add('is-busy');
+          var options = {}; options[opt.id] = +chosen;
+          // the bag page draws its rows once, so it comes back with the 4th tee in (the bar then says the offer is on)
+          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () { location.reload(); }, function () {
+            add.classList.remove('is-busy');
+            err.textContent = t('ما انضاف، جرّب مرة ثانية', 'It was not added, try again');
+          });
+        });
+        $('.um-pick__box', box).focus();
+      }, function () {
+        body.removeAttribute('aria-busy');
+        var e = $('.um-pick__err', body);
+        if (e) e.textContent = t('ما قدرنا نفتح التيشيرت، جرّب مرة ثانية', 'That tee did not open, try again');
+      });
+    }
+    grid();
+    document.addEventListener('keydown', key, true);
+    document.body.appendChild(box);
+    document.documentElement.classList.add('um-pick-on');
+    $('.um-pick__box', box).focus();
+  }
+  // once a visit, by itself, when the bag reaches 3 (no storage, no asking by itself: only the bar's button)
+  var freeOnce = function () {
+    try { if (sessionStorage.getItem('um-free-asked')) return; sessionStorage.setItem('um-free-asked', '1'); } catch (e) { return; }
+    setTimeout(freePick, 700);
+  };
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('[data-um-free]')) { e.preventDefault(); freePick(); }
+  });
 
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
      on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;

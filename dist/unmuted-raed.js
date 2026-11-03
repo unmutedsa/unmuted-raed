@@ -1388,7 +1388,9 @@
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (save ? t('\u0648\u0641\u0651\u0631\u062a ', 'You save ') + money(save) + ' \u00b7 ' : '') +
         (free ? '<b>' + t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') + '</b>' : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship) + t('\u060c \u0648\u0645\u062c\u0627\u0646\u064a \u0645\u0646 \u0663 \u0642\u0637\u0639', ', free from 3 tees')) + '</p>' +
-      (n === 3 || n === 1 || n === 2 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + (n === 3 ? t('\u0627\u062e\u062a\u0631 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629', 'Pick your free tee') : t('\u0623\u0636\u0641 \u0635\u0648\u062a', 'Add a voice')) + '</a>' : '');
+      (n === 3 ? '<button type="button" class="um-offer__go" data-um-free>' + t('\u0627\u062e\u062a\u0631 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629', 'Pick your free tee') + '</button>'
+        : n < 3 ? '<a class="um-offer__go" href="' + esc(allUrl()) + '">' + t('\u0623\u0636\u0641 \u0635\u0648\u062a', 'Add a voice') + '</a>' : '');
+    if (n === 3) freeOnce();
   }
   // Salla takes no 0 discount, so the offer's 3-tee step is 0.01 SAR (the PDF wants 3 tees at full price), and Salla's
   // cart then shows \u00ab\u062d\u0635\u0644\u062a \u0639\u0644\u0649 \u0639\u0631\u0636\u2026 \u062e\u0635\u0645 \u0660\u066b\u0660\u0660\u00bb, 149 struck by 149 (or 148.99), 447 struck by 446.99 and \u00ab\u0648\u0641\u0651\u0631\u062a \u0660\u066b\u0660\u0661\u00bb
@@ -1565,6 +1567,102 @@
     e.stopImmediatePropagation();
     if (btn.getAttribute('aria-busy') !== 'true') sizePick(btn);
   }, true);
+
+  // the free tee (owner's PDF \u00ab\u0645\u0644\u062e\u0635 \u062a\u0646\u0641\u064a\u0630 \u0639\u0631\u0636 Unmuted\u00bb: at 3 tees a window to pick the free one, which the customer can
+  // skip): the tees in a grid, then the chosen one's sizes; it goes in the bag as the 4th and the offer makes it free.
+  // It opens by itself once a visit when the bag reaches 3 (offerBar), and from the bar's \u00ab\u0627\u062e\u062a\u0631 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629\u00bb
+  var TEES = null;
+  var teesAll = function () {
+    return TEES || (TEES = salla.product.fetch({ source: 'categories', source_value: [ALL_CAT], limit: 30 }).then(function (r) {
+      return ((r && r.data) || []).filter(function (p) { return p.status === 'sale' && p.is_available !== false && (p.type || 'product') === 'product'; });
+    }, function (e) { TEES = null; throw e; }));
+  };
+  function freePick() {
+    if ($('.um-pick') || !(window.salla && salla.product && salla.cart)) return;
+    var opener = document.activeElement;
+    var box = el('div', 'um-pick um-free',
+      '<div class="um-pick__box" role="dialog" aria-modal="true" aria-labelledby="um-free-t" tabindex="-1">' +
+        '<button type="button" class="um-pick__x" aria-label="' + t('\u0625\u063a\u0644\u0627\u0642', 'Close') + '">&times;</button>' +
+        '<div class="um-free__body"></div>' +
+        '<button type="button" class="um-free__skip">' + t('\u062a\u062e\u0637\u064e\u0651 \u0627\u0644\u062d\u064a\u0646', 'Skip for now') + '</button>' +
+      '</div>');
+    var body = $('.um-free__body', box);
+    var close = function () { box.remove(); document.removeEventListener('keydown', key, true); document.documentElement.classList.remove('um-pick-on'); if (opener && opener.focus) opener.focus(); };
+    var key = function (e) { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+    box.addEventListener('click', function (e) { if (e.target === box || e.target.closest('.um-pick__x, .um-free__skip')) close(); });
+    function grid() {
+      body.innerHTML = '<p class="um-pick__name um-free__title" id="um-free-t">' + t('\u0627\u062e\u062a\u0631 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629', 'Pick your free tee') + '</p>' +
+        '<p class="um-free__sub">' + t('\u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0639\u0644\u064a\u0646\u0627. \u0627\u062e\u062a\u0631 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0648\u0628\u0639\u062f\u0647\u0627 \u0627\u0644\u0645\u0642\u0627\u0633.', 'The fourth is on us. Pick the tee, then its size.') + '</p>' +
+        '<div class="um-free__grid" aria-busy="true"></div><p class="um-pick__err" role="alert"></p>';
+      var g = $('.um-free__grid', body);
+      teesAll().then(function (list) {
+        g.removeAttribute('aria-busy');
+        g.innerHTML = list.map(function (p) {
+          return '<button type="button" class="um-free__tee" data-id="' + esc(p.id) + '"><img src="' + esc(imageOf(p)) + '" alt="" loading="lazy"><span>' + esc(p.name) + '</span></button>';
+        }).join('');
+        $$('.um-free__tee', g).forEach(function (b) { b.addEventListener('click', function () { sizes(b.getAttribute('data-id')); }); });
+      }, function () {
+        g.removeAttribute('aria-busy');
+        $('.um-pick__err', body).textContent = t('\u0645\u0627 \u0642\u062f\u0631\u0646\u0627 \u0646\u062c\u064a\u0628 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629', 'The tees did not load, try again');
+      });
+    }
+    function sizes(id) {
+      body.setAttribute('aria-busy', 'true');
+      detailsOf(id).then(function (d) {
+        body.removeAttribute('aria-busy');
+        var need = (d.options || []).filter(function (o) { return o.required; });
+        if (need.length !== 1 || !(need[0].details || []).length) { if (d.url) location.href = d.url; return; }
+        var opt = need[0], chosen = null, pic = (d.image && d.image.url) || '';
+        body.innerHTML = '<button type="button" class="um-free__back">' + t('\u0631\u062c\u0648\u0639 \u0644\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a', 'Back to the tees') + '</button>' +
+          '<div class="um-pick__head">' + (pic ? '<img src="' + esc(pic) + '" alt="">' : '') + '<p class="um-pick__name" id="um-free-t">' + esc(d.name || '') + '</p></div>' +
+          '<p class="um-pick__label" id="um-free-l">' + esc(opt.name || t('\u0627\u0644\u0645\u0642\u0627\u0633', 'Size')) + '</p>' +
+          '<div class="um-pick__sizes" role="radiogroup" aria-labelledby="um-free-l">' + opt.details.map(function (v) {
+            return '<button type="button" class="um-tile" role="radio" aria-checked="false" data-v="' + v.id + '"' + (v.is_out ? ' disabled' : '') + '>' + esc(v.name) + '</button>';
+          }).join('') + '</div>' +
+          '<p class="um-pick__err" role="alert"></p>' +
+          '<button type="button" class="um-pick__add" aria-disabled="true">' + t('\u0623\u0636\u0641 \u0642\u0637\u0639\u062a\u0643 \u0627\u0644\u0645\u062c\u0627\u0646\u064a\u0629', 'Add your free tee') + '</button>';
+        var err = $('.um-pick__err', body), add = $('.um-pick__add', body), tiles = $$('.um-tile', body);
+        $('.um-free__back', body).addEventListener('click', function () { grid(); $('.um-pick__box', box).focus(); });
+        tiles.forEach(function (b) {
+          b.addEventListener('click', function () {
+            chosen = b.getAttribute('data-v');
+            tiles.forEach(function (x) { x.setAttribute('aria-checked', String(x === b)); });
+            add.setAttribute('aria-disabled', 'false');
+            err.textContent = '';
+          });
+        });
+        add.addEventListener('click', function () {
+          if (!chosen) { err.textContent = t('\u0627\u062e\u062a\u0631 \u0627\u0644\u0645\u0642\u0627\u0633 \u0623\u0648\u0644\u0627\u064b', 'Pick a size first'); return; }
+          if (add.classList.contains('is-busy')) return;
+          add.classList.add('is-busy');
+          var options = {}; options[opt.id] = +chosen;
+          // the bag page draws its rows once, so it comes back with the 4th tee in (the bar then says the offer is on)
+          salla.cart.addItem({ id: +id, quantity: 1, options: options }).then(function () { location.reload(); }, function () {
+            add.classList.remove('is-busy');
+            err.textContent = t('\u0645\u0627 \u0627\u0646\u0636\u0627\u0641\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629', 'It was not added, try again');
+          });
+        });
+        $('.um-pick__box', box).focus();
+      }, function () {
+        body.removeAttribute('aria-busy');
+        var e = $('.um-pick__err', body);
+        if (e) e.textContent = t('\u0645\u0627 \u0642\u062f\u0631\u0646\u0627 \u0646\u0641\u062a\u062d \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a\u060c \u062c\u0631\u0651\u0628 \u0645\u0631\u0629 \u062b\u0627\u0646\u064a\u0629', 'That tee did not open, try again');
+      });
+    }
+    grid();
+    document.addEventListener('keydown', key, true);
+    document.body.appendChild(box);
+    document.documentElement.classList.add('um-pick-on');
+    $('.um-pick__box', box).focus();
+  }
+  // once a visit, by itself, when the bag reaches 3 (no storage, no asking by itself: only the bar's button)
+  var freeOnce = function () {
+    try { if (sessionStorage.getItem('um-free-asked')) return; sessionStorage.setItem('um-free-asked', '1'); } catch (e) { return; }
+    setTimeout(freePick, 700);
+  };
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('[data-um-free]')) { e.preventDefault(); freePick(); }
+  });
 
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
      on WhatsApp only. whatsapp-coupon/ (a Cloudflare Worker) checks the number and the visitor (Turnstile) and sends it;
