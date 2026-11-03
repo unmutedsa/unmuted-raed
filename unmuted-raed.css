@@ -6,6 +6,7 @@
 
 html:root {
   --um-paper: #FAF5EF;
+  --um-logo: url(__LOGO__);   /* once: the header and the home's loader both use it */
   --um-ink: #101010;
   --um-orange: #F36C27;
   --um-blue: #2AACE2;
@@ -51,7 +52,7 @@ body.theme-raed { font-family: var(--um-font) !important; }
 .theme-raed .store-header .top-navbar { display: none; }
 .theme-raed #mainnav, .theme-raed #mainnav .inner { background: var(--um-paper) !important; box-shadow: none !important; }
 .theme-raed #mainnav { border-bottom: 2px solid var(--um-ink); }
-.theme-raed .navbar-brand img { content: url(__LOGO__); width: auto !important; height: 46px !important; max-height: none; object-fit: contain; }
+.theme-raed .navbar-brand img { content: var(--um-logo); width: auto !important; height: 46px !important; max-height: none; object-fit: contain; }
 .theme-raed custom-main-menu .main-menu > li > a, .theme-raed .main-menu > li > a { color: var(--um-ink); font-weight: 800; font-size: 16px; }
 .theme-raed .main-menu .sub-menu { padding: 8px; border: 2px solid var(--um-ink); border-radius: 16px; background: var(--um-paper); box-shadow: var(--um-hard); }
 .theme-raed .main-menu .sub-menu a { border-radius: 10px; font-weight: 600; }
@@ -175,7 +176,7 @@ body.index.um-home-off #main-content > section.s-block { visibility: visible; an
    from the first paint; unmuted-raed.js lifts it (html.um-ready) once the sections are in and the view sits at the top,
    or, on the way back from a product, where it was left. Without the script it lifts by itself after 10s. */
 body.index::before, body.index::after { content: ''; position: fixed; z-index: 2147483000; pointer-events: auto; }
-body.index::before { inset: 0; background: var(--um-paper) url(__LOGO__) no-repeat 50% calc(50% - 22px) / 168px auto; animation: um-ld-out .4s ease 10s forwards; }
+body.index::before { inset: 0; background: var(--um-paper) var(--um-logo) no-repeat 50% calc(50% - 22px) / 168px auto; animation: um-ld-out .4s ease 10s forwards; }
 body.index::after {
   z-index: 2147483001; left: 50%; top: calc(50% + 34px); width: 46px; height: 24px; transform: translateX(-50%);
   background-image: linear-gradient(var(--um-orange), var(--um-orange)), linear-gradient(var(--um-blue), var(--um-blue)), linear-gradient(var(--um-ink), var(--um-ink)), linear-gradient(var(--um-blue), var(--um-blue)), linear-gradient(var(--um-orange), var(--um-orange));
