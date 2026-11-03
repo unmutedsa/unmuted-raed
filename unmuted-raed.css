@@ -605,6 +605,7 @@ button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointe
    unmuted-raed.js offerZero) and Salla's own offer banner (it shows the 0.01 step; the .um-offer bar says it all) */
 .theme-raed salla-conditional-offer, .theme-raed salla-cart-item-offers[data-um-zero] { display: none !important; }
 .theme-raed form[data-um-same] .item-regular-price { display: none !important; }
+.theme-raed salla-cart-item-offers[data-um-free] .s-cart-item-offers-discount { display: none !important; }   /* the free 4th tee: no «خصم 129.57» */
 .theme-raed form[data-um-same] [data-testid="store-cart-item-price"] { color: var(--um-ink) !important; }
 .theme-raed salla-cart-summary-card[data-um-nosave] .s-cart-summary-card-line--discount { display: none !important; }
 /* the bottom bar's «وفّرت …» and struck total, always: Salla counts the saving before VAT (2 tees: «وفّرت 38.87», 292.16

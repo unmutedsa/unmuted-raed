@@ -1403,9 +1403,12 @@
   var flag = function (n, k, on) { if (n.hasAttribute(k) !== on) n.toggleAttribute(k, on); };
   function offerZero() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
+    // the 4th tee given free (\u00ab\u0627\u0644\u0631\u0627\u0628\u0639 \u0639\u0644\u064a\u0646\u0627\u00bb, buy 3 get 1) shows 0 with 149 struck; Salla's line under it says
+    // \u00ab\u062e\u0635\u0645 129.57\u00bb (the 149 before VAT), so on a free tee only the offer's name stays
     $$('salla-cart-item-offers').forEach(function (o) {
-      var d = $('.s-cart-item-offers-discount', o);
+      var d = $('.s-cart-item-offers-discount', o), f = o.closest('form'), now = f && $('[data-testid="store-cart-item-price"]', f);
       flag(o, 'data-um-zero', !!d && amount(d.textContent) < 0.01);
+      flag(o, 'data-um-free', !!now && amount(now.textContent) === 0);
     });
     $$('form[id^="item-"]').forEach(function (f) {
       var was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f);
