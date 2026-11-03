@@ -170,6 +170,27 @@ body.index:not(.um-home-on) #main-content > section.s-block { visibility: hidden
 body.index.um-home-off #main-content > section.s-block { visibility: visible; animation: none; }
 @keyframes um-unhide { to { visibility: visible; } }
 .um-home { overflow: clip; }
+/* the home's loader (owner, 2026-11-03: a refresh showed the footer first). The UNMUTED sections come in after the page
+   has loaded, so until then the page is only header + footer. The page colour, the logo and a little equalizer cover it
+   from the first paint; unmuted-raed.js lifts it (html.um-ready) once the sections are in and the view sits at the top,
+   or, on the way back from a product, where it was left. Without the script it lifts by itself after 10s. */
+body.index::before, body.index::after { content: ''; position: fixed; z-index: 2147483000; pointer-events: auto; }
+body.index::before { inset: 0; background: var(--um-paper) url(__LOGO__) no-repeat 50% calc(50% - 22px) / 168px auto; animation: um-ld-out .4s ease 10s forwards; }
+body.index::after {
+  z-index: 2147483001; left: 50%; top: calc(50% + 34px); width: 46px; height: 24px; transform: translateX(-50%);
+  background-image: linear-gradient(var(--um-orange), var(--um-orange)), linear-gradient(var(--um-blue), var(--um-blue)), linear-gradient(var(--um-ink), var(--um-ink)), linear-gradient(var(--um-blue), var(--um-blue)), linear-gradient(var(--um-orange), var(--um-orange));
+  background-repeat: no-repeat; background-position: 0 100%, 10px 100%, 20px 100%, 30px 100%, 40px 100%;
+  background-size: 6px 35%, 6px 70%, 6px 100%, 6px 55%, 6px 30%;
+  animation: um-eq .9s ease-in-out infinite alternate, um-ld-out .4s ease 10s forwards;
+}
+html.um-ready body.index::before, html.um-ready body.index::after { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .45s ease, visibility 0s linear .45s; }
+@keyframes um-eq {
+  0% { background-size: 6px 35%, 6px 70%, 6px 100%, 6px 55%, 6px 30%; }
+  50% { background-size: 6px 85%, 6px 30%, 6px 60%, 6px 100%, 6px 45%; }
+  100% { background-size: 6px 50%, 6px 100%, 6px 30%, 6px 40%, 6px 90%; }
+}
+@keyframes um-ld-out { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+@media (prefers-reduced-motion: reduce) { body.index::after { animation: um-ld-out .4s ease 10s forwards; } }
 /* coming back to a page: it stays hidden (not the header) until it sits where it was left (unmuted-raed.js), then fades in */
 html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; transition: none; }
 #main-content, .store-footer { transition: opacity .25s; }   /* only showing fades; hiding is at once */

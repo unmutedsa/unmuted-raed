@@ -130,6 +130,7 @@
       main.insertBefore(box, main.firstChild);
       railTouch(box);
       links(box);
+      homeReady(box);
       var js = el('script');
       js.src = CDN + '/sections.js';
       js.defer = true;
@@ -140,6 +141,7 @@
       document.body.classList.remove('theme-unmuted', 'um-home-on');
       document.body.classList.add('um-home-off');   // Raed's own sections show instead
       window.__umHomeLoading = false;
+      homeReady(null);
     });
   }
 
@@ -1208,31 +1210,62 @@
     f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
   }
 
-  /* back to a page (the browser's back button) lands where it was left. The home's sections and Salla's product lists
-     are added after the page loads, so on the way back the page is short at first: the browser's own restore would stop
-     at the footer, the sections would then push the view up to the top, and only then would it reach the spot. So the
-     page (not the header) stays hidden until it sits at the spot, then fades in. */
-  function keepPlace() {
-    var key = 'um-y:' + location.pathname + location.search, root = document.documentElement;
-    addEventListener('pagehide', function () { try { sessionStorage.setItem(key, String(Math.round(scrollY))); } catch (e) { /* private mode */ } });
-    var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null, y = 0;
-    try { y = Number(sessionStorage.getItem(key)) || 0; } catch (e) { /* private mode */ }
-    if (!nav || nav.type !== 'back_forward' || !y) return;
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    root.classList.add('um-restoring');
-    var stop = false, steady = 0, h = 0, tries = 0;
-    var show = function () { root.classList.remove('um-restoring'); };
-    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { stop = true; show(); }, { once: true, passive: true }); });
-    setTimeout(show, 3500);   // whatever happens, the page shows
+  /* where a page opens (owner, 2026-11-03): a visit or a refresh opens at the top, and the back button lands where the page
+     was left (from a product back to the home: the same spot in the list). The browser's own restore is off: the home's
+     sections and Salla's product lists come in after the page loads, so it would stop at the footer of the still-short
+     page. On the way back the page (not the header) stays hidden until it sits at the spot, then fades in; the home has
+     its loader for that (homeReady). */
+  var NAV = (function () { var n = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null; return n ? n.type : ''; })();
+  var PLACE = 'um-y:' + location.pathname + location.search;
+  var savedY = function () { try { return Number(sessionStorage.getItem(PLACE)) || 0; } catch (e) { return 0; } };
+  // jump to y once the page is tall enough and keep it there while late parts settle; done() once it sits still, the
+  // visitor moves, or 6s go by
+  function settleAt(y, done) {
+    var root = document.documentElement, stop = false, steady = 0, h = 0, tries = 0, fin = false;
+    var end = function () { if (!fin) { fin = true; done(); } };
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(function (t) { addEventListener(t, function () { stop = true; end(); }, { once: true, passive: true }); });
     (function go() {
-      if (stop || ++tries > 60) return show();   // the visitor moved, or 6s went by
+      if (stop || ++tries > 60) return end();
       var tall = root.scrollHeight - innerHeight >= y - 2;
       if (tall) scrollTo({ top: y, behavior: 'instant' });   // the theme scrolls smoothly; this must be a jump
       steady = tall && Math.abs(scrollY - y) < 3 && root.scrollHeight === h ? steady + 1 : 0;
       h = root.scrollHeight;
-      if (steady >= 3) show();                  // at the spot and the page has stopped growing: show it
+      if (steady >= 3) end();                   // at the spot and the page has stopped growing
       if (steady < 8) setTimeout(go, 100);      // and keep it there while late images settle
     })();
+  }
+  function keepPlace() {
+    var root = document.documentElement;
+    addEventListener('pagehide', function () { try { sessionStorage.setItem(PLACE, String(Math.round(scrollY))); } catch (e) { /* private mode */ } });
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    if (document.body && document.body.classList.contains('index')) return;   // the home: homeReady, once its sections are in
+    var y = savedY();
+    if (NAV !== 'back_forward' || !y) return;
+    root.classList.add('um-restoring');
+    var show = function () { root.classList.remove('um-restoring'); };
+    setTimeout(show, 3500);   // whatever happens, the page shows
+    settleAt(y, show);
+  }
+  /* the home's loader (CSS, from the first paint) lifts once the sections are in and their photo has come, with the view at
+     the top, or, back from a product, where it was left */
+  function homeReady(box) {
+    var root = document.documentElement;
+    if (root.classList.contains('um-ready')) return;
+    var img = box && $('.um-hero__photo', box);
+    new Promise(function (r) {
+      if (!img || (img.complete && img.naturalWidth)) return r();
+      img.addEventListener('load', r, { once: true });
+      img.addEventListener('error', r, { once: true });
+      setTimeout(r, 1500);
+    }).then(function () {
+      var lift = function () { root.classList.add('um-ready'); };
+      var y = NAV === 'back_forward' ? savedY() : 0;
+      setTimeout(function () {   // at least .6s from the start, so a quick load doesn't blink
+        if (y) return settleAt(y, lift);
+        if (!location.hash) scrollTo({ top: 0, behavior: 'instant' });
+        requestAnimationFrame(lift);
+      }, Math.max(0, 600 - performance.now()));
+    });
   }
 
   function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); }
