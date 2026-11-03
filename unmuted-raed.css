@@ -206,7 +206,11 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .um-home .um-hero.has-banner { --sec-bg: #43566D; }   /* the banner's denim blue, while it loads */
 .um-home .um-hero__banner { display: block; }
 .um-home .um-hero__banner img { display: block; width: 100%; height: auto; }
-.um-home .um-hero__banner:focus-visible { outline: 3px solid var(--um-orange); outline-offset: -3px; }
+/* the hero's words and button, in the middle of the banner (owner: «على الصورة… في النص»), on the same soft shade they
+   had over the photo, always shown now */
+.um-home .um-hero.has-banner .um-hero__cap { gap: 8px; opacity: 1; }
+.um-home .um-hero.has-banner .um-hero__cap > * { transform: none; }
+.um-home .um-hero.has-banner .um-hero__title { font-size: clamp(36px, 5vw, 72px); }
 /* computers: the tracklist after the rail is three tees a row, each a big photo (phones already show two a row) */
 @media (min-width: 900px) {
   .um-home .um-tl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 28px; padding-top: 28px; }
