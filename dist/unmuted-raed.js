@@ -246,7 +246,8 @@
   var ALONE = { '217344331': 'caution/', '1197022782': 'unmuted-sticker/', '862344853': 'riyadh/', '1501040588': 'just-padel/',
     '1223062065': 'dates-season/', '696581406': 'desert-club/', '2123593358': 'love-pop/',
     '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
-    '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/' };
+    '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/',
+    '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/' };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -708,7 +709,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@393056f57d7b082e1afdd5c165a74ffa860e5f34/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d65b91d0f352023142467fae312c4ff3bb8ace16/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -764,6 +765,24 @@
     dj5DooBsDfOMdbIvIsVaR8QS8wEsn8xvmxvWhKVW: 'kashta/woman-back.webp',
     sP9CiDfNugeakxLSKXloHKhcLAJQ9ohZkicrK3sa: 'kashta/woman-front.webp',
     dpSWAyYYCYADpLLvFi8V4vPYdbxfDOUgtuAbSRg8: 'kashta/woman-side.webp',
+    Ghhln3q589Ku10AIKadmqn0UZowgGCcSB6oDiJBR: 'the-original/man-back.webp',
+    fdpJeclPWyARb153uK5rAd8HXPybLtXXS9GSF7Na: 'the-original/man-front.webp',
+    kxs1dqgX42U4kJmEZhzKxyEbXHsqYe6UH2Ne6Oku: 'the-original/man-side.webp',
+    Uht7CfUwBvLhItbjkuO1G9C7sAScoQLT2Rw4BG8g: 'the-original/woman-back.webp',
+    '1aYXQoll6ClS3HoTnZLh4Zvy88qc1ChDxz8MEMnk': 'the-original/woman-front.webp',
+    pjFTzv8AkGhD34AFm2JUmWC98MTwQKj4xgCTV8pN: 'the-original/woman-side.webp',
+    wLxIAmv0HIzn5xqhNLWXqAIEeRi3yV1jfKZfvvAo: 'megaphone/man-back.webp',
+    ARRbVpEGJG3NPpr80AiqcizSlt3qT4x9n0HlYBlE: 'megaphone/man-front.webp',
+    '5xUGSe1MKNutRzta7fB4RC5ngUgQycfHgEJxSQ9t': 'megaphone/man-side.webp',
+    ikNdUKZWPssiilRsiOrdg7pPaelqTZh7bNEmr41f: 'megaphone/woman-back.webp',
+    N9gENW2Ikl1zQALK2okXvNq6rAVZdTggoQnsYHmR: 'megaphone/woman-front.webp',
+    DGNgn8aRmqtYHJj6N5Re1YvLYFNeL8gENo2XZfH0: 'megaphone/woman-side.webp',
+    IUOB5Cyqi4rKu11pWBXaySTyKKu9Rl5j2CuXDzhs: 'ice-cream/man-back.webp',
+    zbLKKo43r6hyfdZmixY4CBIDCU4jFfGvtWvybduH: 'ice-cream/man-front.webp',
+    UCsvHqpCzOhG95Xe5pm3ra4grTOEAZzTvuR81Uky: 'ice-cream/man-side.webp',
+    '0jYixIp7B7ikRq8QAJa49FGE0itgaSmEbBkSkIFL': 'ice-cream/woman-back.webp',
+    QXzOQsGfc6AXG2Phx4H7yPuMME4Xb1diQ8bU27EB: 'ice-cream/woman-front.webp',
+    '84qARGh1t2UWsMXFMUrjmdv0PxkhwUU83WAHzmKB': 'ice-cream/woman-side.webp',
     ydNcdgim5f5l02lH7a0ocOyp22LevKSTKpWLlZJm: 'unmuted-sticker/man-back.webp',
     '16etEZ7BIDyi5zVcVWaLwNvIWRNP8ItU6CmagbmJ': 'unmuted-sticker/man-front.webp',
     vyG1fatbBuooEFrczJ8mJur6DWQ1rOrSZsBhcG63: 'unmuted-sticker/man-side.webp',
@@ -821,7 +840,13 @@
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
     tbOWy7dj4MOch0oBxiAYJkd7ZDZzGeucukkrQt7y: 'kashta/alone-front.webp',
-    ZW7gbVLhS8MhbsjyEARQAQw0K2kkVz4cLM2WJg6K: 'kashta/alone-back.webp'
+    ZW7gbVLhS8MhbsjyEARQAQw0K2kkVz4cLM2WJg6K: 'kashta/alone-back.webp',
+    xvch0LdtD40mqsyO83btCQIxmN2uNyJYKZhFDzT8: 'the-original/alone-front.webp',
+    sqbTmQ2OEZyZSO2fHBdOiy2VaXYE7Ylhs64nWjDR: 'the-original/alone-back.webp',
+    tEeeF5QsPxa0ReM7OizCbCylHEF59QU3yoiJCIcA: 'megaphone/alone-front.webp',
+    uWWXA9gx5OuiJfWl1ItEo4RsUhAY0JXdHKBopF1z: 'megaphone/alone-back.webp',
+    iZ8m9YdntMvoISTbJOj5iYqeBFty0cfk0J81Cx4G: 'ice-cream/alone-front.webp',
+    Etz5XE1PB7xIaJIRqCGxGSoYWMW5tJFjou301Uzy: 'ice-cream/alone-back.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -870,7 +895,7 @@
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: \u00ab\u062d\u062a\u064a \u0645\u0646 \u0627\u0644\u062f\u0627\u062e\u0644 \u062a\u0643\u0648\u0646 \u0627\u0644\u062e\u0644\u0641\u064a\u0647 \u0646\u0641\u0633 \u0644\u0648\u0646 \u0627\u0644\u0645\u0648\u0642\u0639\u00bb)
   var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496',
-    '226109447', '1987585855', '157439951'];
+    '226109447', '1987585855', '157439951', '540602239', '752858337', '955844389'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
