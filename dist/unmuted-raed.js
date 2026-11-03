@@ -1376,7 +1376,7 @@
       title: t('\u0635\u0648\u062a\u064a\u0646. \u0648\u0627\u062d\u062f \u0644\u0643 \u0648\u0648\u0627\u062d\u062f \u0644\u0635\u0627\u062d\u0628\u0643.', 'Two voices. One for you, one for a friend.'),
       deal: t('\u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u064a\u0646 \u062a\u062e\u062a\u0627\u0631\u0647\u0645 \u0628\u062e\u0635\u0645 \u0661\u0665\u066a.', 'Any two tees you pick, 15% off.'), go: t('\u0627\u062e\u062a\u0631 \u0635\u0648\u062a\u064a\u0646', 'Pick two voices') },
     { pack: PACKS[2], tone: 'orange', pics: ['cherry-market', 'caution'], badge: t('\u0627\u0644\u0631\u0627\u0628\u0639<br>\u0645\u062c\u0627\u0646\u0627\u064b', '4th<br>free'),
-      title: t('\u0623\u0631\u0628\u0639\u0629 \u0623\u0635\u0648\u0627\u062a. \u0627\u0644\u0631\u0627\u0628\u0639 \u0639\u0644\u064a\u0646\u0627.', 'Four voices. The fourth is on us.'),
+      title: t('\u062b\u0644\u0627\u062b \u0623\u0635\u0648\u0627\u062a. \u0627\u0644\u0631\u0627\u0628\u0639 \u0639\u0644\u064a\u0646\u0627.', 'Three voices. The fourth is on us.'),
       deal: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u0648\u0627\u0644\u0631\u0627\u0628\u0639 \u0645\u062c\u0627\u0646\u0627\u064b.', 'Buy 3 tees, the 4th is free.'), go: t('\u0627\u062e\u062a\u0631 \u0664 \u0623\u0635\u0648\u0627\u062a', 'Pick four voices') }
   ];
   function duoPage() {
@@ -1407,6 +1407,35 @@
     main.insertBefore(page, main.firstChild);
     var box = entry && entry.closest('section, .container, article');
     if (box) box.style.display = 'none';
+  }
+
+  // Salla's \u00abadded to your bag\u00bb popup (salla-add-product-toast) reads its words once, when it is made; if the store's
+  // translations arrive later it can keep the raw keys (owner's screenshot 2026-11-03: \u00abpages.cart.added_to_cart\u00bb,
+  // \u00abpages.cart.complete_order\u00bb). Give it the words, and fix any key it has already drawn
+  var TOAST = {
+    successMessage: ['pages.cart.added_to_cart', t('\u062a\u0645\u062a \u0627\u0644\u0625\u0636\u0627\u0641\u0629 \u0625\u0644\u0649 \u0627\u0644\u0633\u0644\u0629', 'Added to your bag')],
+    viewCartText: ['pages.cart.view_cart', t('\u0639\u0631\u0636 \u0627\u0644\u0633\u0644\u0629', 'View bag')],
+    checkoutText: ['pages.cart.complete_order', t('\u0625\u062a\u0645\u0627\u0645 \u0627\u0644\u0637\u0644\u0628', 'Checkout')],
+    showMoreText: ['pages.checkout.show_more', t('\u0639\u0631\u0636 \u0627\u0644\u0645\u0632\u064a\u062f', 'Show more')]
+  };
+  var toastWord = function (k) {
+    var key = TOAST[k][0], got = window.salla && salla.lang && salla.lang.get ? salla.lang.get(key) : key;
+    return got && got !== key ? got : TOAST[k][1];
+  };
+  function toastText() {
+    var box = $('salla-add-product-toast');
+    if (!box) return;
+    var byKey = {};
+    Object.keys(TOAST).forEach(function (k) {
+      byKey[TOAST[k][0]] = k;
+      if (typeof box[k] === 'string' && box[k].indexOf(TOAST[k][0]) === 0) box[k] = toastWord(k);
+    });
+    if (!/pages\.(cart|checkout)\./.test(box.textContent)) return;
+    var walk = document.createTreeWalker(box, NodeFilter.SHOW_TEXT), n;
+    while ((n = walk.nextNode())) {
+      var k = byKey[n.nodeValue.trim()];
+      if (k) n.nodeValue = toastWord(k);
+    }
   }
 
   /* the welcome code on WhatsApp (owner, 2026-11-03): a popup asks for a mobile number and the code reaches the customer
@@ -1536,11 +1565,11 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); duoPage(); }
+  function run() { previewLinks(); fonts(); header(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); duoPage(); toastText(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
