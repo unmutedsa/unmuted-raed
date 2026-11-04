@@ -1359,10 +1359,12 @@
       '<div class="um-packs__row">' + PACKS.map(function (p) { return packCard(p, 'div').replace('class="um-pack', 'class="um-pack' + (p.n === at ? ' is-on' : '')); }).join('') + '</div>';
   }
   // the cart: how many tees, what the next one gets, what's saved, and the shipping
+  var rowQty = function (q) {
+    var i = q && $('input', q);
+    return q ? parseInt((i && i.value) || q.getAttribute('value'), 10) || 0 : 0;
+  };
   var cartCount = function () {
-    return $$('form[id^="item-"] salla-quantity-input').reduce(function (n, q) {
-      var i = $('input', q); return n + (parseInt((i && i.value) || q.getAttribute('value'), 10) || 0);
-    }, 0);
+    return $$('form[id^="item-"] salla-quantity-input').reduce(function (n, q) { return n + rowQty(q); }, 0);
   };
   function offerBar() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
@@ -1404,21 +1406,39 @@
   var flag = function (n, k, on) { if (n.hasAttribute(k) !== on) n.toggleAttribute(k, on); };
   function offerZero() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
+    // the free tee at 4 and up: the offer splits its 149 over the tees (the PDF wants that in the order: 111.75 each), so no
+    // row said which tee is free (owner's screenshot 2026-11-04: «مش مكتوب عليه مجاني»). While the bag's total is one tee
+    // less than its count, the rows say it: every tee at its full price and the last one free. Only these words change: the
+    // order keeps Salla's split, and with a coupon or another product in the bag the sums differ and Salla's numbers stay
+    var rows = $$('form[id^="item-"]'), count = cartCount(), bar = $('salla-cart-summary-card .s-cart-summary-card-bar-total');
+    var oneFree = count >= 4 && !!bar && Math.abs(amount(bar.textContent) - (count - 1) * PACK.price) < 0.05 && rows.every(function (f) {
+      var w = $('.item-regular-price', f);
+      return !!w && amount(w.textContent) === PACK.price;
+    });
+    var setMoney = function (node, v) {
+      var n = node && node.firstChild, s = moneyNum(v) + ' ';
+      if (n && n.nodeType === 3 && n.data !== s) n.data = s;
+    };
     // the 4th tee given free («الرابع علينا», buy 3 get 1) shows 0 with 149 struck; Salla's line under it says
     // «خصم 129.57» (the 149 before VAT), so on a free tee only the offer's name stays
     $$('salla-cart-item-offers').forEach(function (o) {
       var d = $('.s-cart-item-offers-discount', o), f = o.closest('form'), now = f && $('[data-testid="store-cart-item-price"]', f);
-      flag(o, 'data-um-zero', !!d && amount(d.textContent) < 0.01);
+      flag(o, 'data-um-zero', oneFree || (!!d && amount(d.textContent) < 0.01));
       flag(o, 'data-um-free', !!now && amount(now.textContent) === 0);
     });
-    // the free tee's own line (price 0): «هديتك · مجاناً» instead of its price and total, and no quantity buttons (one
-    // gift; more tees go in as paid ones) (owner)
-    $$('form[id^="item-"]').forEach(function (f) {
+    // the free tee's own line: «هديتك · مجاناً» instead of its price and total, and no quantity buttons (one gift; more
+    // tees go in as paid ones) (owner). A last row of several tees keeps them: «قطعة منها مجانية»
+    rows.forEach(function (f, i) {
       var was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f), tot = $('[data-testid="store-cart-item-total"]', f);
-      var gift = !!now && amount(now.textContent) === 0;
+      var qty = rowQty($('salla-quantity-input', f)), last = oneFree && i === rows.length - 1;
+      if (oneFree) { setMoney(now, PACK.price); setMoney(tot, (qty - (last ? 1 : 0)) * PACK.price); }
+      var gift = !!now && (amount(now.textContent) === 0 || (last && qty === 1)), part = last && qty > 1;
       flag(f, 'data-um-same', !!was && !!now && Math.abs(amount(was.textContent) - amount(now.textContent)) < 1);
       flag(f, 'data-um-gift', gift);
-      if (gift && !$('.um-gift-tag', f)) now.insertAdjacentHTML('afterend', '<span class="um-gift-tag">' + t('هديتك · مجاناً', 'Your gift · free') + '</span>');
+      flag(f, 'data-um-part', part);
+      if ((gift || part) && !$('.um-gift-tag', f)) now.insertAdjacentHTML('afterend', '<span class="um-gift-tag"></span>');
+      var tag = $('.um-gift-tag', f), words = part ? t('قطعة منها مجانية', 'One of them is free') : t('هديتك · مجاناً', 'Your gift · free');
+      if (tag && tag.textContent !== words) tag.textContent = words;
       if (gift && tot && !$('.um-gift-total', f)) tot.insertAdjacentHTML('afterend', '<span class="um-gift-total">' + t('مجاناً', 'Free') + '</span>');
     });
     var card = $('salla-cart-summary-card');

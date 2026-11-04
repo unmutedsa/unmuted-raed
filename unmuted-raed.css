@@ -613,7 +613,7 @@ button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointe
 .theme-raed salla-cart-item-offers .s-cart-item-offers-box ~ .s-cart-item-offers-box { display: none !important; }
 /* the free tee's line: «هديتك · مجاناً» instead of its 0 price, «مجاناً» as its total, no quantity buttons (unmuted-raed.js offerZero) */
 .um-gift-tag, .um-gift-total { display: none; }
-.theme-raed form[data-um-gift] .um-gift-tag { display: inline-block; margin-top: 2px; padding: 3px 12px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 13px; line-height: 1.4; }
+.theme-raed form[data-um-gift] .um-gift-tag, .theme-raed form[data-um-part] .um-gift-tag { display: inline-block; margin-top: 2px; padding: 3px 12px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 13px; line-height: 1.4; }
 .theme-raed form[data-um-gift] .um-gift-total { display: inline; }
 .theme-raed form[data-um-gift] .item-regular-price, .theme-raed form[data-um-gift] [data-testid="store-cart-item-price"],
 .theme-raed form[data-um-gift] [data-testid="store-cart-item-total"], .theme-raed form[data-um-gift] salla-quantity-input { display: none !important; }
