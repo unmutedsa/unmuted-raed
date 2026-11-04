@@ -572,8 +572,7 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-pack__title { font-size: 16px; font-weight: 800; padding-inline-end: 30px; }
 .um-pack__price { font-size: 20px; font-weight: 800; }
 .um-pack__price s { margin-inline-start: 6px; font-size: 14px; font-weight: 500; color: var(--um-soft); }
-.um-pack__note, .um-pack__sub { font-size: 13px; color: var(--um-soft); }
-.um-pack__note b { color: var(--um-ink); }
+.um-pack__sub { font-size: 13px; color: var(--um-soft); }
 .um-money { white-space: nowrap; }
 .um-money .sicon-sar { font-size: .85em; }
 .um-pack.is-best { border-color: var(--um-ink); background-color: #FFF4EC; }
@@ -587,7 +586,6 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-packs__head { line-height: 1.6; }
 .um-packs .um-pack__title { padding-inline-end: 0; }
 .um-packs .um-pack__price { grid-column: 2; grid-row: 1; justify-self: end; text-align: end; }
-.um-packs .um-pack__note { grid-column: 1 / -1; }
 .um-packs .um-pack__sub { display: none; }
 .um-packs .um-pack.is-best { margin-top: 12px; }
 @media (prefers-reduced-motion: reduce) { .um-pack { transition: none; } }

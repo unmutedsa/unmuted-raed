@@ -1313,24 +1313,19 @@
   var PACK = { price: 149, ship: 40, page: '72145634' };
   var PACKS = [
     { n: 1, title: t('\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629', 'One tee'), total: 149, was: 0, free: false },
-    { n: 2, title: t('\u0642\u0637\u0639\u062a\u064a\u0646', 'Two tees'), total: 253.30, was: 298, free: false },
-    { n: 4, title: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u0648\u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062c\u0627\u0646\u0627\u064b', 'Buy 3, the 4th is free'), total: 447, was: 596, free: true, best: true }
+    { n: 2, title: t('\u0642\u0637\u0639\u062a\u064a\u0646 \u0628\u062e\u0635\u0645 \u0661\u0665\u066a', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
+    { n: 4, title: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u0648\u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062c\u0627\u0646\u0627\u064b +\u00a0\u0634\u062d\u0646\u00a0\u0645\u062c\u0627\u0646\u064a', 'Buy 3, the 4th is free +\u00a0free\u00a0shipping'), total: 447, was: 596, free: true, best: true }
   ];
   var money = function (v) {
     var s = Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v));
     return '<span class="um-money">' + (ar ? arNum(s).replace('.', '\u066b') : s) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
-  // each card's line as the PDF has it: \u00ab\u0627\u0644\u0634\u062d\u0646 40 \u0631\u064a\u0627\u0644\u00bb \u00b7 \u00ab\u062e\u0635\u0645 15% \u00b7 \u0627\u0644\u0634\u062d\u0646 40 \u0631\u064a\u0627\u0644\u00bb \u00b7 \u00ab4 \u0642\u0637\u0639 \u00b7 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a\u00bb
-  var packNote = function (p) {
-    var ship = p.free ? '<b>' + t('\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') + '</b>' : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship);
-    return p.n === 2 ? t('\u062e\u0635\u0645 \u0661\u0665\u066a', '15% off') + ' \u00b7 ' + ship : p.n === 4 ? t('\u0664 \u0642\u0637\u0639', '4 tees') + ' \u00b7 ' + ship : ship;
-  };
+  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards)
   var packCard = function (p, tag) {
     return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
       (p.best ? '<i class="um-pack__tag">' + t('\u0627\u0644\u0623\u0643\u062b\u0631 \u062a\u0648\u0641\u064a\u0631\u0627\u064b', 'Best value') + '</i>' : '') +
       '<b class="um-pack__title">' + p.title + '</b>' +
       '<span class="um-pack__price">' + money(p.total) + '</span>' +
-      '<span class="um-pack__note">' + packNote(p) + '</span>' +
     '</' + tag + '>';
   };
   // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a

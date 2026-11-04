@@ -1313,24 +1313,19 @@
   var PACK = { price: 149, ship: 40, page: '72145634' };
   var PACKS = [
     { n: 1, title: t('قطعة واحدة', 'One tee'), total: 149, was: 0, free: false },
-    { n: 2, title: t('قطعتين', 'Two tees'), total: 253.30, was: 298, free: false },
-    { n: 4, title: t('اشترِ ٣ والرابعة مجاناً', 'Buy 3, the 4th is free'), total: 447, was: 596, free: true, best: true }
+    { n: 2, title: t('قطعتين بخصم ١٥٪', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
+    { n: 4, title: t('اشترِ ٣ والرابعة مجاناً +\u00a0شحن\u00a0مجاني', 'Buy 3, the 4th is free +\u00a0free\u00a0shipping'), total: 447, was: 596, free: true, best: true }
   ];
   var money = function (v) {
     var s = Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v));
     return '<span class="um-money">' + (ar ? arNum(s).replace('.', '٫') : s) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
-  // each card's line as the PDF has it: «الشحن 40 ريال» · «خصم 15% · الشحن 40 ريال» · «4 قطع · شحن مجاني»
-  var packNote = function (p) {
-    var ship = p.free ? '<b>' + t('شحن مجاني', 'Free shipping') + '</b>' : t('الشحن ', 'Shipping ') + money(PACK.ship);
-    return p.n === 2 ? t('خصم ١٥٪', '15% off') + ' · ' + ship : p.n === 4 ? t('٤ قطع', '4 tees') + ' · ' + ship : ship;
-  };
+  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards)
   var packCard = function (p, tag) {
     return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
       (p.best ? '<i class="um-pack__tag">' + t('الأكثر توفيراً', 'Best value') + '</i>' : '') +
       '<b class="um-pack__title">' + p.title + '</b>' +
       '<span class="um-pack__price">' + money(p.total) + '</span>' +
-      '<span class="um-pack__note">' + packNote(p) + '</span>' +
     '</' + tag + '>';
   };
   // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a
