@@ -608,6 +608,9 @@ button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointe
 /* Salla's «خصم …» under each tee is its share before VAT (2 tees: 19.44 where it is 22.35; 4: 32.39 where it is 37.25):
    only the offer's name stays; the .um-offer bar shows the saving (owner: exactly as the PDF) */
 .theme-raed salla-cart-item-offers .s-cart-item-offers-discount { display: none !important; }
+/* two sizes of one tee in the bag: Salla puts every tee's share of the offer on one line and writes the offer's name once
+   for each (owner's screenshot 2026-11-04). The bag takes one offer, so one name is enough */
+.theme-raed salla-cart-item-offers .s-cart-item-offers-box ~ .s-cart-item-offers-box { display: none !important; }
 /* the free tee's line: «هديتك · مجاناً» instead of its 0 price, «مجاناً» as its total, no quantity buttons (unmuted-raed.js offerZero) */
 .um-gift-tag, .um-gift-total { display: none; }
 .theme-raed form[data-um-gift] .um-gift-tag { display: inline-block; margin-top: 2px; padding: 3px 12px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font-weight: 800; font-size: 13px; line-height: 1.4; }
