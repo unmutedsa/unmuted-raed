@@ -1316,9 +1316,12 @@
     { n: 2, title: t('\u0642\u0637\u0639\u062a\u064a\u0646 \u0628\u062e\u0635\u0645 \u0661\u0665\u066a', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
     { n: 4, title: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u0648\u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062c\u0627\u0646\u0627\u064b +\u00a0\u0634\u062d\u0646\u00a0\u0645\u062c\u0627\u0646\u064a', 'Buy 3, the 4th is free +\u00a0free\u00a0shipping'), total: 447, was: 596, free: true, best: true }
   ];
-  var money = function (v) {
+  var moneyNum = function (v) {
     var s = Math.round(v * 100) % 100 ? v.toFixed(2) : String(Math.round(v));
-    return '<span class="um-money">' + (ar ? arNum(s).replace('.', '\u066b') : s) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
+    return ar ? arNum(s).replace('.', '\u066b') : s;
+  };
+  var money = function (v) {
+    return '<span class="um-money">' + moneyNum(v) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
   // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards)
   var packCard = function (p, tag) {
@@ -1420,7 +1423,25 @@
     });
     var card = $('salla-cart-summary-card');
     var save = card && ($('.s-cart-summary-card-line--discount b', card) || $('.s-cart-summary-card-bar-savings-badge', card));
-    if (card) flag(card, 'data-um-nosave', !!save && amount(save.textContent) < 1);
+    if (card) { flag(card, 'data-um-nosave', !!save && amount(save.textContent) < 1); summaryShip(card); }
+  }
+  // Salla's summary has every line before VAT, so the 40 shipping (VAT included since 2026-11-04) read \u00ab\u0663\u0664\u066b\u0667\u0668\u00bb (owner: \u00ab\u0644\u064a\u0647 \u0645\u0634
+  // \u0645\u0643\u062a\u0648\u0628 40\u00bb). It shows the 40, and the VAT line without shipping's part, so the lines still add up to Salla's total. Only
+  // the text in Salla's own nodes changes, so Salla can still redraw them; any other shipping rate keeps Salla's numbers
+  function summaryShip(card) {
+    var lines = $$('.s-cart-summary-card-line', card);
+    var cell = function (re) {
+      var l = lines.filter(function (x) { return re.test(($('span', x) || {}).textContent || ''); })[0], n = l && $('b', l) && $('b', l).firstChild;
+      return n && n.nodeType === 3 ? n : null;
+    };
+    var raw = function (n) { if (n.data !== n.umWrote) n.umRaw = amount(n.data); return n.umRaw; };
+    var put = function (n, v) { n.umWrote = moneyNum(v) + ' '; if (n.data !== n.umWrote) n.data = n.umWrote; };
+    var ship = cell(/^\s*(\u0631\u0633\u0648\u0645 \u0627\u0644\u0634\u062d\u0646|shipping)/i), vat = cell(/^\s*(\u0636\u0631\u064a\u0628\u0629 \u0627\u0644\u0642\u064a\u0645\u0629|vat)/i);
+    if (!ship || !vat) return;
+    var S = raw(ship), V = raw(vat), on = Math.abs(S * 1.15 - PACK.ship) < 0.02;
+    if (!isFinite(S) || !isFinite(V)) return;
+    put(ship, on ? PACK.ship : S);
+    put(vat, on ? Math.round((V - (PACK.ship - S)) * 100) / 100 : V);
   }
   // the Duo page (Salla's info page #72145634, linked in the header): each offer as the UNMUTED store's Duo card (a
   // tilted photo of our couple shots, a big line, the price and one button), as bordered cards one under the other
