@@ -439,6 +439,7 @@ html.um-fit-lock, html.um-fit-lock body { overflow: hidden !important; }
 .theme-raed salla-quantity-input .s-quantity-input-input { width: 30px; border: 0; background: none; font-weight: 700; text-align: center; box-shadow: none; }
 .theme-raed #free-shipping { border: 2px solid var(--um-ink) !important; border-radius: 14px !important; background: var(--um-blue) !important; }
 .theme-raed #free-shipping .progress-bg, .theme-raed #free-shipping .bg-primary { background: var(--um-ink) !important; }
+.theme-raed #free-shipping p, .theme-raed #free-shipping p * { color: #fff !important; }
 .theme-raed salla-cart-summary-card { display: block; padding: 16px; border: 2px solid var(--um-ink); border-radius: 20px; background: var(--um-paper); box-shadow: var(--um-hard); }
 .theme-raed .s-cart-summary-card-bar, .theme-raed .s-cart-summary-card-sheet { background: transparent !important; }
 .theme-raed .s-cart-summary-card-line span, .theme-raed .s-cart-summary-card-line b, .theme-raed .s-cart-summary-card-bar-label-text, .theme-raed .s-cart-summary-card-bar-total { color: var(--um-ink) !important; }
