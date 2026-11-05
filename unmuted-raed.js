@@ -1313,7 +1313,7 @@
   var PACK = { price: 149, ship: 40, page: '72145634' };
   var PACKS = [
     { n: 1, title: t('قطعة واحدة', 'One tee'), total: 149, was: 0, free: false },
-    { n: 2, title: t('قطعتين بخصم ١٥٪', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
+    { n: 2, title: t('قطعتين بخصم\u00a0١٥٪', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
     { n: 4, title: t('اشترِ ٣ والرابعة مجاناً +\u00a0شحن\u00a0مجاني', 'Buy 3, the 4th is free +\u00a0free\u00a0shipping'), total: 447, was: 596, free: true, best: true }
   ];
   var moneyNum = function (v) {
@@ -1323,12 +1323,13 @@
   var money = function (v) {
     return '<span class="um-money">' + moneyNum(v) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
-  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards)
+  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards);
+  // the old price struck beside the new one, so the saving shows (owner 2026-11-05)
   var packCard = function (p, tag) {
     return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
       (p.best ? '<i class="um-pack__tag">' + t('الأكثر توفيراً', 'Best value') + '</i>' : '') +
       '<b class="um-pack__title">' + p.title + '</b>' +
-      '<span class="um-pack__price">' + money(p.total) + '</span>' +
+      '<span class="um-pack__price">' + (p.was ? '<s aria-label="' + t('بدل ', 'instead of ') + p.was + '">' + moneyNum(p.was) + '</s>' : '') + money(p.total) + '</span>' +
     '</' + tag + '>';
   };
   // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a
@@ -1484,7 +1485,7 @@
     document.body.classList.add('um-duo-on');
     var shop = esc(allUrl());
     var page = el('div', 'um-duo-page',
-      '<header class="um-duo-page__head"><h1 lang="en">Duo</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
+      '<header class="um-duo-page__head"><h1>' + t('باكجات', 'Packages') + '</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
       DUO_CARDS.map(function (c, n) {
         var p = c.pack;
         return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +

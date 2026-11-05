@@ -572,7 +572,7 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-pack:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
 .um-pack__title { font-size: 16px; font-weight: 800; padding-inline-end: 30px; }
 .um-pack__price { font-size: 20px; font-weight: 800; }
-.um-pack__price s { margin-inline-start: 6px; font-size: 14px; font-weight: 500; color: var(--um-soft); }
+.um-pack__price s { font-size: 15px; font-weight: 700; color: var(--um-soft); text-decoration-thickness: 1.5px; }
 .um-pack__sub { font-size: 13px; color: var(--um-soft); }
 .um-money { white-space: nowrap; }
 .um-money .sicon-sar { font-size: .85em; }
@@ -586,7 +586,7 @@ button.um-pack:not(.is-on)::after { content: ''; position: absolute; top: 14px; 
 .um-packs .um-pack::after { content: none !important; }
 .um-packs__head { line-height: 1.6; }
 .um-packs .um-pack__title { padding-inline-end: 0; }
-.um-packs .um-pack__price { grid-column: 2; grid-row: 1; justify-self: end; text-align: end; }
+.um-packs .um-pack__price { grid-column: 2; grid-row: 1; justify-self: end; display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .um-packs .um-pack__sub { display: none; }
 .um-packs .um-pack.is-best { margin-top: 12px; }
 @media (prefers-reduced-motion: reduce) { .um-pack { transition: none; } }
@@ -628,7 +628,7 @@ button.um-offer__go { font-family: inherit; line-height: inherit; cursor: pointe
    bordered cards one under the other */
 .um-duo-page { max-width: none; margin: 0; padding: 0 16px 48px; }
 .um-duo-page__head { max-width: 1100px; margin: 0 auto; padding: 28px 0 30px; }
-.um-duo-page__head h1 { margin: 0 0 8px; font: 800 clamp(48px, 9vw, 104px)/.95 var(--um-latin); letter-spacing: -.02em; }
+.um-duo-page__head h1 { margin: 0 0 8px; font: 800 clamp(48px, 9vw, 104px)/1.15 var(--um-font); }
 .um-duo-page__head p { max-width: 560px; margin: 0; font-size: 16px; line-height: 1.8; color: var(--um-soft); }
 .um-duo { --tone: var(--um-blue); --pop: var(--um-orange); display: grid; gap: 34px; align-items: center; max-width: 1100px; margin: 0 auto 40px; padding: clamp(26px, 5vw, 60px); border: 3px solid var(--um-ink); border-radius: 30px; background: var(--tone); color: var(--um-ink); box-shadow: 10px 12px 0 var(--um-ink); }
 .um-duo.is-orange { --tone: var(--um-orange); --pop: var(--um-blue); }

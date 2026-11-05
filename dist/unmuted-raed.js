@@ -1313,7 +1313,7 @@
   var PACK = { price: 149, ship: 40, page: '72145634' };
   var PACKS = [
     { n: 1, title: t('\u0642\u0637\u0639\u0629 \u0648\u0627\u062d\u062f\u0629', 'One tee'), total: 149, was: 0, free: false },
-    { n: 2, title: t('\u0642\u0637\u0639\u062a\u064a\u0646 \u0628\u062e\u0635\u0645 \u0661\u0665\u066a', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
+    { n: 2, title: t('\u0642\u0637\u0639\u062a\u064a\u0646 \u0628\u062e\u0635\u0645\u00a0\u0661\u0665\u066a', 'Two tees, 15% off'), total: 253.30, was: 298, free: false },
     { n: 4, title: t('\u0627\u0634\u062a\u0631\u0650 \u0663 \u0648\u0627\u0644\u0631\u0627\u0628\u0639\u0629 \u0645\u062c\u0627\u0646\u0627\u064b +\u00a0\u0634\u062d\u0646\u00a0\u0645\u062c\u0627\u0646\u064a', 'Buy 3, the 4th is free +\u00a0free\u00a0shipping'), total: 447, was: 596, free: true, best: true }
   ];
   var moneyNum = function (v) {
@@ -1323,12 +1323,13 @@
   var money = function (v) {
     return '<span class="um-money">' + moneyNum(v) + ' <i class="sicon-sar" aria-hidden="true"></i></span>';
   };
-  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards)
+  // each card is its title and its price, nothing under them (owner 2026-11-04: no shipping on the first two cards);
+  // the old price struck beside the new one, so the saving shows (owner 2026-11-05)
   var packCard = function (p, tag) {
     return '<' + tag + ' class="um-pack' + (p.best ? ' is-best' : '') + '" data-n="' + p.n + '"' + (tag === 'button' ? ' type="button" role="radio" aria-checked="false"' : '') + '>' +
       (p.best ? '<i class="um-pack__tag">' + t('\u0627\u0644\u0623\u0643\u062b\u0631 \u062a\u0648\u0641\u064a\u0631\u0627\u064b', 'Best value') + '</i>' : '') +
       '<b class="um-pack__title">' + p.title + '</b>' +
-      '<span class="um-pack__price">' + money(p.total) + '</span>' +
+      '<span class="um-pack__price">' + (p.was ? '<s aria-label="' + t('\u0628\u062f\u0644 ', 'instead of ') + p.was + '">' + moneyNum(p.was) + '</s>' : '') + money(p.total) + '</span>' +
     '</' + tag + '>';
   };
   // a tee's page: the three packages above the add button, as information only (owner's manager, 3 Nov: picking a
@@ -1484,7 +1485,7 @@
     document.body.classList.add('um-duo-on');
     var shop = esc(allUrl());
     var page = el('div', 'um-duo-page',
-      '<header class="um-duo-page__head"><h1 lang="en">Duo</h1><p>' + t('\u0643\u0644 \u0645\u0627 \u0632\u0627\u062f\u062a \u0623\u0635\u0648\u0627\u062a\u0643 \u0632\u0627\u062f \u062a\u0648\u0641\u064a\u0631\u0643. \u0627\u0644\u0639\u0631\u0636 \u064a\u062a\u0637\u0628\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629 \u0639\u0644\u0649 \u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u062a\u062e\u062a\u0627\u0631\u0647\u0627.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
+      '<header class="um-duo-page__head"><h1>' + t('\u0628\u0627\u0643\u062c\u0627\u062a', 'Packages') + '</h1><p>' + t('\u0643\u0644 \u0645\u0627 \u0632\u0627\u062f\u062a \u0623\u0635\u0648\u0627\u062a\u0643 \u0632\u0627\u062f \u062a\u0648\u0641\u064a\u0631\u0643. \u0627\u0644\u0639\u0631\u0636 \u064a\u062a\u0637\u0628\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629 \u0639\u0644\u0649 \u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u062a\u062e\u062a\u0627\u0631\u0647\u0627.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
       DUO_CARDS.map(function (c, n) {
         var p = c.pack;
         return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +
