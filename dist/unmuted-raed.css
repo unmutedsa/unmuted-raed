@@ -151,6 +151,9 @@ body.theme-raed { font-family: var(--um-font) !important; }
 }
 @media (max-width: 639px) {
   .theme-raed .um-plp-sort, .theme-raed .um-plp-sort > div, .theme-raed .um-plp-sort select#product-filter { width: 100%; }
+  /* Raed hides \0000AB\00062A\000631\00062A\00064A\000628 \00062D\000633\000628\0000BB on phones; the laptop shows it, so the phone does too (owner, 2026-11-07) */
+  .theme-raed .um-plp-sort label.hidden { display: block !important; }
+  .theme-raed .um-plp-sort > div > div, .theme-raed .um-plp-sort select#product-filter { min-width: 0; }
 }
 
 /* ---------- home: Raed's hero slider and features (the fallback when the UNMUTED sections don't load) ---------- */
@@ -236,6 +239,10 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
   .um-home .um-rls__face img[data-side="back"] { --tip-w: calc((var(--iw) - var(--hx) - 3) * var(--px) * var(--k)); }
   .um-home .um-rls__progress { top: calc((190 + 560 * var(--k)) * var(--px) + 14px); }
   .um-home .um-rls__more { padding-top: calc((190 + 560 * var(--k)) * var(--px) + 64px); }
+  /* the four photos beside the title show on phones too (owner, 2026-11-07: what the laptop has, the phone has), small,
+     fanned in the corner above \0000AB\000627\000633\00062D\000628\0000BB */
+  .um-home .um-rls__pols { display: block !important; left: auto; right: 10px; top: 2px; width: 20vw; max-width: 96px; height: 17vw; max-height: 80px; }
+  .um-home .um-rls__pol { width: 8vw; max-width: 36px; padding: 2px 2px 6px; box-shadow: 0 3px 6px rgba(40,25,10,.3); }
 }
 /* the rail is for looking (unmuted-raed.js takes the links off): the tees just hang and swing */
 .um-home .um-rls__swing { cursor: inherit; }
