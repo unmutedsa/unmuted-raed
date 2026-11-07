@@ -285,6 +285,18 @@
     '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
     '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/',
     '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/' };
+  // tees whose print is on the back: every list shows them from behind first (the tracklist, the product cards, the free
+  // tee window), while the product page keeps Salla's photo order (owner, 2026-11-07: \u00ab\u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c \u0628\u0633\u060c \u0627\u0644\u0644\u064a \u0645\u0646 \u062c\u0648\u0647 \u0646\u0641\u0633 \u0627\u0644\u062a\u0631\u062a\u064a\u0628\u00bb)
+  var BACK_FIRST = ['862344853', '1501040588', '157439951'];   // \u0627\u0644\u0631\u064a\u0627\u0636\u060c Just Padel\u060c Who Said Kashta?
+  var backFirst = function (id) { return BACK_FIRST.indexOf(String(id)) > -1 && !!ALONE[String(id)]; };
+  var backPhoto = function (id, size) { return PHOTOS + ALONE[String(id)] + (size || 'sm') + '/alone-back.webp'; };
+  var showBack = function (img, id) {
+    var sm = backPhoto(id);
+    if (!img || img.getAttribute('src') === sm) return;
+    img.setAttribute('srcset', sm + ' 800w, ' + backPhoto(id, 'md') + ' 1600w');
+    img.setAttribute('sizes', Math.max(160, Math.round(img.getBoundingClientRect().width || 300)) + 'px');
+    img.setAttribute('src', sm);
+  };
   function bindTracks(box, data, photos) {
     var list = $('.um-tracks ol.um-tl', box), rows = list ? $$('li', list) : [], byName = {};
     if (!data || !data.items.length || !rows.length) return;
@@ -305,7 +317,9 @@
       var back = hung && hung.getAttribute('data-back'), pic = $('.um-tl__img', li), model = mdOf(imageOf(p)), alone = ALONE[String(p.id)];
       $$('.um-tl__back', li).forEach(function (n) { n.remove(); });
       li.classList.toggle('um-tl--alone', !!alone);
-      if (alone && pic) aloneTrack(pic, p, PHOTOS + alone, PHOTOS + alone + 'md/alone-back.webp');
+      // a tee whose print is on its back opens on the back here, and the hover shows the other side
+      var first = backFirst(p.id) ? 'back' : 'front';
+      if (alone && pic) aloneTrack(pic, p, PHOTOS + alone, first, PHOTOS + alone + 'md/alone-' + (first === 'back' ? 'front' : 'back') + '.webp');
       else if (model && pic) modelTrack(pic, p, model);
       else if (back && pic) {
         var img = el('img', 'um-tl__back um-face-back');
@@ -340,11 +354,11 @@
   }
   // on a computer the model photo comes in on hover; a phone has no hover, so a finger drags through the product's own
   // photos after the tee (owner, 2026-11-02), with dots for where it is
-  function aloneTrack(pic, p, dir, model) {
-    var face = $('img', pic);
-    face.setAttribute('srcset', dir + 'sm/alone-front.webp 800w, ' + dir + 'md/alone-front.webp 1600w');
+  function aloneTrack(pic, p, dir, first, model) {
+    var face = $('img', pic), own = dir + 'sm/alone-' + first + '.webp';
+    face.setAttribute('srcset', own + ' 800w, ' + dir + 'md/alone-' + first + '.webp 1600w');
     face.setAttribute('sizes', '(min-width: 768px) 30vw, 46vw');
-    face.src = dir + 'sm/alone-front.webp';
+    face.src = own;
     face.classList.add('um-face');
     pic.classList.remove('um-model');
     pic.classList.add('um-alone');
@@ -359,7 +373,7 @@
     }
     photosOf(p.id).then(function (imgs) {
       var urls = imgs.filter(function (i) { return !HANGER.test(i.alt || ''); }).map(function (i) { return smOf(i.url); })
-        .filter(function (u) { return u && u !== dir + 'sm/alone-front.webp'; });
+        .filter(function (u) { return u && u !== own; });
       if (!urls.length || $('.um-swipe', pic)) return;
       var strip = el('span', 'um-swipe'), dots = el('span', 'um-swipe__dots');
       strip.appendChild(face);
@@ -573,7 +587,9 @@
       var c = en.target, pic = $('.s-product-card-image', c), front = pic && $('a img', pic);
       if (!c.product || !front || en.boundingClientRect.width < 60) return;
       photosOf(c.product.id).then(function (imgs) {
-        var other = imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
+        // a back-first tee shows its back on the card, so the hover brings its main photo, the front
+        var other = backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
+          : imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
         if (!other || $('.um-cback', pic)) return;
         var back = el('img', 'um-cback um-face-back');
         back.alt = '';
@@ -945,7 +961,8 @@
       var box = $('.s-product-card-image', c);
       if (!box || !c.product || !c.product.image || !hdOf(c.product.image.url)) return;
       box.classList.add('um-model');
-      sharpen($('a img:not(.um-cback)', box), c.product.image.url);
+      if (backFirst(c.product.id)) showBack($('a img:not(.um-cback)', box), c.product.id);
+      else sharpen($('a img:not(.um-cback)', box), c.product.image.url);
       var back = $('img.um-cback', box);
       if (back && back.getAttribute('data-um-url')) sharpen(back, back.getAttribute('data-um-url'));
     });
@@ -1647,7 +1664,7 @@
       teesAll().then(function (list) {
         g.removeAttribute('aria-busy');
         g.innerHTML = list.map(function (p) {
-          return '<button type="button" class="um-free__tee" data-id="' + esc(p.id) + '"><img src="' + esc(imageOf(p)) + '" alt="" loading="lazy"><span>' + esc(p.name) + '</span></button>';
+          return '<button type="button" class="um-free__tee" data-id="' + esc(p.id) + '"><img src="' + esc(backFirst(p.id) ? backPhoto(p.id) : imageOf(p)) + '" alt="" loading="lazy"><span>' + esc(p.name) + '</span></button>';
         }).join('');
         $$('.um-free__tee', g).forEach(function (b) { b.addEventListener('click', function () { sizes(b.getAttribute('data-id')); }); });
       }, function () {
