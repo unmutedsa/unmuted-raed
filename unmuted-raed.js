@@ -1504,7 +1504,7 @@
     document.body.classList.add('um-duo-on');
     var shop = esc(allUrl());
     var page = el('div', 'um-duo-page',
-      '<header class="um-duo-page__head"><h1>' + t('باكجات', 'Packages') + '</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
+      '<header class="um-duo-page__head"><h1>' + t('بكجات', 'Packages') + '</h1><p>' + t('كل ما زادت أصواتك زاد توفيرك. العرض يتطبق تلقائياً في السلة على أي تيشيرتات تختارها.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
       DUO_CARDS.map(function (c, n) {
         var p = c.pack;
         return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +

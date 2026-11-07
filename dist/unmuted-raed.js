@@ -1504,7 +1504,7 @@
     document.body.classList.add('um-duo-on');
     var shop = esc(allUrl());
     var page = el('div', 'um-duo-page',
-      '<header class="um-duo-page__head"><h1>' + t('\u0628\u0627\u0643\u062c\u0627\u062a', 'Packages') + '</h1><p>' + t('\u0643\u0644 \u0645\u0627 \u0632\u0627\u062f\u062a \u0623\u0635\u0648\u0627\u062a\u0643 \u0632\u0627\u062f \u062a\u0648\u0641\u064a\u0631\u0643. \u0627\u0644\u0639\u0631\u0636 \u064a\u062a\u0637\u0628\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629 \u0639\u0644\u0649 \u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u062a\u062e\u062a\u0627\u0631\u0647\u0627.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
+      '<header class="um-duo-page__head"><h1>' + t('\u0628\u0643\u062c\u0627\u062a', 'Packages') + '</h1><p>' + t('\u0643\u0644 \u0645\u0627 \u0632\u0627\u062f\u062a \u0623\u0635\u0648\u0627\u062a\u0643 \u0632\u0627\u062f \u062a\u0648\u0641\u064a\u0631\u0643. \u0627\u0644\u0639\u0631\u0636 \u064a\u062a\u0637\u0628\u0642 \u062a\u0644\u0642\u0627\u0626\u064a\u0627\u064b \u0641\u064a \u0627\u0644\u0633\u0644\u0629 \u0639\u0644\u0649 \u0623\u064a \u062a\u064a\u0634\u064a\u0631\u062a\u0627\u062a \u062a\u062e\u062a\u0627\u0631\u0647\u0627.', 'The more voices, the more you save. It applies by itself in your bag, on any tees you pick.') + '</p></header>' +
       DUO_CARDS.map(function (c, n) {
         var p = c.pack;
         return '<section class="um-duo is-' + c.tone + (n % 2 ? ' is-flip' : '') + '" aria-labelledby="um-duo-' + p.n + '">' +
