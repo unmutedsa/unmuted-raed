@@ -287,7 +287,9 @@
     '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/' };
   // tees whose print is on the back: every list shows them from behind first (the tracklist, the product cards, the free
   // tee window), while the product page keeps Salla's photo order (owner, 2026-11-07: \u00ab\u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c \u0628\u0633\u060c \u0627\u0644\u0644\u064a \u0645\u0646 \u062c\u0648\u0647 \u0646\u0641\u0633 \u0627\u0644\u062a\u0631\u062a\u064a\u0628\u00bb)
-  var BACK_FIRST = ['862344853', '1501040588', '157439951'];   // \u0627\u0644\u0631\u064a\u0627\u0636\u060c Just Padel\u060c Who Said Kashta?
+  // \u0627\u0644\u0631\u064a\u0627\u0636\u060c Just Padel\u060c Who Said Kashta? (2026-11-07), then every tee with a back print: The Love Pop Club\u060c Carnival\u060c
+  // Good Mood Fast Food\u060c Vending Machine\u060c Play UNMUTED (owner: \u00ab\u0627\u064a \u0634\u064a \u0641\u064a \u0631\u0633\u0645 \u0645\u0646 \u0627\u0644\u0638\u0647\u0631\u00bb)
+  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496'];
   var backFirst = function (id) { return BACK_FIRST.indexOf(String(id)) > -1 && !!ALONE[String(id)]; };
   var backPhoto = function (id, size) { return PHOTOS + ALONE[String(id)] + (size || 'sm') + '/alone-back.webp'; };
   var showBack = function (img, id) {

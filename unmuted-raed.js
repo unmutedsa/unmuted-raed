@@ -287,7 +287,9 @@
     '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/' };
   // tees whose print is on the back: every list shows them from behind first (the tracklist, the product cards, the free
   // tee window), while the product page keeps Salla's photo order (owner, 2026-11-07: «من الخارج بس، اللي من جوه نفس الترتيب»)
-  var BACK_FIRST = ['862344853', '1501040588', '157439951'];   // الرياض، Just Padel، Who Said Kashta?
+  // الرياض، Just Padel، Who Said Kashta? (2026-11-07), then every tee with a back print: The Love Pop Club، Carnival،
+  // Good Mood Fast Food، Vending Machine، Play UNMUTED (owner: «اي شي في رسم من الظهر»)
+  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496'];
   var backFirst = function (id) { return BACK_FIRST.indexOf(String(id)) > -1 && !!ALONE[String(id)]; };
   var backPhoto = function (id, size) { return PHOTOS + ALONE[String(id)] + (size || 'sm') + '/alone-back.webp'; };
   var showBack = function (img, id) {
