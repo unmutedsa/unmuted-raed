@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '5bac970ebf0776a0380b4761afe76490ca7ec958';
+  var CDN_REF = '3ad055161287004fc069c6235ff70aaf625dd40f';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8', 'بيج': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -764,14 +764,14 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@5bac970ebf0776a0380b4761afe76490ca7ec958/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@3ad055161287004fc069c6235ff70aaf625dd40f/cdn/photos/';
   var HD = {
-    '8HhtAyjzz6MSHqzfZSwoDcodwTgDkRrBBus4IIdu': 'carnival/man-back.webp',
-    'NY1XDTbbDdRIwwC49VEQDnNBeCPzUW8jrgertphn': 'carnival/man-front.webp',
-    'NJLNfeRESpRE9XcAeV4fhzAjUjyymQK52ETnM8x8': 'carnival/man-side.webp',
-    'ngupLFtVj2x0zMlgEVAG9UAoCa7dZSyn811UzdZf': 'carnival/woman-back.webp',
-    'ELJvm8ScjxgSwrW0nW109zfDTm8MAO5Uwdfw8Qqv': 'carnival/woman-front.webp',
-    'qN2SFaP49xC0wxGiDNBvOAuAusDZuo9bxvL6Sxgg': 'carnival/woman-side.webp',
+    'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
+    '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
+    '5bwC1l6xlHQY0TEUdEycuCsKfRDaBgBJvZz0o8fM': 'carnival/man-side.webp',
+    'jvflEoyI4G6478ZqjFXYFmLslkO5GrXSeYoXh1Su': 'carnival/woman-back.webp',
+    'GDdH56uD3rqQ4VUvKEu2Kihgc3IfwVe9Xt2zcT4E': 'carnival/woman-front.webp',
+    'AEiLetenLetZYnBeHh6atxvzn4CrrWvmK0CwQrRt': 'carnival/woman-side.webp',
     'YRVDDZey35yv7LVYTdiGqk1xqkGmwINKBFRTJedy': 'love-pop/man-back.webp',
     'bOZroOxZRn3HEqtxEywWj58tEVRa9A7mepqJzri6': 'love-pop/man-front.webp',
     'Lg4G32SJfG62CbP4qZGAa9wbo9ofiLF1Dtrs5UgX': 'love-pop/man-side.webp',
