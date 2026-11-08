@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@592ebc78d4b4b645010c65b2a18c3c4c3a5c0cd1/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@3589758e7e0c690e3ab67ca264af07395d40f138/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -814,12 +814,12 @@
     htVip9wTpzTdD0Ky4fRX1BFLVaYWeN5WCiPb9Kvs: 'call-me/woman-back.webp',
     SC9lADMT2f1QUc3q6gbxjo8oPKFmDnUxg6uOY2cA: 'call-me/woman-front.webp',
     UqlgDBwCZUqyb6USFGAy2ZEiFm7QCQXNUrZMTmZb: 'call-me/woman-side.webp',
-    W0IiirBvpTsM1PNM8VxqXqzjEmvqbuktkeaF0ofd: 'kashta/man-back.webp',
-    q9GBmknGaBLIv8NpunXQQbYik2RSr5BZKoJHQEPN: 'kashta/man-front.webp',
-    '6jYI4I2rbxlSd57KPBoJRdMD7eJgzjH3B5ld4saJ': 'kashta/man-side.webp',
-    dj5DooBsDfOMdbIvIsVaR8QS8wEsn8xvmxvWhKVW: 'kashta/woman-back.webp',
-    sP9CiDfNugeakxLSKXloHKhcLAJQ9ohZkicrK3sa: 'kashta/woman-front.webp',
-    dpSWAyYYCYADpLLvFi8V4vPYdbxfDOUgtuAbSRg8: 'kashta/woman-side.webp',
+    'LIxLWH3jMyfigjehR7YQQ4PtNg2zqGFsbbC4Adrh': 'kashta/man-back.webp',
+    'h0WjylAbwIH9LJ79eFNbc3WaMTjakMjUvnEaCsRF': 'kashta/man-front.webp',
+    '5ua75q7ZHFwLkbur4yoGyJKC9qlkNXjQySdbvqvv': 'kashta/man-side.webp',
+    'bd788XtEd0piv6VyOirqqEDuBMudKmUMHa2UvlVB': 'kashta/woman-back.webp',
+    'L5Mz513QGM0c86CdcFgAJ9Tf23dGXr8S7vRp5RzM': 'kashta/woman-front.webp',
+    'nGe3eKGnfXQ8YA7k8of2iC6J0MKjWzSg7Oj1Jc39': 'kashta/woman-side.webp',
     Ghhln3q589Ku10AIKadmqn0UZowgGCcSB6oDiJBR: 'the-original/man-back.webp',
     fdpJeclPWyARb153uK5rAd8HXPybLtXXS9GSF7Na: 'the-original/man-front.webp',
     kxs1dqgX42U4kJmEZhzKxyEbXHsqYe6UH2Ne6Oku: 'the-original/man-side.webp',
