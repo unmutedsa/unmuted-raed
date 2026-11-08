@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = 'ba9bd1a67532d6302edd1f81c477f15bfeed375d';
+  var CDN_REF = '9188ba621db0d600e5809ac180989b66ec1f1df7';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@3589758e7e0c690e3ab67ca264af07395d40f138/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@9188ba621db0d600e5809ac180989b66ec1f1df7/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -872,10 +872,10 @@
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
     DOKx2BkfiwkFTNLWjZrcuV0xMoVwKsbesiIG2FW7: 'desert-club/alone-front.webp',
     OpfpeHqhARLni0ZYINyTr7t6lLeYgWVJfblrytGg: 'desert-club/alone-back.webp',
-    '1Ygy4msW1h67z4BdJeAtZTNYJHDD6DNR0zzEI8SJ': 'riyadh/alone-front.webp',
-    qh1tr1DtL4MmaGFRCqKf42lapIFizdFZla8xiIRk: 'riyadh/alone-back.webp',
-    lizO0CemjntxlokvULcFtYe2xWFBASALf9UsQv8D: 'unmuted-sticker/alone-front.webp',
-    ukyYWbexaqmTj9RC766Y9rYPhCGXEs5rEgQGhAmU: 'unmuted-sticker/alone-back.webp',
+    '6UTlIxxOK449tF8PROtn0jxC6Pe9eldsAqLkckSo': 'riyadh/alone-front.webp',
+    'FZC7yUEXHwn2cpPzKrK1JFWrXwX3Cll8QH3xaCvv': 'riyadh/alone-back.webp',
+    'sELIOvyCKiSuW9g2BwnHre346IoXd5RAc5qNzNcq': 'unmuted-sticker/alone-front.webp',
+    'Ub59s2TOYdUouYEY9bGHyYCcaClT2bfW9PSfmkLl': 'unmuted-sticker/alone-back.webp',
     N5kz4lXn1dUG3dNzbDFvZaWsDn4KKhvCt1lHYxna: 'dates-season/alone-front.webp',
     vnxEvqs4EnndiG95iNwOjCX31rtxQcQFWV9uEflY: 'dates-season/alone-back.webp',
     OEBS5O9KcUiJUjXAsXnUMSoRq0uQtxMn8Bz8ddwZ: 'just-padel/alone-front.webp',
@@ -894,8 +894,8 @@
     Q9bRHZxe0K5hPuNxwOV20E7xXmgnyhKx1oPpfBvL: 'vending/alone-back.webp',
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
-    tbOWy7dj4MOch0oBxiAYJkd7ZDZzGeucukkrQt7y: 'kashta/alone-front.webp',
-    ZW7gbVLhS8MhbsjyEARQAQw0K2kkVz4cLM2WJg6K: 'kashta/alone-back.webp',
+    'xIJ6mmWigs0cRgfwqXDrxKM0Y1mQWy0oUgJw8m44': 'kashta/alone-front.webp',
+    '5JjACysdoVvEdcto3QUrrwuxpa5e64YLJbw9BfKf': 'kashta/alone-back.webp',
     xvch0LdtD40mqsyO83btCQIxmN2uNyJYKZhFDzT8: 'the-original/alone-front.webp',
     sqbTmQ2OEZyZSO2fHBdOiy2VaXYE7Ylhs64nWjDR: 'the-original/alone-back.webp',
     tEeeF5QsPxa0ReM7OizCbCylHEF59QU3yoiJCIcA: 'megaphone/alone-front.webp',
