@@ -1,75 +1,80 @@
 # كود الترحيب على الواتساب (UNMUTED)
 
 نافذة في المتجر يكتب فيها العميل رقم جواله، ويوصله كود الخصم **على الواتساب فقط**. الكود ما يكون في الموقع أبداً:
-محفوظ كسرّ في خادم صغير (Cloudflare Worker) هو اللي يرسل الرسالة من حساب واتساب الأعمال الرسمي.
+محفوظ كسرّ في خادم صغير (Cloudflare Worker) هو اللي يرسل الرسالة عن طريق تطبيق **كارتات** (Cartat) اللي مشتركة فيه
+من سلة.
 
 - `worker.js`: الخادم. يتأكد إن الطلب جاي من المتجر، وإن الزائر مو روبوت (Cloudflare Turnstile)، وإن الرقم جوال سعودي،
   ويرسل الكود **مرة وحدة لكل رقم**، ويحفظ الأرقام عشان تقدرين تنزلينها كملف.
-- النافذة نفسها في `../unmuted-raed.js` (الدالة `waOffer`) و`../unmuted-raed.css` (`.um-wa`). **مطفية** لين يتعبّى
-  `WA.url` في أعلى الدالة.
+- النافذة نفسها في `../unmuted-raed.js` (الدالة `waOffer`) و`../unmuted-raed.css` (`.um-wa`). صورتها من الفوتوشوت
+  (Love Pop). على unmutedsa.com **مطفية** لين يتعبّى `WA.url` في أعلى الدالة. في **معاينة الثيم** (salla.sa/unmuted?preview=true)
+  تطلع بعد ٣ ثواني كل مرة وما ترسل شي، عشان تشوفينها قبل الربط.
+
+## ليش ما نربط النافذة بكارتات مباشرة؟
+مفتاح كارتات (التوكن) يرسل رسائل من رقمك لأي أحد. لو حطيناه في كود الموقع يقدر أي زائر يشوفه ويستخدمه، ويشوف الكود
+كمان. فالخادم الصغير هو اللي يمسك المفتاح والكود، والموقع يعرف بس رابط الخادم.
 
 ## الخطوات
 
 ### ١) في سلة: كود الخصم
-التسويق ← كوبونات التخفيض ← كوبون جديد:
+التسويق ← الكوبونات ← كوبون جديد:
 - الكود: اللي تبينه (مثل `HELLO10`). لا تحطينه في أي بنر أو صفحة.
 - **مرة وحدة لكل عميل**، وحد أقصى لعدد الاستخدام الكلي، وتاريخ انتهاء.
 - قولي لي النسبة (مثلاً ١٠٪) عشان تطلع في عنوان النافذة، أو نخليها «كود خصم لأول صوت تختاره» بدون رقم.
 
-### ٢) واتساب الأعمال (Meta)، تسوينها أنتِ
-1. https://business.facebook.com ← أنشئي حساب أعمال باسم UNMUTED.
-2. https://developers.facebook.com ← My Apps ← Create App ← نوع **Business** ← أضيفي **WhatsApp**.
-3. أضيفي رقم جوال للمتجر: رقم **مو مسجّل حالياً في تطبيق واتساب** (أو احذفي الواتساب منه أول)، وأكّديه برسالة،
-   واسم الظهور `UNMUTED`.
-4. في WhatsApp Manager أضيفي **طريقة دفع**: رسائل التسويق تنحسب على كل رسالة.
-5. أنشئي **قالب الرسالة** (تحت) وانتظري موافقة Meta (عادة يوم أو يومين).
-6. Business Settings ← System users ← أنشئي مستخدم نظام ← **Generate token** بصلاحيات
-   `whatsapp_business_messaging` و`whatsapp_business_management`، وانسخي **Phone number ID** من صفحة WhatsApp ← API Setup.
+### ٢) في كارتات: مفتاح الـ API
+- افتحي لوحة كارتات (سلة ← التطبيقات ← تطبيقاتي ← كارتات إشعارات واتساب ← افتح التطبيق، أو cartat.net)،
+  ودوري على **API** أو **الإعدادات ← API**، وانسخي **Access token**.
+- لو ما لقيتيه في باقتك، اسألي دعم كارتات: «أبي أرسل رسالة واتساب من موقعي عن طريق الـ API
+  (`POST https://api.cartat.net/message/text`)، كيف أطلع الـ Access token؟».
+- **لا ترسلين التوكن في المحادثة.** يدخل في الخطوة ٤.
+- لو رقمك في كارتات مربوط على الواتساب الرسمي (مو الـ QR)، الرسائل لازم تكون بقالب معتمد: سوّي قالب فيه متغيّر للكود
+  وقولي لي اسمه واسم المتغيّر (أحطهم في `CARTAT_TEMPLATE` و`CARTAT_TEMPLATE_PARAM`).
 
-### ٣) قالب الرسالة (WhatsApp Manager ← Message templates ← Create)
-- Category: **Marketing** · Name: `unmuted_welcome_code` · Language: **Arabic**
-- Body:
-  ```
-  هلا! هذا كود خصمك على أول صوت تختاره من UNMUTED:
-  {{1}}
-  استخدمه عند الدفع في unmutedsa.com
-  البس صوتك.
-  ```
-  Sample for {{1}}: `HELLO10`
-- Footer (اختياري): `UNMUTED`
-- Button: **Copy offer code** (Sample: `HELLO10`). ممكن تضيفين بعده زر **Visit website** على `https://unmutedsa.com`.
+نص الرسالة (لو بدون قالب):
+```
+هلا! هذا كود خصمك على أول صوت تختاره من UNMUTED:
+<الكود>
+استخدمه عند الدفع في unmutedsa.com
+البس صوتك.
+```
 
-### ٤) Cloudflare (مجاني)
+### ٣) Cloudflare (مجاني)
 1. https://dash.cloudflare.com ← أنشئي حساب.
 2. **Turnstile** ← Add widget ← الدومين `unmutedsa.com` ← Mode: **Managed** ← أرسلي لي **Site key** (عادي، مو سرّي).
-   الـ **Secret key** لا ترسلينه، يدخل في الخطوة ٦.
+   الـ **Secret key** لا ترسلينه، يدخل في الخطوة ٤.
 3. أنا أشغّل `npx wrangler login` (يفتح المتصفح وأنتِ توافقين)، ثم أنشئ مخزن الأرقام وأرفع الخادم:
    ```
    npx wrangler kv namespace create SENT     # الـ id يدخل في wrangler.toml
    npx wrangler deploy
    ```
-4. أعبّي `WA_PHONE_ID` في `wrangler.toml` (مو سرّي) وأرفعه مرة ثانية.
 
-### ٥) الأسرار، تدخلينها أنتِ (لا ترسلينها في المحادثة)
+### ٤) الأسرار، تدخلينها أنتِ (لا ترسلينها في المحادثة)
 Cloudflare ← Workers ← `unmuted-whatsapp-coupon` ← Settings ← Variables and Secrets ← **Add** (Type: Secret):
 
 | الاسم | القيمة |
 |---|---|
 | `COUPON_CODE` | كود الخصم من سلة |
-| `WA_TOKEN` | توكن مستخدم النظام من Meta |
+| `CARTAT_TOKEN` | الـ Access token من كارتات |
 | `TURNSTILE_SECRET` | الـ Secret key من Turnstile |
 | `ADMIN_KEY` | كلمة طويلة تختارينها (لتنزيل الأرقام) |
 
-### ٦) التشغيل
-أحط رابط الخادم والـ Site key والنسبة في `WA` داخل `unmuted-raed.js`، نجرّب على رقمك، وبعدها أحفظه في سلة.
+### ٥) التشغيل
+أحط رابط الخادم والـ Site key والنسبة في `WA` داخل `unmuted-raed.js`، نجرّب على رقمك، وبعدها أحفظه في الثيم.
+النافذة تشتغل على الموقع لما تنشرين المسودة.
 
 ## تنزيل الأرقام
 `https://<رابط الخادم>/export?key=<ADMIN_KEY>` ← ملف CSV فيه كل رقم وصله الكود ووقته.
 
+## بديل: واتساب Cloud API من Meta مباشرة
+`PROVIDER = "meta"` في `wrangler.toml`، والسر `WA_TOKEN` بدل `CARTAT_TOKEN`، و`WA_PHONE_ID`، وقالب معتمد باسم
+`unmuted_welcome_code` فيه `{{1}}` للكود وزر **Copy offer code**. (خطوات Meta: حساب أعمال، تطبيق Business فيه WhatsApp،
+رقم مو مسجّل في تطبيق واتساب، طريقة دفع، مستخدم نظام وتوكن بصلاحيات `whatsapp_business_messaging`.)
+
 ## للتجربة محلياً (بدون إرسال حقيقي)
 ```
 npm install
-printf 'COUPON_CODE=TESTCODE10\nWA_TOKEN=x\nTURNSTILE_SECRET=1x0000000000000000000000000000000AA\nADMIN_KEY=local-admin\n' > .dev.vars
+printf 'COUPON_CODE=TESTCODE10\nCARTAT_TOKEN=x\nTURNSTILE_SECRET=1x0000000000000000000000000000000AA\nADMIN_KEY=local-admin\n' > .dev.vars
 npx wrangler dev --port 8799 --var DRY_RUN:1
 ```
 `DRY_RUN=1` يسوي كل شي إلا الإرسال للواتساب ويرجّع الرسالة اللي كان بيرسلها. الـ Secret اللي فوق هو مفتاح Turnstile

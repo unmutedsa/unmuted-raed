@@ -10,6 +10,12 @@ binding = "SENT"
 id = "REPLACE_WITH_KV_ID"
 
 [vars]
+# who sends it: "cartat" (the Salla app «كارتات», its access token = secret CARTAT_TOKEN) or "meta" (WhatsApp Cloud API)
+PROVIDER = "cartat"
+# cartat: leave CARTAT_TEMPLATE empty for a plain text message (MESSAGE in worker.js, or set MESSAGE here with {code});
+# on Cartat's official channel, put the approved template's name and the name of its code variable
+CARTAT_TEMPLATE = ""
+CARTAT_TEMPLATE_PARAM = "code"
 ALLOWED_ORIGINS = "https://unmutedsa.com,https://www.unmutedsa.com"
 WA_PHONE_ID = "REPLACE_WITH_PHONE_NUMBER_ID"
 TEMPLATE_NAME = "unmuted_welcome_code"

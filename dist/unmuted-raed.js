@@ -1739,6 +1739,11 @@
      another dialog; closed \u2192 not again for 14 days, sent \u2192 never again. */
   var WA = { url: '', site: '', pct: 0 };   // url: the Worker's \u2026/coupon; site: the Turnstile site key; pct: the discount (title)
   var WA_KEY = 'um-wa';
+  // a theme's preview (salla.sa/unmuted?preview=true, not the store's own address) shows the popup before WhatsApp is
+  // connected, after 3 seconds and every visit, and sends nothing (owner, 2026-11-08: the popup in the draft copy first).
+  // On unmutedsa.com it stays off until WA.url is set
+  // (not inside the theme editor's frame, where it would cover the page being edited)
+  var waDemo = function () { return !WA.url && !/(^|\.)unmutedsa\.com$/i.test(location.hostname) && window.top === window; };
   // a Saudi mobile in any common writing \u2192 9665XXXXXXXX, else '' (the Worker checks it the same way)
   var waPhone = function (raw) {
     var d = String(raw || '').replace(/[\u0660-\u0669]/g, function (c) { return c.charCodeAt(0) - 0x660; }).replace(/\D/g, '');
@@ -1748,13 +1753,14 @@
     return /^5\d{8}$/.test(d) ? '966' + d : '';
   };
   function waOffer() {
-    if (!WA.url || window.__umWa) return;
+    var demo = waDemo();
+    if ((!WA.url && !demo) || window.__umWa) return;
     window.__umWa = true;
     if (/\/(cart|checkout|profile|orders|wishlist|notifications|login|register|payment|thank)/i.test(location.pathname)) return;
     var st = {};
     try { st = JSON.parse(localStorage.getItem(WA_KEY)) || {}; } catch (e) { /* private mode */ }
-    if (st.s === 'sent' || (st.s === 'closed' && Date.now() - (st.at || 0) < 14 * 864e5)) return;
-    try { if (sessionStorage.getItem(WA_KEY)) return; } catch (e) { /* private mode */ }
+    if (!demo && (st.s === 'sent' || (st.s === 'closed' && Date.now() - (st.at || 0) < 14 * 864e5))) return;
+    try { if (!demo && sessionStorage.getItem(WA_KEY)) return; } catch (e) { /* private mode */ }
     var shown = false, root = document.documentElement;
     var go = function () {
       if (shown) return;
@@ -1762,12 +1768,12 @@
       shown = true;
       waOpen();
     };
-    setTimeout(go, 12000);
+    setTimeout(go, demo ? 3000 : 12000);
     document.addEventListener('mouseout', function (e) { if (!e.relatedTarget && e.clientY <= 0 && performance.now() > 6000) go(); });
   }
   function waOpen() {
-    var root = document.documentElement, prev = document.activeElement;
-    var keep = function (s) { try { localStorage.setItem(WA_KEY, JSON.stringify({ s: s, at: Date.now() })); } catch (e) { /* private mode */ } };
+    var root = document.documentElement, prev = document.activeElement, demo = waDemo();
+    var keep = function (s) { if (demo) return; try { localStorage.setItem(WA_KEY, JSON.stringify({ s: s, at: Date.now() })); } catch (e) { /* private mode */ } };
     try { sessionStorage.setItem(WA_KEY, '1'); } catch (e) { /* private mode */ }
     var pct = WA.pct ? arNum(WA.pct) + (ar ? '\u066a' : '%') : '';
     var veil = el('div', 'um-wa-veil'), box = el('div', 'um-wa');
@@ -1840,6 +1846,11 @@
       var phone = waPhone(input.value);
       if (!phone) return err(t('\u0627\u0643\u062a\u0628 \u062c\u0648\u0627\u0644 \u0633\u0639\u0648\u062f\u064a \u064a\u0628\u062f\u0623 \u0628\u0640 5\u060c \u0645\u062b\u0644 5X XXX XXXX.', 'Enter a Saudi mobile that starts with 5, like 5X XXX XXXX.'));
       busy(true);
+      // the preview: the thank-you screen, a note that nothing went out, no request
+      if (demo) return void setTimeout(function () {
+        done(false, phone);
+        $('.um-wa-done .um-wa-sub', box).insertAdjacentHTML('afterend', '<p class="um-wa-fine">' + t('\u0645\u0639\u0627\u064a\u0646\u0629: \u0645\u0627 \u0627\u0646\u0631\u0633\u0644 \u0634\u064a. \u0627\u0644\u0625\u0631\u0633\u0627\u0644 \u064a\u0634\u062a\u063a\u0644 \u0628\u0639\u062f \u0631\u0628\u0637 \u0643\u0627\u0631\u062a\u0627\u062a.', 'Preview: nothing was sent. Sending starts once Cartat is connected.') + '</p>');
+      }, 600);
       var tries = 0;
       (function send() {
         if (WA.site && !token && tries++ < 24) return void setTimeout(send, 250);   // the check is still on its way

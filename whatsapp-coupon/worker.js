@@ -1,9 +1,15 @@
 /* UNMUTED: the welcome code on WhatsApp (owner, 2026-11-03).
-   The store's popup sends a mobile number here; this sends the store's discount code to that number on WhatsApp
-   (an approved WhatsApp Business template), once per number. The code itself lives only here (a secret), never on the
-   site. Checks on the way: the request comes from the store, the visitor is not a bot (Cloudflare Turnstile), the
-   number is a Saudi mobile, the same address is not hammering it. Numbers that got the code are kept (KV) so the owner
-   can export the list.
+   The store's popup sends a mobile number here; this sends the store's discount code to that number on WhatsApp, once
+   per number. The code itself lives only here (a secret), never on the site. Checks on the way: the request comes from
+   the store, the visitor is not a bot (Cloudflare Turnstile), the number is a Saudi mobile, the same address is not
+   hammering it. Numbers that got the code are kept (KV) so the owner can export the list.
+
+   Who sends it (PROVIDER in wrangler.toml):
+     "cartat" (default, owner 2026-11-08: the Salla app «كارتات إشعارات واتساب» she subscribed to) → Cartat's API,
+              POST https://api.cartat.net/message/text with the store's Cartat access token. A plain text message
+              (MESSAGE, {code} is replaced by the code); with CARTAT_TEMPLATE set, that approved template instead
+              (official WhatsApp channel), the code in its parameter CARTAT_TEMPLATE_PARAM.
+     "meta"   → WhatsApp Cloud API directly (an approved template, see README).
 
    POST /coupon   {"phone": "05…", "token": "<turnstile response>"}
      200 {"ok": true}                  sent
@@ -14,10 +20,11 @@
      502 {"error": "send"}             WhatsApp refused (the number may not be on WhatsApp)
    GET /export?key=…  the numbers that got the code, as CSV (ADMIN_KEY)
 
-   Secrets (wrangler secret put …): COUPON_CODE, WA_TOKEN, TURNSTILE_SECRET, ADMIN_KEY
-   Settings (wrangler.toml [vars]): WA_PHONE_ID, TEMPLATE_NAME, TEMPLATE_LANG, TEMPLATE_BODY_CODE ("1": the body's {{1}}
-   is the code), TEMPLATE_COPY_BUTTON ("1": the template has a «copy code» button), GRAPH_VERSION, ALLOWED_ORIGINS,
-   DRY_RUN ("1": everything but the WhatsApp call, for testing). KV binding: SENT. */
+   Secrets (Cloudflare dashboard or wrangler secret put …): COUPON_CODE, TURNSTILE_SECRET, ADMIN_KEY, and
+   CARTAT_TOKEN (cartat) or WA_TOKEN (meta).
+   Settings (wrangler.toml [vars]): PROVIDER, MESSAGE, CARTAT_TEMPLATE, CARTAT_TEMPLATE_PARAM, WA_PHONE_ID, TEMPLATE_NAME,
+   TEMPLATE_LANG, TEMPLATE_BODY_CODE, TEMPLATE_COPY_BUTTON, GRAPH_VERSION, ALLOWED_ORIGINS, DRY_RUN ("1": everything but
+   the WhatsApp call, for testing). KV binding: SENT. */
 
 const json = (body, status, cors) => new Response(JSON.stringify(body), { status: status || 200, headers: { 'content-type': 'application/json; charset=utf-8', ...cors } });
 
@@ -28,6 +35,12 @@ export function saudiMobile(raw) {
   if (d.startsWith('966')) d = d.slice(3);
   if (d.startsWith('0')) d = d.slice(1);
   return /^5\d{8}$/.test(d) ? '966' + d : '';
+}
+
+// the text message (cartat without a template): the owner's wording from the README, {code} → the code
+const DEFAULT_MESSAGE = 'هلا! هذا كود خصمك على أول صوت تختاره من UNMUTED:\n{code}\nاستخدمه عند الدفع في unmutedsa.com\nالبس صوتك.';
+export function messageText(env) {
+  return String(env.MESSAGE || DEFAULT_MESSAGE).replace(/\\n/g, '\n').split('{code}').join(env.COUPON_CODE || '');
 }
 
 function corsFor(req, env) {
@@ -59,7 +72,25 @@ async function tooMany(ip, env) {
   return false;
 }
 
-async function sendCode(to, env) {
+// Cartat: https://docs.cartat.net (Authorization: Bearer <access token>; number with country code, no +)
+export function cartatBody(to, env) {
+  if (env.CARTAT_TEMPLATE) return { number: to, template_name: env.CARTAT_TEMPLATE, parameters: { [env.CARTAT_TEMPLATE_PARAM || 'code']: env.COUPON_CODE } };
+  return { number: to, message: messageText(env) };
+}
+async function sendCartat(to, env) {
+  const body = cartatBody(to, env);
+  if (env.DRY_RUN === '1') return { ok: true, dry: body };
+  const r = await fetch('https://api.cartat.net/message/text', {
+    method: 'POST',
+    headers: { authorization: 'Bearer ' + env.CARTAT_TOKEN, accept: 'application/json', 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const out = await r.json().catch(() => ({}));
+  const failed = out.status === 'error' || out.success === false || out.error;
+  return { ok: r.ok && !failed, error: failed ? r.status + ' ' + JSON.stringify(out.error || out.message || out).slice(0, 200) : (r.ok ? '' : String(r.status)) };
+}
+
+async function sendMeta(to, env) {
   const components = [];
   if (env.TEMPLATE_BODY_CODE === '1') components.push({ type: 'body', parameters: [{ type: 'text', text: env.COUPON_CODE }] });
   if (env.TEMPLATE_COPY_BUTTON === '1') components.push({ type: 'button', sub_type: 'COPY_CODE', index: '0', parameters: [{ type: 'coupon_code', coupon_code: env.COUPON_CODE }] });
@@ -73,6 +104,8 @@ async function sendCode(to, env) {
   const out = await r.json().catch(() => ({}));
   return { ok: r.ok && !!(out.messages && out.messages[0]), error: out.error && (out.error.code + ' ' + out.error.message) };
 }
+
+const sendCode = (to, env) => ((env.PROVIDER || 'cartat') === 'meta' ? sendMeta(to, env) : sendCartat(to, env));
 
 async function exportCsv(env) {
   const rows = ['number,sent_at'];
