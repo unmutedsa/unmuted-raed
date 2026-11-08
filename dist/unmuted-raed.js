@@ -1739,6 +1739,9 @@
      another dialog; closed \u2192 not again for 14 days, sent \u2192 never again. */
   var WA = { url: '', site: '', pct: 0 };   // url: the Worker's \u2026/coupon; site: the Turnstile site key; pct: the discount (title)
   var WA_KEY = 'um-wa';
+  // its photo: the couple in the No Sharing tee by the containers (owner, 2026-11-08), full size beside the form on
+  // computers, a smaller copy as a strip over the form on phones
+  var WA_PIC = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f8ae57ddcff63c9de049efb3dde454fefb7133fe/cdn/photos/popup/';
   // a theme's preview (salla.sa/unmuted?preview=true, not the store's own address) shows the popup before WhatsApp is
   // connected, after 3 seconds and every visit, and sends nothing (owner, 2026-11-08: the popup in the draft copy first).
   // On unmutedsa.com it stays off until WA.url is set
@@ -1792,7 +1795,7 @@
         '<p class="um-wa-fine">' + t('\u0628\u0625\u0631\u0633\u0627\u0644 \u0631\u0642\u0645\u0643 \u062a\u0648\u0627\u0641\u0642 \u0625\u0646 UNMUTED \u062a\u0631\u0633\u0644 \u0644\u0643 \u0639\u0644\u0649 \u0627\u0644\u0648\u0627\u062a\u0633\u0627\u0628\u060c \u0648\u062a\u0642\u062f\u0631 \u062a\u0648\u0642\u0641\u0647\u0627 \u0645\u062a\u0649 \u0645\u0627 \u062a\u0628\u064a.', 'By sending your number you agree to hear from UNMUTED on WhatsApp; you can stop it any time.') + '</p>' +
         '<button type="button" class="um-wa-no">' + t('\u0644\u0627\u060c \u0634\u0643\u0631\u0627\u064b', 'No thanks') + '</button>' +
       '</form></div>' +
-      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + PHOTOS + 'love-pop/md/woman-front.webp">' + (pct ? '<span class="um-wa-stk"><small>' + t('\u062e\u0635\u0645', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
+      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + WA_PIC + 'no-sharing-md.jpg" srcset="' + WA_PIC + 'no-sharing-md.jpg 749w, ' + WA_PIC + 'no-sharing.webp 1499w" sizes="(min-width: 720px) 330px, 100vw">' + (pct ? '<span class="um-wa-stk"><small>' + t('\u062e\u0635\u0645', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
     veil.appendChild(box);
     document.body.appendChild(veil);
     root.classList.add('um-wa-lock');

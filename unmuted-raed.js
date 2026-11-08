@@ -1739,6 +1739,9 @@
      another dialog; closed → not again for 14 days, sent → never again. */
   var WA = { url: '', site: '', pct: 0 };   // url: the Worker's …/coupon; site: the Turnstile site key; pct: the discount (title)
   var WA_KEY = 'um-wa';
+  // its photo: the couple in the No Sharing tee by the containers (owner, 2026-11-08), full size beside the form on
+  // computers, a smaller copy as a strip over the form on phones
+  var WA_PIC = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f8ae57ddcff63c9de049efb3dde454fefb7133fe/cdn/photos/popup/';
   // a theme's preview (salla.sa/unmuted?preview=true, not the store's own address) shows the popup before WhatsApp is
   // connected, after 3 seconds and every visit, and sends nothing (owner, 2026-11-08: the popup in the draft copy first).
   // On unmutedsa.com it stays off until WA.url is set
@@ -1792,7 +1795,7 @@
         '<p class="um-wa-fine">' + t('بإرسال رقمك توافق إن UNMUTED ترسل لك على الواتساب، وتقدر توقفها متى ما تبي.', 'By sending your number you agree to hear from UNMUTED on WhatsApp; you can stop it any time.') + '</p>' +
         '<button type="button" class="um-wa-no">' + t('لا، شكراً', 'No thanks') + '</button>' +
       '</form></div>' +
-      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + PHOTOS + 'love-pop/md/woman-front.webp">' + (pct ? '<span class="um-wa-stk"><small>' + t('خصم', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
+      '<div class="um-wa-pic" aria-hidden="true"><img alt="" src="' + WA_PIC + 'no-sharing-md.jpg" srcset="' + WA_PIC + 'no-sharing-md.jpg 749w, ' + WA_PIC + 'no-sharing.webp 1499w" sizes="(min-width: 720px) 330px, 100vw">' + (pct ? '<span class="um-wa-stk"><small>' + t('خصم', 'off') + '</small>' + pct + '</span>' : '') + '</div>';
     veil.appendChild(box);
     document.body.appendChild(veil);
     root.classList.add('um-wa-lock');

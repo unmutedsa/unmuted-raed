@@ -6,8 +6,8 @@
 
 - `worker.js`: الخادم. يتأكد إن الطلب جاي من المتجر، وإن الزائر مو روبوت (Cloudflare Turnstile)، وإن الرقم جوال سعودي،
   ويرسل الكود **مرة وحدة لكل رقم**، ويحفظ الأرقام عشان تقدرين تنزلينها كملف.
-- النافذة نفسها في `../unmuted-raed.js` (الدالة `waOffer`) و`../unmuted-raed.css` (`.um-wa`). صورتها من الفوتوشوت
-  (Love Pop). على unmutedsa.com **مطفية** لين يتعبّى `WA.url` في أعلى الدالة. في **معاينة الثيم** (salla.sa/unmuted?preview=true)
+- النافذة نفسها في `../unmuted-raed.js` (الدالة `waOffer`) و`../unmuted-raed.css` (`.um-wa`). صورتها صورة
+  الثنائي بتيشيرت No Sharing (`cdn/photos/popup/`). على unmutedsa.com **مطفية** لين يتعبّى `WA.url` في أعلى الدالة. في **معاينة الثيم** (salla.sa/unmuted?preview=true)
   تطلع بعد ٣ ثواني كل مرة وما ترسل شي، عشان تشوفينها قبل الربط.
 
 ## ليش ما نربط النافذة بكارتات مباشرة؟

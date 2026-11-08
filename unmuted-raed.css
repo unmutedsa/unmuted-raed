@@ -529,7 +529,11 @@ html.um-wa-lock, html.um-wa-lock body { overflow: hidden !important; }
 .um-wa-veil { position: fixed; inset: 0; z-index: 9998; display: flex; align-items: flex-end; justify-content: center; background: rgba(16, 16, 16, .45); animation: um-fit-fade .2s ease; }
 .um-wa { position: relative; display: flex; width: 100%; max-height: 92vh; overflow-y: auto; overscroll-behavior: contain; border: 2px solid var(--um-ink); border-bottom: 0; border-radius: 24px 24px 0 0; background: var(--um-paper); color: var(--um-ink); font-family: var(--um-font); animation: um-fit-up .28s cubic-bezier(.2, .8, .2, 1); }
 .um-wa-body { flex: 1; min-width: 0; padding: 28px 20px calc(20px + env(safe-area-inset-bottom)); }
-.um-wa-pic { display: none; }
+/* phones: the photo as a strip over the form (owner, 2026-11-07: what the laptop has, the phone has) */
+.um-wa { flex-direction: column; }
+.um-wa-pic { position: relative; order: -1; flex: 0 0 auto; height: min(30vh, 230px); overflow: hidden; border-bottom: 2px solid var(--um-ink); border-radius: 22px 22px 0 0; background: var(--um-wall); }
+.um-wa-pic img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.um-wa-stk { display: none; }
 .um-wa h2 { margin: 0 0 8px; padding-inline-end: 40px; font: 800 26px/1.3 var(--um-font); color: var(--um-ink); }
 .um-wa-sub { margin: 0 0 18px; font-size: 15px; line-height: 1.75; color: var(--um-soft); }
 .um-wa-sub b { color: var(--um-ink); font-family: var(--um-latin); white-space: nowrap; direction: ltr; unicode-bidi: isolate; }
@@ -558,10 +562,11 @@ html.um-wa-lock, html.um-wa-lock body { overflow: hidden !important; }
   .um-wa { width: 780px; max-width: calc(100vw - 48px); overflow: hidden; border-bottom: 2px solid var(--um-ink); border-radius: 24px; box-shadow: 6px 8px 0 var(--um-ink); }
   .um-wa-body { align-self: center; padding: 48px 38px 34px; }
   .um-wa h2 { font-size: 32px; }
-  .um-wa-pic { position: relative; display: block; flex: 0 0 42%; border-inline-start: 2px solid var(--um-ink); background: var(--um-wall); }
+  .um-wa { flex-direction: row; }
+  .um-wa-pic { position: relative; display: block; order: 0; flex: 0 0 42%; height: auto; border-bottom: 0; border-radius: 0; border-inline-start: 2px solid var(--um-ink); background: var(--um-wall); }
   .um-wa-pic { overflow: hidden; }
-  .um-wa-pic img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; transform: scale(1.55); transform-origin: 50% 22%; }   /* the photo has room round her: in on the tee */
-  .um-wa-stk { position: absolute; bottom: 22px; inset-inline-start: 22px; display: grid; place-content: center; width: 92px; height: 92px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-orange); color: var(--um-ink); font: 800 24px/1 var(--um-font); box-shadow: var(--um-hard); transform: rotate(-10deg); text-align: center; }
+  .um-wa-pic img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+  .um-wa-stk { display: grid; position: absolute; bottom: 22px; inset-inline-start: 22px; display: grid; place-content: center; width: 92px; height: 92px; border: 2px solid var(--um-ink); border-radius: 50%; background: var(--um-orange); color: var(--um-ink); font: 800 24px/1 var(--um-font); box-shadow: var(--um-hard); transform: rotate(-10deg); text-align: center; }
   .um-wa-stk small { display: block; margin-bottom: 2px; font-size: 13px; font-weight: 700; }
 }
 @media (prefers-reduced-motion: reduce) { .um-wa-veil, .um-wa { animation: none; } .um-wa-go { transition: none; } }
