@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@a64dec7ab91838b9ba3a03f140ce40939c553af3/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@592ebc78d4b4b645010c65b2a18c3c4c3a5c0cd1/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -844,12 +844,12 @@
     'quU3UynY1FQp1EUPNza3faaY6Jff7DP2wvNAcmbi': 'unmuted-sticker/woman-back.webp',
     '5DHlPIkwpYcnlrtyBaKzLsZTrssYJRQAQLLsGWAj': 'unmuted-sticker/woman-front.webp',
     'JhI5jBfUqa459qGYvYlypQE27crNCul55vNX42EZ': 'unmuted-sticker/woman-side.webp',
-    jFp0RhU5xsVimOAFvo3keymD8rjtCycVi3rzmSJq: 'riyadh/man-back.webp',
-    qVO4wP7nyodaxiBwHc5CQ7yIWEnvhYDmduzGvYIB: 'riyadh/man-front.webp',
-    dlyO3AseGpmbrGDsWcWrS5n82OyrwYJdSJcGR5CB: 'riyadh/man-side.webp',
-    O1elPhV54tqUjnbdzN0CE8ys8b3aJxWUKXF2JJEX: 'riyadh/woman-back.webp',
-    nhJmJnsSgHutKzAHO1r2kI5i7RbdlZ4EDcgq2Yda: 'riyadh/woman-front.webp',
-    lxmVanX96aa70bF15fahHhrwv6dhB68w26sF8lZR: 'riyadh/woman-side.webp',
+    'utDh83gpuxy6XcLLwzXiGnNOTnYZAN4Lsk2sHwhJ': 'riyadh/man-back.webp',
+    's7R71w70jq5HDrTzRkVEyYehuneo3UOZiAv4cL0H': 'riyadh/man-front.webp',
+    'v6itdoY8dCbS248EXx2R9fR6LmozMKFExBe1Y1s4': 'riyadh/man-side.webp',
+    'fDnnFGT6DIC1Eufrd7MnJCy1jyix7KP4MZsFGeiG': 'riyadh/woman-back.webp',
+    'Nf1F50wpTy8qMRWJluQVEbNiptpwZXprOdJDRjI5': 'riyadh/woman-front.webp',
+    'Qe9VAAlFII0elUEC50adkaz6SAIKAyn3IF6WcSob': 'riyadh/woman-side.webp',
     IhkrWY4t0E90rzJxfGg3uCq69JMP9iElsdA84dEq: 'dates-season/man-back.webp',
     '8bofH7shScnmedv74dkLyHhQDDYC0GOLKBk3KfVQ': 'dates-season/man-front.webp',
     '3hn6AejzILJm3jeMo7q4D8RkUd7bMTNv7nzX0Xai': 'dates-season/man-side.webp',
