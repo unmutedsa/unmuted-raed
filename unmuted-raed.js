@@ -1737,7 +1737,7 @@
      the code itself is never on the site. Off until WA.url is set. It opens once the visitor has looked around a while
      (or, on a computer, heads for the tabs), never on the cart, checkout or account pages, not over the home's loader or
      another dialog; closed → not again for 14 days, sent → never again. */
-  var WA = { url: '', site: '', pct: 0 };   // url: the Worker's …/coupon; site: the Turnstile site key; pct: the discount (title)
+  var WA = { url: '', site: '', pct: 10 };   // url: the Worker's …/coupon; site: the Turnstile site key; pct: the discount (title)
   var WA_KEY = 'um-wa';
   // its photo: the couple in the No Sharing tee by the containers (owner, 2026-11-08), full size beside the form on
   // computers, a smaller copy as a strip over the form on phones
