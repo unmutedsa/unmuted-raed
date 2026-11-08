@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d65b91d0f352023142467fae312c4ff3bb8ace16/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@a64dec7ab91838b9ba3a03f140ce40939c553af3/cdn/photos/';
   var HD = {
     lCl34MQZ20K7dLtRmLNaDJsu79omK930WD7oDcWj: 'carnival/man-back.webp',
     IAh1xwYXNHwefq9PQRKQXsTyaFMQUvd7Mv8lxo1M: 'carnival/man-front.webp',
@@ -790,12 +790,12 @@
     USL8zoThjCPjKybpMmbS3a0p3ncDOQWCry0bARpr: 'cherry-market/woman-back.webp',
     yP55M6ypcIFJw9QPjKMbz0EaruV3XIpl6I7cFRMk: 'cherry-market/woman-front.webp',
     K4YZZ0m1LfH9hcufIm2PBtT9I32eAHFLiOyoNaBB: 'cherry-market/woman-side.webp',
-    Arkb8Uu3OdyD5D1MOKCG0L1O1mmoekwjm8MLQF6M: 'caution/man-back.webp',
-    sYnxcMJE9XlsVJYG0jSMUVnZGgyV5w8rpSmeXAcE: 'caution/man-front.webp',
-    llQZWWgb73X47wA8XnxzAFwTfUqY8Qm5De8NjyyB: 'caution/man-side.webp',
-    hzCKTuXGKWyrcZJo7jOjk4ZyLH4kl1iymMoj383y: 'caution/woman-back.webp',
-    ufzjzwvi5KTxq9A2x0urBeNLzpLF6xaDIO7MPPjj: 'caution/woman-front.webp',
-    WyDrT4zNinloFDSAzNXXXrRUi6LgSroW4lNvd1Es: 'caution/woman-side.webp',
+    'wjw2k0JhXJ0pLprgG2TQbhFErgGxyqr767XBYEWs': 'caution/man-back.webp',
+    'I4uqZTvvDuLhpWkwmxKJF0mAa4YJA0P3r3HxuFvv': 'caution/man-front.webp',
+    'jUgpERuTDfOHXyU0HeWruR1ikhOEpEmMwxd6pOig': 'caution/man-side.webp',
+    'XQQ3mNyPonm5rTopVDIdofAx9HdHKr3gGpxmadVC': 'caution/woman-back.webp',
+    'a6cJGC3dmB2awt2agad8dLgdBlvTKXILyr04hGRf': 'caution/woman-front.webp',
+    'gM43mdbXrnCoKmjRbjoKbXeJz3LQo7Rwgonsg48N': 'caution/woman-side.webp',
     '6pgJ2tDxrLYRPSnjYkBU3smxoRdwBMiqdEuSrmqs': 'play-unmuted/man-back.webp',
     rtdSBUtx7AeK22If2RLe9LgJRG43lxQzEUGYmqm5: 'play-unmuted/man-front.webp',
     V9n4VlOyPcGnY0WkBlnjk2C2LQ9AYlfQQ9mUrGHW: 'play-unmuted/man-side.webp',
@@ -838,12 +838,12 @@
     '0jYixIp7B7ikRq8QAJa49FGE0itgaSmEbBkSkIFL': 'ice-cream/woman-back.webp',
     QXzOQsGfc6AXG2Phx4H7yPuMME4Xb1diQ8bU27EB: 'ice-cream/woman-front.webp',
     '84qARGh1t2UWsMXFMUrjmdv0PxkhwUU83WAHzmKB': 'ice-cream/woman-side.webp',
-    ydNcdgim5f5l02lH7a0ocOyp22LevKSTKpWLlZJm: 'unmuted-sticker/man-back.webp',
-    '16etEZ7BIDyi5zVcVWaLwNvIWRNP8ItU6CmagbmJ': 'unmuted-sticker/man-front.webp',
-    vyG1fatbBuooEFrczJ8mJur6DWQ1rOrSZsBhcG63: 'unmuted-sticker/man-side.webp',
-    x968MfZB6OUVQFcRpx6yqKC0rYo9At8Jyg5Cgph0: 'unmuted-sticker/woman-back.webp',
-    UcfiNy5AGseFstr3NMqxeaMr3zk4TOGW04Ffh0L2: 'unmuted-sticker/woman-front.webp',
-    Ab2luijL2AFrl0rkFF8nOwtKZoXrEfGqJNBo2sos: 'unmuted-sticker/woman-side.webp',
+    'd0rtnb3CsC6gHH2giqEbRDGFQ5obslv5cF8f11L5': 'unmuted-sticker/man-back.webp',
+    'gpqsKBWmauPYxYUivaxYKggSqXpQaPwL3U4tQTwx': 'unmuted-sticker/man-front.webp',
+    'jdpaRlMo16SUbHJNWpbLvoc8uQkUjj1UEEAg8LEU': 'unmuted-sticker/man-side.webp',
+    'quU3UynY1FQp1EUPNza3faaY6Jff7DP2wvNAcmbi': 'unmuted-sticker/woman-back.webp',
+    '5DHlPIkwpYcnlrtyBaKzLsZTrssYJRQAQLLsGWAj': 'unmuted-sticker/woman-front.webp',
+    'JhI5jBfUqa459qGYvYlypQE27crNCul55vNX42EZ': 'unmuted-sticker/woman-side.webp',
     jFp0RhU5xsVimOAFvo3keymD8rjtCycVi3rzmSJq: 'riyadh/man-back.webp',
     qVO4wP7nyodaxiBwHc5CQ7yIWEnvhYDmduzGvYIB: 'riyadh/man-front.webp',
     dlyO3AseGpmbrGDsWcWrS5n82OyrwYJdSJcGR5CB: 'riyadh/man-side.webp',
