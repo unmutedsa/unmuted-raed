@@ -723,3 +723,21 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
   .um-free .um-pick__box { max-height: 88vh; }
   .um-free__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 }
+
+/* Arabic lines never run into each other (owner 2026-11-09: «ما يكون في كلام داخل في بعض», the offers badge
+   «الرابع / مجاناً»): Alexandria's tall letters and deep tails need about 1.4x between lines once a heading, badge or
+   fact wraps. Single-line display titles keep their tight setting. */
+.um-duo__badge { line-height: 1.5; }
+.um-duo h2 { line-height: 1.4; }
+.um-duo__facts li { line-height: 1.5; }
+.um-home .um-title { line-height: 1.4; }
+.theme-raed .s-block--features__item h2 { line-height: 1.5; }
+.theme-raed .um-info-hero h1 { line-height: 1.35; }
+.theme-raed .um-info-card h2 { line-height: 1.4; }
+.theme-raed .um-info-sticker { line-height: 1.45; }
+.theme-raed .um-info-facts b { line-height: 1.5; }
+.um-cart-title { line-height: 1.35; }
+.theme-raed .main-content h1[data-testid="store-product-title"] { line-height: 1.3; }
+.theme-raed .s-block__title h2, .theme-raed .s-block__title h3, .theme-raed .s-slider-block__title h2 { line-height: 1.4; }
+.theme-raed .s-block--hero-slider .home-slider__content h2 { line-height: 1.35; }
+.um-fit h3 { line-height: 1.45; }
