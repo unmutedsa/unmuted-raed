@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '578f1d65be52b0e11b1db0025eece206c2ace96e';
+  var CDN_REF = 'fc7feaf2439564c46f414bab8429a70547cb0d5d';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8', 'بيج': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fa30a8dcabab9f1f61ed606e37313faef65a11f7/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fc7feaf2439564c46f414bab8429a70547cb0d5d/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -916,8 +916,8 @@
     'Ub59s2TOYdUouYEY9bGHyYCcaClT2bfW9PSfmkLl': 'unmuted-sticker/alone-back.webp',
     'KtyNvRrRasc5RsE9QOczVIELCfkBDlg9UJuS1NpK': 'dates-season/alone-front.webp',
     'kwSCUjzRiax57wvIubRf3SmGev6vt7cG5aRI77ca': 'dates-season/alone-back.webp',
-    'NVUub01fZDlSyhmQnk4i4psdWQ95QpnzYgAHL66F': 'just-padel/alone-front.webp',
-    'x9vnhTRqTWrK3s7xNayNXeH3AZY0LZWXDJLDK5Ee': 'just-padel/alone-back.webp',
+    'X0FwnTE1DZ1Dg76EVfrA7SB6WpYKKXnsmqCmq7VW': 'just-padel/alone-front.webp',
+    'Mi6e1DtS3RGID9A2lfJcXWJpiMf6uq0vasOxUYnu': 'just-padel/alone-back.webp',
     'jOX2EgsdodR4YmYEQtm25DaD8dw6hzXy6ME2kyFM': 'love-pop/alone-front.webp',
     'sPCoLWXbYoeA4UqtpqQVjHKtcElkGF53vLoejLfj': 'love-pop/alone-back.webp',
     'jQ8Al1VzwyehEC7jp33AlzvqsmPayhtqWLmzQf1L': 'carnival/alone-front.webp',
