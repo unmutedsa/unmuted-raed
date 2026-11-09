@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7aaa9177d0a7a1cea06e1899472ca401e468f5e1/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fa30a8dcabab9f1f61ed606e37313faef65a11f7/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -900,12 +900,12 @@
     'k7vZKVMywdPBbRXxdwi5eQHGp6rqnKLLcMaHpGbw': 'desert-club/woman-back.webp',
     'lR5ZUnL5FmTEM5pcB1i1qDVZnlHx3PTY8k1pOH9Z': 'desert-club/woman-front.webp',
     'uIt4i7X5nkjh7MPi2H6ROrRPmeqZXSoy8UfsExsJ': 'desert-club/woman-side.webp',
-    'yoHIwW1mrTJZOzvsnWgjM0W5pxggdfLjPnheFpUn': 'just-padel/man-back.webp',
-    'gvBzIBlGVggqi1yoMUwoDlpRBlU5aTP1EzkD1YjK': 'just-padel/man-front.webp',
-    'Qe8RKzJqleIUwarPzC8iCHml1TRK496zCKqQLysW': 'just-padel/man-side.webp',
-    'yj6KbUB2dTa5CJhstktkHtyH9QBwtcjCBlfdUXR8': 'just-padel/woman-back.webp',
-    '5sghv6832XXNBBbl5LgvvDaNT9S9BurW8ABk1QmN': 'just-padel/woman-front.webp',
-    'T7Mw3jqhkODCCpZc9jSp2L7L7qiryAZAe1c0Gs23': 'just-padel/woman-side.webp',
+    'gcSUybNR1aR5w6fM46hj6u35vILlH6bohnBw2cmx': 'just-padel/man-back.webp',
+    '90bKG7AoUCmxMgOWHjZrFBwNtGNDee74XzfVnzG7': 'just-padel/man-front.webp',
+    '6XnrDvulBsrdCqzlmJnqthUqVcdBszwGF5leRRjc': 'just-padel/man-side.webp',
+    'agv0E02LYGEDssHYDqWJTKVUBTPMRKLFDWkR4YEs': 'just-padel/woman-back.webp',
+    'r3GULTr6Nrpswu8xArXtmkyFzTd3iDNitX3GSQ8K': 'just-padel/woman-front.webp',
+    '1Tuj9CQRaes3XXiV251C0dg6ExL6qE6vyMhZII9A': 'just-padel/woman-side.webp',
     Y2YU24YFhlI3CmH2Bm28udWKYE5iELbG3jNxlico: 'caution/alone-front.webp',
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
     'm2UmsXGzR4S7BjTFCdZbYAGWnwbr6bU2FWAUkIKY': 'desert-club/alone-front.webp',
