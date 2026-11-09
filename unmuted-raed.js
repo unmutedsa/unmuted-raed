@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = 'ff85786ea690e5f61f1481f01d5e3f10ff43eb31';
+  var CDN_REF = 'b441e0ec1362c985f8e1d23265654acbc914c61b';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8', 'بيج': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@0e728d569a70951824be29edb0ce8f182cd52cfe/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@b441e0ec1362c985f8e1d23265654acbc914c61b/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -908,8 +908,8 @@
     '52qdamr1R3z4Pz2yDlGYlmbAXv52wDrAL2vLaca6': 'just-padel/woman-side.webp',
     Y2YU24YFhlI3CmH2Bm28udWKYE5iELbG3jNxlico: 'caution/alone-front.webp',
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
-    'm2UmsXGzR4S7BjTFCdZbYAGWnwbr6bU2FWAUkIKY': 'desert-club/alone-front.webp',
-    '0QyH9Js5fLACjl20EWOl7xy2DoBDTcSlsCKjAN5L': 'desert-club/alone-back.webp',
+    'WfOYB96Bubsn4nPvD1y4N2TwjQQ56FqBVVvWj018': 'desert-club/alone-front.webp',
+    'rZVQeeCwVEMq0NyCvTXcGIFt4SIDiwAlfky1uZDh': 'desert-club/alone-back.webp',
     'c7LZUyOo7StMOnNbR4NmSRKt9DVRyrFNdwFE4tZe': 'riyadh/alone-front.webp',
     'qskU2ehlhPTdA634KCHzMbtzaZwCevjPv2nTE41p': 'riyadh/alone-back.webp',
     'sELIOvyCKiSuW9g2BwnHre346IoXd5RAc5qNzNcq': 'unmuted-sticker/alone-front.webp',
@@ -956,16 +956,16 @@
     'Uxlq2xcA7TMOMgogIqQO7RgHdBTAY5g9bQsDs68q': 'speakers/woman-back.webp',
     '6Bzkk8ObWw36Ds8QKQZtFctLXaeAD6jQV5gqEzXQ': 'speakers/woman-front.webp',
     'fHbN3du0nHMdmbUvVAmGuCy8hYZlrn1v5qfmATLj': 'speakers/woman-side.webp',
-    '7VAyxsmc7NxxrKBqwB4XoYOP8MegypRS51o1mmi4': 'skateboard/alone-front.webp',
-    '4QMfZeYNLWf56LK0JSy1bDbP95dnrnlO6OR9FSUU': 'skateboard/alone-back.webp',
+    '4L32BywRvgxLvOeCRzWpYfg4jsKdnvqTpK8442PA': 'skateboard/alone-front.webp',
+    'AZQCrW4RsyLTLLj10S771pO0NGm1zHdvAcfMX5rg': 'skateboard/alone-back.webp',
     'VCsfR56Fb5ddt1peChbV5bvqzw8urPJ9t3Y7WUHb': 'skateboard/man-back.webp',
     'DfKQGYS7eEd4cdENy28jF32CzQKzwc3qoYXNBKJU': 'skateboard/man-front.webp',
     'Lx316Gc7yRZ8kT0U4qqbgA5t4ZbmX5LfmwDUJQwu': 'skateboard/man-side.webp',
     'B095RHmEAOVnjVobaJbtThjLDgFcnvR0KERJJwTz': 'skateboard/woman-back.webp',
     'FBT0RdCY1iAYFbVTrl9X2M2tpk7vQ3Sowj8nfBRI': 'skateboard/woman-front.webp',
     'RIPf5FBatD8YHsudcxQjKu6zJjSxXvcpRbThfjW6': 'skateboard/woman-side.webp',
-    'SH62c76n9mQdk61sBH0vST43IpGQtYGP6Q0rhJGj': 'coffee-on-my-mind/alone-front.webp',
-    'wdwfJoMvmlxGD8ymBGZ57BPYaOVsbhxEZDppt2Ej': 'coffee-on-my-mind/alone-back.webp',
+    'odFK9eaMLWm1PybGQ1xIbFoh92QBblPj0uBsUTfK': 'coffee-on-my-mind/alone-front.webp',
+    'PFkkjqbslW9lhDpY8q5jfc9SbDGOSDECAhD1tfj6': 'coffee-on-my-mind/alone-back.webp',
     'bLJknQGgiIj0j1beBDFfwnPsCKi9JAuuPcl2qgWj': 'coffee-on-my-mind/man-back.webp',
     'tP5W12mtOp0O0XIoMNKHI4jYo6glT9B4gQVcfoN1': 'coffee-on-my-mind/man-front.webp',
     'yiUL08NLVToCxOB90uoBXDg0BUKL9rQ754odKdgf': 'coffee-on-my-mind/man-side.webp',
