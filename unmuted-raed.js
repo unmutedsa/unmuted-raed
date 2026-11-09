@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fc7feaf2439564c46f414bab8429a70547cb0d5d/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f5c7fb9d0e3d4c8c1e8fdc596751977979867122/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -876,12 +876,12 @@
     '0jYixIp7B7ikRq8QAJa49FGE0itgaSmEbBkSkIFL': 'ice-cream/woman-back.webp',
     QXzOQsGfc6AXG2Phx4H7yPuMME4Xb1diQ8bU27EB: 'ice-cream/woman-front.webp',
     '84qARGh1t2UWsMXFMUrjmdv0PxkhwUU83WAHzmKB': 'ice-cream/woman-side.webp',
-    'd0rtnb3CsC6gHH2giqEbRDGFQ5obslv5cF8f11L5': 'unmuted-sticker/man-back.webp',
-    'gpqsKBWmauPYxYUivaxYKggSqXpQaPwL3U4tQTwx': 'unmuted-sticker/man-front.webp',
-    'jdpaRlMo16SUbHJNWpbLvoc8uQkUjj1UEEAg8LEU': 'unmuted-sticker/man-side.webp',
-    'quU3UynY1FQp1EUPNza3faaY6Jff7DP2wvNAcmbi': 'unmuted-sticker/woman-back.webp',
-    '5DHlPIkwpYcnlrtyBaKzLsZTrssYJRQAQLLsGWAj': 'unmuted-sticker/woman-front.webp',
-    'JhI5jBfUqa459qGYvYlypQE27crNCul55vNX42EZ': 'unmuted-sticker/woman-side.webp',
+    'nmbz2wFuKIxFGA1ODAbsJ5VZXIH9xqx04dlh2WNv': 'unmuted-sticker/man-back.webp',
+    'Z9fV6TZueSsu4AG7TsI8hztLcjcD81gHCQIWaLJZ': 'unmuted-sticker/man-front.webp',
+    'TILQlNlBRwxQ7Sg2SvexPN71lwdJocN3lQynMiNI': 'unmuted-sticker/man-side.webp',
+    'M1X8CAbxGe94FUDI1IkKAhUDyoj8QUMDXk6jqHbe': 'unmuted-sticker/woman-back.webp',
+    'owzor2jNJYqchLZYdp0VFUPpoTW8Las896HIZeCJ': 'unmuted-sticker/woman-front.webp',
+    '42J5KBOy9oVp3Bw6YWH3deFTLOBIkCLrMYSZwfea': 'unmuted-sticker/woman-side.webp',
     'gqesC3p7rjAXFOX4Mm6COng6eVzn7OiShYATZOV1': 'riyadh/man-back.webp',
     '0r1ARVFwMg7lTOUX12hlDhrVunEddWDA3vNIkpDX': 'riyadh/man-front.webp',
     '2GS0bN4bonux87J3Gj8MnN6Ef1iPp8AnqN1anczW': 'riyadh/man-side.webp',
