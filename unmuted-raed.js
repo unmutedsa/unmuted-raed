@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@b441e0ec1362c985f8e1d23265654acbc914c61b/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d75c2a0d63544c59fbe13802f990776c11839ea1/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -940,7 +940,7 @@
     uWWXA9gx5OuiJfWl1ItEo4RsUhAY0JXdHKBopF1z: 'megaphone/alone-back.webp',
     iZ8m9YdntMvoISTbJOj5iYqeBFty0cfk0J81Cx4G: 'ice-cream/alone-front.webp',
     Etz5XE1PB7xIaJIRqCGxGSoYWMW5tJFjou301Uzy: 'ice-cream/alone-back.webp',
-    '8WGW4Dy6d10faG1HRXHJaB48JDBOjscV6P4Ewt2g': 'tape-green/alone-front.webp',
+    '7cFhze1Lt0lwcU97EHyBH3lLIXpM6dejflpnPge1': 'tape-green/alone-front.webp',
     'av8gfy99s0CnD62bdG0tSfxTFK9P5v8AVjP8buGR': 'tape-green/alone-back.webp',
     'Y8VHVoInodYbkec7cejxY58pAt4VBHPTRfB4yLLl': 'tape-green/man-back.webp',
     '9PMZWbXvYILvKTmySDaujus2yBAozpaW86VrM2uR': 'tape-green/man-front.webp',
@@ -965,14 +965,14 @@
     'FBT0RdCY1iAYFbVTrl9X2M2tpk7vQ3Sowj8nfBRI': 'skateboard/woman-front.webp',
     'RIPf5FBatD8YHsudcxQjKu6zJjSxXvcpRbThfjW6': 'skateboard/woman-side.webp',
     'odFK9eaMLWm1PybGQ1xIbFoh92QBblPj0uBsUTfK': 'coffee-on-my-mind/alone-front.webp',
-    'PFkkjqbslW9lhDpY8q5jfc9SbDGOSDECAhD1tfj6': 'coffee-on-my-mind/alone-back.webp',
+    'N6Y7U8GqF1cyXllwp6bkiPtL2guNf2qCYcRhkXrR': 'coffee-on-my-mind/alone-back.webp',
     'bLJknQGgiIj0j1beBDFfwnPsCKi9JAuuPcl2qgWj': 'coffee-on-my-mind/man-back.webp',
     'tP5W12mtOp0O0XIoMNKHI4jYo6glT9B4gQVcfoN1': 'coffee-on-my-mind/man-front.webp',
     'yiUL08NLVToCxOB90uoBXDg0BUKL9rQ754odKdgf': 'coffee-on-my-mind/man-side.webp',
     'JIyWO0igOqT0w8AXY6jgvcT35TccRVRBAIPElCUg': 'coffee-on-my-mind/woman-back.webp',
     '7psN3c1tQrm6JdXfT3jRXs88pwR91rwXwbTz1BwM': 'coffee-on-my-mind/woman-front.webp',
     'hTeViQCK74sougyENw9BdvgNGeOEfR1BPtzFBEYI': 'coffee-on-my-mind/woman-side.webp',
-    'Vwjs9FHV5Z31b5Iho5r5KZN4dQemYVjjwYMkfGXp': 'tape-yellow/alone-front.webp',
+    'QxQPteOeIYhMmaaaGcxjtQzP8sHuHjNotuvWwERq': 'tape-yellow/alone-front.webp',
     'q76luxU4N6Oh8d7qh4sMaDtjPfdstmkmz5iVr1d5': 'tape-yellow/alone-back.webp',
     'DEYTfzcfHwpwEUPAmN3Syui0QCpeWxzAcTFKXkpw': 'tape-yellow/man-back.webp',
     'X1Vr0WXZDd1bQNy64H9owBGIlOW7a8lAMfQugGZI': 'tape-yellow/man-front.webp',
@@ -989,7 +989,7 @@
     'dKrAB2Xb46BbXumGXgRcgR0H379Vl6WOjGopmpKa': 'weekend-recovery-club/woman-front.webp',
     'rJxDur8mKgrgkPXDa4R4RPJYfmZ1N2hgzIKVnBLO': 'weekend-recovery-club/woman-side.webp',
     'WD5BWyxmDj2TsH9nHje5CGUTtSkpBnJ6wTgXzQ89': 'records/alone-front.webp',
-    'Y1eK1oIRN676i4oTAvRHdDP7nGW5L6cn2nztsjW2': 'records/alone-back.webp',
+    'kKBbbwtJs0yljhR32M93zROthZHx9KEEQI4VUIMB': 'records/alone-back.webp',
     '8wcazY64h5XBOvcS3qFmaLJI0MoBDYSYdtuD0oAd': 'records/man-back.webp',
     'lw5S7WNvdMMa7FtAsoKpZ8zSuz95fGzI9wZswP5W': 'records/man-front.webp',
     'rgiIRjGwZyracYCLNU4C2uI22RG0ICF4aP6hCTeR': 'records/man-side.webp',
