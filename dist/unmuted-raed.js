@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@578f1d65be52b0e11b1db0025eece206c2ace96e/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@b83716c5062ed4b423224edaabc578c2638febcf/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -822,12 +822,12 @@
     's1hgKcVgehyfnLcztE9ibK8b8WIU3JoYXIv2aGCm': 'good-mood/woman-back.webp',
     'WK8GSt5uoYXKGqTr8wuwfZ3yyElGKC0Qli3pHf5M': 'good-mood/woman-front.webp',
     'cPG3bbLuI4SySw5rUDTJ27y2TOeoZSpiuTmR3qmh': 'good-mood/woman-side.webp',
-    'fBs25oGldzsHpfzi6twXEvFxCAyI4MzGynBIFeQV': 'cherry-market/man-back.webp',
-    '8huaRooSs9RgxLaP04HwzPvv5bFP4zSLnYaROyu4': 'cherry-market/man-front.webp',
-    'rqhtyI6TB5dwV6qJWJFoD1kcInYEm7ZgFVddblg3': 'cherry-market/man-side.webp',
-    '8FG5eLJKt1iVIh44WILyupbCMgRiSz7ttAbafYfX': 'cherry-market/woman-back.webp',
-    'XaVF7gQnhqE6gZYfzdE48VDakuDUwYb3cCna6L5z': 'cherry-market/woman-front.webp',
-    'K8ZdKGYcoIHD9fiOtBevy0siNVVpsDcDky5VRJ9z': 'cherry-market/woman-side.webp',
+    'zEVSb3k8lpTkoAEmd5zZLG2I8hcKUeSh8qb8ESVM': 'cherry-market/man-back.webp',
+    'vdnrBdiJ9eRQGe30FrHqZijqYubu80nCaUhNCm6B': 'cherry-market/man-front.webp',
+    'TDfeJIfkbSDssKsocQS4ZalirugGWIPgBBoqWHLY': 'cherry-market/man-side.webp',
+    'h89TXxyhNdMGUip5pbzqi9HWKTGu3w7KaIaEEWXU': 'cherry-market/woman-back.webp',
+    '97ogpAOKZhHi3yTt0OKonzwGbmcQgqOFu64MFzNd': 'cherry-market/woman-front.webp',
+    'ztoy4YILmeJToCPx2EmMKk88FLkjY8MDOzmjOGEG': 'cherry-market/woman-side.webp',
     'wjw2k0JhXJ0pLprgG2TQbhFErgGxyqr767XBYEWs': 'caution/man-back.webp',
     'I4uqZTvvDuLhpWkwmxKJF0mAa4YJA0P3r3HxuFvv': 'caution/man-front.webp',
     'jUgpERuTDfOHXyU0HeWruR1ikhOEpEmMwxd6pOig': 'caution/man-side.webp',
@@ -888,12 +888,12 @@
     'a2DgYHIVfD9k4zOxgtA0xK5NsMRuknAT1DUoqMdi': 'riyadh/woman-back.webp',
     'xtJGXVgoBilA8TvXYAl5pnniKsbYqguxjww1EnpH': 'riyadh/woman-front.webp',
     'GpsHVHO9ikbho7J93GWA8ImV2eeX6DmV6Kl9AJKI': 'riyadh/woman-side.webp',
-    'UYmjcc1Wtut9lX6l06UfOSPFHZS7l2hGeWpH461L': 'dates-season/man-back.webp',
-    'GkSmBkiPKDBDJhim43xNFF5xfNSG6UvLd01sPP9R': 'dates-season/man-front.webp',
-    'OHrMVfcvl9ccRavdRihPQ0ni5H5icKyZXd8SXFj8': 'dates-season/man-side.webp',
-    'atDa1QaM16XO7hbcs9ldKdk3AlEAlJCWI4MPcwgu': 'dates-season/woman-back.webp',
-    'OffxNW20JUnPr2AYqBAGAIqXhR1FDGkB7g6qza4d': 'dates-season/woman-front.webp',
-    'MPE4Ym4Y0z3iaBI0d4Krcw6wzLY1Cg7Bhsdz6kLw': 'dates-season/woman-side.webp',
+    'DI8ThdrnJIxkLdtVeALSmo6TP6geKxFYSrAO6XSt': 'dates-season/man-back.webp',
+    'hdhFnRBjYDZJ5jOEdchpA90TSS21ohv6vh9RZP6S': 'dates-season/man-front.webp',
+    'x9RyYYX6di00d5xsmwgFgARbkXh3JjZRl6O60HgN': 'dates-season/man-side.webp',
+    'AY9edKS8pPidZevGzgKmA1XY9yBs2OtN1P016DfP': 'dates-season/woman-back.webp',
+    'HAuq94AId4ea0yAG0lZ1wTFaUuFxIQhhQhL1snZy': 'dates-season/woman-front.webp',
+    'f5szBaSyCnJfxVkW2HYdj34trLhwrFfb3jbmwjla': 'dates-season/woman-side.webp',
     'n99wORzh68Go6tNlAsthsCvNdRzANneOGlOCJK9Y': 'desert-club/man-back.webp',
     'r9wAUbrF5IliYzJC3wxbkGHJik4WN541GCil42Fw': 'desert-club/man-front.webp',
     'ZjIyjEhoOwN54NOOeIUojgQtNoD5ML6kmLx0jWN9': 'desert-club/man-side.webp',
