@@ -802,7 +802,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c78acd963ae055e869c86616eff9139451e87e0b/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7aaa9177d0a7a1cea06e1899472ca401e468f5e1/cdn/photos/';
   var HD = {
     'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
     'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
@@ -828,12 +828,12 @@
     'h89TXxyhNdMGUip5pbzqi9HWKTGu3w7KaIaEEWXU': 'cherry-market/woman-back.webp',
     '97ogpAOKZhHi3yTt0OKonzwGbmcQgqOFu64MFzNd': 'cherry-market/woman-front.webp',
     'ztoy4YILmeJToCPx2EmMKk88FLkjY8MDOzmjOGEG': 'cherry-market/woman-side.webp',
-    'wjw2k0JhXJ0pLprgG2TQbhFErgGxyqr767XBYEWs': 'caution/man-back.webp',
-    'I4uqZTvvDuLhpWkwmxKJF0mAa4YJA0P3r3HxuFvv': 'caution/man-front.webp',
-    'jUgpERuTDfOHXyU0HeWruR1ikhOEpEmMwxd6pOig': 'caution/man-side.webp',
-    'XQQ3mNyPonm5rTopVDIdofAx9HdHKr3gGpxmadVC': 'caution/woman-back.webp',
-    'a6cJGC3dmB2awt2agad8dLgdBlvTKXILyr04hGRf': 'caution/woman-front.webp',
-    'gM43mdbXrnCoKmjRbjoKbXeJz3LQo7Rwgonsg48N': 'caution/woman-side.webp',
+    'TjjVlhy1bcG3CNuIvO64AQjhx05mv86CZybQx8Ld': 'caution/man-back.webp',
+    'jdjzJrUgXHyZC6fXMg26gfblxKnQZGpwJJnvdejC': 'caution/man-front.webp',
+    '7m1mR1Ys0qjOJObF6DU7UOq2eFjp9TbldG0465Ug': 'caution/man-side.webp',
+    'zUHqaq3ZoUwEmTAwZvEyqBKg4yVECiRNUSMdyGhf': 'caution/woman-back.webp',
+    'wCrpAN1fHtNr9eVYkD0s43CUUwE9IIBU1Z6u8T72': 'caution/woman-front.webp',
+    'WUNd2Rn6DCKsY5th4BO1XUN4yscObuyU21H3ooza': 'caution/woman-side.webp',
     '6pgJ2tDxrLYRPSnjYkBU3smxoRdwBMiqdEuSrmqs': 'play-unmuted/man-back.webp',
     rtdSBUtx7AeK22If2RLe9LgJRG43lxQzEUGYmqm5: 'play-unmuted/man-front.webp',
     V9n4VlOyPcGnY0WkBlnjk2C2LQ9AYlfQQ9mUrGHW: 'play-unmuted/man-side.webp',
