@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = 'fbcb0e7328313ddeb9fb72f313ab0348daa55dc8';
+  var CDN_REF = '1b9a6565cf791341bea2ab0fd53cfdbbde21713d';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8', '\u0628\u064a\u062c': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fbcb0e7328313ddeb9fb72f313ab0348daa55dc8/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@1b9a6565cf791341bea2ab0fd53cfdbbde21713d/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -872,8 +872,8 @@
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
     'm2UmsXGzR4S7BjTFCdZbYAGWnwbr6bU2FWAUkIKY': 'desert-club/alone-front.webp',
     '0QyH9Js5fLACjl20EWOl7xy2DoBDTcSlsCKjAN5L': 'desert-club/alone-back.webp',
-    'rZ5zP97bzLnHEX5wcZ381jU2y2WI8WodXEDUbItY': 'riyadh/alone-front.webp',
-    'QdWr4FQPVHPWnVDSYxPPaYzdVlMQjMmiSsp8xVrM': 'riyadh/alone-back.webp',
+    'uAy6YqR5lsXhKXDlUC0NpyMjIKS5QONyuRcnmbG7': 'riyadh/alone-front.webp',
+    'qskU2ehlhPTdA634KCHzMbtzaZwCevjPv2nTE41p': 'riyadh/alone-back.webp',
     'sELIOvyCKiSuW9g2BwnHre346IoXd5RAc5qNzNcq': 'unmuted-sticker/alone-front.webp',
     'Ub59s2TOYdUouYEY9bGHyYCcaClT2bfW9PSfmkLl': 'unmuted-sticker/alone-back.webp',
     'KtyNvRrRasc5RsE9QOczVIELCfkBDlg9UJuS1NpK': 'dates-season/alone-front.webp',
@@ -884,8 +884,8 @@
     'sPCoLWXbYoeA4UqtpqQVjHKtcElkGF53vLoejLfj': 'love-pop/alone-back.webp',
     'wjGjXBz3wBKKjg5L57HUju8KoSlfe490OZu0Tp1I': 'carnival/alone-front.webp',
     '0QQtx7QDEUdBaRcdZdfP4l1qiluOzz2cwb0baLfX': 'carnival/alone-back.webp',
-    'fdfskMt2MytPwux8GzN2BJMOUgduTmY30DYhbDiu': 'good-mood/alone-front.webp',
-    'H2Uh6bxUfKWsZI9TCfG5vTlmYcWxiPxIgU0bN14w': 'good-mood/alone-back.webp',
+    'fPC0jG7BzOxlFjdomJXotbBNZwUQaN30nifnSgJ6': 'good-mood/alone-front.webp',
+    'hirYTKBy1PRCgrwLfFDYlt23HORSohR97kAsqoeP': 'good-mood/alone-back.webp',
     'aG6bfHFeFf53Wd3pxtviLLHWg9EIm77ADSgsEEzf': 'cherry-market/alone-front.webp',
     '4Gto8X9ToONiyQFMM4zM0CFFNb8rx1FgUzgoaf6o': 'cherry-market/alone-back.webp',
     ygua2Tt1pynUhVktVXwgaw15RrKmoDsS12vjS1dN: 'play-unmuted/alone-front.webp',
@@ -894,7 +894,7 @@
     'aDFFeOpa9IPgXR1Q9uK4HvckyUXGkrLqUo9I5fUk': 'vending/alone-back.webp',
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
-    'm3Fnb8eAS0RdTcgdTvI8iNU7P1ph9d1aImARUMFL': 'kashta/alone-front.webp',
+    'KYcipnhIkJvy4jgccNR1xjkDYCJThV6hlBT0xFRe': 'kashta/alone-front.webp',
     '4xQYZ57Uvv3U762fGDy6dFkkoMQo0Gnv5SklNiV4': 'kashta/alone-back.webp',
     'z3cgsk0gooVId5Duu8WwEz2L6dsaAkeNgh35N5QL': 'the-original/alone-front.webp',
     'VnO3gf8gpK0KCr6UndJEftcXzkL9dJK9gMKbDFoe': 'the-original/alone-back.webp',
