@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '8b08549beb5460e338e1b0941eb53e4ff25f8147';
+  var CDN_REF = 'd12b88e15044640f56ca136f3b3853949dfa9643';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8', '\u0628\u064a\u062c': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -124,10 +124,7 @@
       // the tees the rail has no cut-out for bring their \u00ab\u0634\u0645\u0627\u0639\u0629\u00bb photos from their product pages
       var cut = {};
       $$('.um-rail [data-um-qv]', box).forEach(function (a) { cut[(a.getAttribute('data-name') || '').toLowerCase()] = 1; });
-      // only the tees the rail already hangs (owner, 2026-11-09: the new tees stay off the rail and the tracklist,
-      // \u00ablike before, the old ones only\u00bb); a tee added to the store later shows in its categories, not up here
-      if (res[1]) res[1].items = res[1].items.filter(function (p) { return cut[String(p.name).toLowerCase()]; });
-      var news = [];
+      var news = res[1] ? res[1].items.filter(function (p) { return !cut[String(p.name).toLowerCase()]; }) : [];
       return settle(Promise.all(news.map(function (p) { return hangerOf(p).catch(function () { return null; }); })), 2000).then(function (found) {
         var photos = {};
         (found || []).forEach(function (h) { if (h) photos[h.id] = h; });
@@ -139,7 +136,7 @@
       $$('.um-hero__eyebrow, .um-hero .um-fl.is-w, .um-rail .um-rls__sub', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
       [function () { bindHero(box); }, function () { heroBanner(box); }, function () { bindRail(box, res[1], res[3]); },
-        function () { bindTracks(box, res[1], res[3]); }, function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
+        function () { bindTracks(box, res[1], res[3]); }, function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { trackTwelve(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
       railTouch(box);
       links(box);
@@ -242,7 +239,9 @@
     var lis = $$('.um-rls__item', track), byName = {};
     if (!data.items.length || !lis.length) return;
     lis.forEach(function (li) { var a = $('[data-um-qv]', li); if (a) byName[(a.getAttribute('data-name') || '').toLowerCase()] = li; });
-    var out = data.items.map(function (p) {
+    // only the tees it has its own cut-out for (owner, 2026-11-09: the new tees stay off the rail, \u00ablike before, the old
+    // ones only\u00bb; they show in the list below and on \u00ab\u0627\u062e\u062a\u0631 \u0635\u0648\u062a\u0643\u00bb)
+    var out = data.items.filter(function (p) { return byName[String(p.name).toLowerCase()]; }).map(function (p) {
       var li = byName[String(p.name).toLowerCase()];
       if (!li) {   // no cut-out here: its \u00ab\u0634\u0645\u0627\u0639\u0629\u00bb photo (front, and back if there is one), else its main photo
         var h = (photos || {})[String(p.id)] || {}, front = h.front || imageOf(p), back = h.back || '';
@@ -271,6 +270,17 @@
   }
   // the rail hangs the first ten tees of the list (the section's \u00ab\u0643\u0644 \u0627\u0644\u0623\u0635\u0648\u0627\u062a\u00bb button leads to the rest), and its bar counts them
   var RAIL_MAX = 10;
+  // the home page lists twelve tees (owner, 2026-11-09); all of them are on \u00ab\u0627\u062e\u062a\u0631 \u0635\u0648\u062a\u0643\u00bb, which the button under the list opens
+  var TRACK_MAX = 12;
+  function trackTwelve(box) {
+    var list = $('.um-tracks ol.um-tl', box);
+    if (!list) return;
+    $$('li', list).slice(TRACK_MAX).forEach(function (li) { li.remove(); });
+    if ($('.um-tl__more', box)) return;
+    var p = el('p', 'um-tl__more', '<a class="um-btn um-btn--ink" href="' + allUrl() + '">' + t('\u0643\u0644 \u0627\u0644\u0623\u0635\u0648\u0627\u062a', 'Every voice') + '</a>');
+    p.style.cssText = 'display:flex;justify-content:center;margin:32px 0 0';
+    list.parentNode.insertBefore(p, list.nextSibling);
+  }
   function railTen(box) {
     var rail = $('.um-rail', box), items = rail ? $$('[data-um-rail-track] > .um-rls__item', rail) : [];
     if (!items.length) return;
@@ -768,7 +778,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8b08549beb5460e338e1b0941eb53e4ff25f8147/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d12b88e15044640f56ca136f3b3853949dfa9643/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -807,10 +817,10 @@
     NGlg8TsAh4W7ZfinnPwKyDVbfgxZqhZ9h0BtU1XO: 'play-unmuted/woman-front.webp',
     AX1CZt0G4t1cJ9KUqhOzuQ9IP7Yi87yNXHxaEBSf: 'play-unmuted/woman-side.webp',
     'j9kQNbs91W2sdqnMkl2Bb8F7TyLswMPJZZoHjL6p': 'vending/man-back.webp',
-    '4eUZMSjHYQh46SAftpqDz2WR6TVdI9y3VGL1KQIh': 'vending/man-front.webp',
+    'T5PA0DrxW4f0UPQcLiwjSnro26ke6pYxbvjHMVkL': 'vending/man-front.webp',
     'tvlGy1q2RkrIacoNfQA2s3sQYxIqltRHRyJCa1Oe': 'vending/man-side.webp',
     '1VVHa8V6H20OhtMtvnKc6p9OaZ2NFNWNH51ehfvF': 'vending/woman-back.webp',
-    'TYIuvo6kLxQtyVIWBs1yjqdehf5T7aj9W3VyXfMQ': 'vending/woman-front.webp',
+    'Xnriha90Uaf49OPeMFHRKGAPzh894u1qTAOZc6hV': 'vending/woman-front.webp',
     'FFNB4CQgnUOpowchC3oI34uPatXphAltSjOWpJnp': 'vending/woman-side.webp',
     '0mHsiNaxfp3SAO61Ty35MHy4wLcvhURZscCHB0Gb': 'call-me/man-back.webp',
     '6KGfT4nhFgjbjCvyNsQhn1ZMCjfoiEB9nU8v8Ic6': 'call-me/man-front.webp',
@@ -894,7 +904,7 @@
     '4Gto8X9ToONiyQFMM4zM0CFFNb8rx1FgUzgoaf6o': 'cherry-market/alone-back.webp',
     ygua2Tt1pynUhVktVXwgaw15RrKmoDsS12vjS1dN: 'play-unmuted/alone-front.webp',
     KYMpMZrzfMqDYOwpIOIuVYDfPQBUbOt5KmBd6ksk: 'play-unmuted/alone-back.webp',
-    'xLx4KOCLQM9GOYuWVbCN5Ugv9h9FiItknDNn6rL2': 'vending/alone-front.webp',
+    'OPEEgSl6EDHFJ59W7Jgf3o7ThyGglET5Sxa5wX1N': 'vending/alone-front.webp',
     'aDFFeOpa9IPgXR1Q9uK4HvckyUXGkrLqUo9I5fUk': 'vending/alone-back.webp',
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
