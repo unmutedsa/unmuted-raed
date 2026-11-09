@@ -1261,8 +1261,15 @@
   /* footer: the store's closing line */
   function footer() {
     var f = $('.store-footer');
-    if (!f || $('.um-ftr-big')) return;
-    f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('\u0627\u0644\u0628\u0633 \u0635\u0648\u062a\u0643.', '\u0627\u0644\u0628\u0633 \u0635\u0648\u062a\u0643.') + '</p>'), f.firstChild);
+    if (!f) return;
+    if (!$('.um-ftr-big')) f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('\u0627\u0644\u0628\u0633 \u0635\u0648\u062a\u0643.', '\u0627\u0644\u0628\u0633 \u0635\u0648\u062a\u0643.') + '</p>'), f.firstChild);
+    // the brand in a few words under the store's name (owner, 2026-11-09: \u00ab\u0648\u0647\u0630\u0627 \u0627\u062d\u062a\u0627\u062c \u064a\u0646\u0636\u0627\u0641 \u0648\u0635\u0641 \u0644\u0644\u0628\u0631\u0627\u0646\u062f \u062a\u062d\u062a\u00bb)
+    var name = $('.store-footer__inner h3'), spot = name && (name.closest('a') || name);
+    if (spot && !$('.um-ftr-about')) spot.insertAdjacentHTML('afterend', '<div class="um-ftr-about"><p class="um-ftr-about__t"><span lang="en" dir="ltr">UNMUTED</span> \u2014 ' +
+      t('\u0627\u0644\u0628\u0633 \u0635\u0648\u062a\u0643.', 'Wear your voice.') + '</p><p>' +
+      t('\u0628\u0631\u0627\u0646\u062f \u0633\u0639\u0648\u062f\u064a \u064a\u0639\u0637\u064a \u0634\u062e\u0635\u064a\u062a\u0643 \u0645\u0633\u0627\u062d\u0629 \u062a\u062a\u0643\u0644\u0645. \u0646\u062d\u0648\u0651\u0644 \u0627\u0644\u0623\u0641\u0643\u0627\u0631 \u0648\u0627\u0644\u0631\u0633\u0648\u0645\u0627\u062a \u0627\u0644\u062c\u0631\u064a\u0626\u0629 \u0625\u0644\u0649 \u0642\u0637\u0639 \u0628\u0642\u0635\u0651\u0627\u062a \u0648\u0627\u0633\u0639\u0629\u060c \u062a\u062e\u062a\u0627\u0631 \u0645\u0646\u0647\u0627 \u0627\u0644\u0644\u064a \u064a\u0634\u0628\u0647\u0643 \u0648\u062a\u0644\u0628\u0633\u0647\u0627 \u0628\u0637\u0631\u064a\u0642\u062a\u0643. \u0643\u0644 \u0642\u0637\u0639\u0629 \u062a\u0639\u0628\u0631 \u0639\u0646\u0643\u060c \u0642\u0628\u0644 \u0644\u0627 \u062a\u0642\u0648\u0644 \u0623\u064a \u0643\u0644\u0645\u0629.',
+        'A Saudi brand that gives your personality room to speak. We turn bold ideas and graphics into oversized pieces: pick the one that sounds like you and wear it your way. Every piece speaks for you before you say a word.') +
+      '</p></div>');
   }
 
   /* where a page opens (owner, 2026-11-03): a visit or a refresh opens at the top, and the back button lands where the page

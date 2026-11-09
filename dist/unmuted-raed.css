@@ -741,3 +741,9 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
 .theme-raed .s-block__title h2, .theme-raed .s-block__title h3, .theme-raed .s-slider-block__title h2 { line-height: 1.4; }
 .theme-raed .s-block--hero-slider .home-slider__content h2 { line-height: 1.35; }
 .um-fit h3 { line-height: 1.45; }
+
+/* the brand in a few words under the store's name in the footer (unmuted-raed.js footer, owner 2026-11-09) */
+.um-ftr-about { max-width: 36em; margin: 14px 0 22px; color: var(--um-ink); font-size: 15px; line-height: 1.85; }
+.um-ftr-about p { margin: 0; }
+.um-ftr-about__t { margin-bottom: 6px !important; font-weight: 800; font-size: 17px; line-height: 1.5; }
+.um-ftr-about__t span { font-family: var(--um-latin); letter-spacing: .02em; }

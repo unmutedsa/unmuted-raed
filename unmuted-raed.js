@@ -1261,8 +1261,15 @@
   /* footer: the store's closing line */
   function footer() {
     var f = $('.store-footer');
-    if (!f || $('.um-ftr-big')) return;
-    f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
+    if (!f) return;
+    if (!$('.um-ftr-big')) f.insertBefore(el('div', 'um-ftr-big', '<p lang="en" dir="ltr">Wear your voice.</p><p>' + t('البس صوتك.', 'البس صوتك.') + '</p>'), f.firstChild);
+    // the brand in a few words under the store's name (owner, 2026-11-09: «وهذا احتاج ينضاف وصف للبراند تحت»)
+    var name = $('.store-footer__inner h3'), spot = name && (name.closest('a') || name);
+    if (spot && !$('.um-ftr-about')) spot.insertAdjacentHTML('afterend', '<div class="um-ftr-about"><p class="um-ftr-about__t"><span lang="en" dir="ltr">UNMUTED</span> — ' +
+      t('البس صوتك.', 'Wear your voice.') + '</p><p>' +
+      t('براند سعودي يعطي شخصيتك مساحة تتكلم. نحوّل الأفكار والرسومات الجريئة إلى قطع بقصّات واسعة، تختار منها اللي يشبهك وتلبسها بطريقتك. كل قطعة تعبر عنك، قبل لا تقول أي كلمة.',
+        'A Saudi brand that gives your personality room to speak. We turn bold ideas and graphics into oversized pieces: pick the one that sounds like you and wear it your way. Every piece speaks for you before you say a word.') +
+      '</p></div>');
   }
 
   /* where a page opens (owner, 2026-11-03): a visit or a refresh opens at the top, and the back button lands where the page
