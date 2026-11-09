@@ -748,3 +748,22 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
 .um-ftr-about p { margin: 0; }
 .um-ftr-about__t { margin-bottom: 6px !important; font-weight: 800; font-size: 17px; line-height: 1.5; }
 .um-ftr-about__t span { font-family: var(--um-latin); letter-spacing: .02em; }
+
+/* home tee list: every card in a row lines up (picture, voice line, price + «اختر مقاسك», bottom line) however many
+   lines a name takes, on every screen (owner 2026-11-09). Each card shares the list's rows (subgrid: picture, name,
+   voice, price); a short name sits on its voice line, like Salla's cards on the category pages. Spacing moves from the
+   gaps to margins so the rows hold it. Older browsers: the card fills its cell and the price sits at the bottom. */
+@supports (grid-template-rows: subgrid) {
+  .um-home .um-tl { --um-tl-row: 22px; --um-tl-in: 8px; row-gap: 0; }
+  .um-home .um-tl > li { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; padding-bottom: var(--um-tl-row); }
+  .um-home .um-tl > li > .um-tl__row { grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; }
+  .um-home .um-tl__name { display: contents; }
+  .um-home .um-tl__name b { align-self: end; }
+  .um-home .um-tl__img, .um-home .um-tl__name small { margin-bottom: var(--um-tl-in); }
+}
+@supports not (grid-template-rows: subgrid) {
+  .um-home .um-tl > li { display: flex; }
+  .um-home .um-tl > li > .um-tl__row { flex: 1 1 auto; grid-template-rows: auto auto 1fr; }
+  .um-home .um-tl__end { align-self: end; }
+}
+@media (min-width: 900px) { .um-home .um-tl { --um-tl-row: 36px; --um-tl-in: 12px; } }
