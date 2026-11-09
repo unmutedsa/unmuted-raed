@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = 'd12b88e15044640f56ca136f3b3853949dfa9643';
+  var CDN_REF = '905c86efc143230d3b315a877381143f554871ec';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8', '\u0628\u064a\u062c': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -299,12 +299,13 @@
     '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
     '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/',
     '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/',
-    '1319907686': 'tape-green/', '285102373': 'speakers/', '1629114231': 'skateboard/', '2058090175': 'coffee-on-my-mind/' };
+    '1319907686': 'tape-green/', '285102373': 'speakers/', '1629114231': 'skateboard/', '2058090175': 'coffee-on-my-mind/',
+    '620531049': 'tape-yellow/', '1358578306': 'weekend-recovery-club/', '1722444392': 'records/' };
   // tees whose print is on the back: every list shows them from behind first (the tracklist, the product cards, the free
   // tee window), while the product page keeps Salla's photo order (owner, 2026-11-07: \u00ab\u0645\u0646 \u0627\u0644\u062e\u0627\u0631\u062c \u0628\u0633\u060c \u0627\u0644\u0644\u064a \u0645\u0646 \u062c\u0648\u0647 \u0646\u0641\u0633 \u0627\u0644\u062a\u0631\u062a\u064a\u0628\u00bb)
   // \u0627\u0644\u0631\u064a\u0627\u0636\u060c Just Padel\u060c Who Said Kashta? (2026-11-07), then every tee with a back print: The Love Pop Club\u060c Carnival\u060c
   // Good Mood Fast Food\u060c Vending Machine\u060c Play UNMUTED (owner: \u00ab\u0627\u064a \u0634\u064a \u0641\u064a \u0631\u0633\u0645 \u0645\u0646 \u0627\u0644\u0638\u0647\u0631\u00bb)
-  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496', '285102373', '2058090175'];
+  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496', '285102373', '2058090175', '1358578306', '1722444392'];
   var backFirst = function (id) { return BACK_FIRST.indexOf(String(id)) > -1 && !!ALONE[String(id)]; };
   var backPhoto = function (id, size) { return PHOTOS + ALONE[String(id)] + (size || 'sm') + '/alone-back.webp'; };
   var showBack = function (img, id) {
@@ -779,7 +780,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@d12b88e15044640f56ca136f3b3853949dfa9643/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@905c86efc143230d3b315a877381143f554871ec/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -948,7 +949,31 @@
     '7qqcfEBYkl8IVeE3ObKX3LnenPyTGbrT1aN3fZLe': 'coffee-on-my-mind/man-side.webp',
     'zqYXz49lz7UB2qpsvwtRMWL1ehN0ZDsWOJussKqg': 'coffee-on-my-mind/woman-back.webp',
     '3oBaYi3t33FZ8XoVJGqJyNqT7P5G4aPO339lbjkP': 'coffee-on-my-mind/woman-front.webp',
-    '07r2yPR839sYkGcULULHNNmIfeBHpNNN5m8XDBZ8': 'coffee-on-my-mind/woman-side.webp'
+    '07r2yPR839sYkGcULULHNNmIfeBHpNNN5m8XDBZ8': 'coffee-on-my-mind/woman-side.webp',
+    'kO1IfeDET3IbryBxU6mumoE10CgulHzYtCisucwe': 'tape-yellow/alone-front.webp',
+    'p89UPdqlnLVuK2g7tuHzOxNKJ3bgneFFyfRssVI9': 'tape-yellow/alone-back.webp',
+    'Z2rgrOUqGuDRdgvhuCBEsuQF6uX9GVVOn1VHYvl1': 'tape-yellow/man-back.webp',
+    'n9w8fgSU0qN2b0Xnz6MOeOnNOvcvakNMTw2MbCnf': 'tape-yellow/man-front.webp',
+    'u90fz5FvY4Lq1k4Ig0uVLKVwbCUpkz0iwVamRSwp': 'tape-yellow/man-side.webp',
+    '7J4NuG2xi7KouQPBu7t3oohYxJKeAUQyouda5zle': 'tape-yellow/woman-back.webp',
+    'oamDrl553Eb0xW3M90BbVXKXUeKPyfEJLLZSjJfx': 'tape-yellow/woman-front.webp',
+    'LdTYSAk45KMGpLCWkCwzCNWnI0aNKSja67lcrIDi': 'tape-yellow/woman-side.webp',
+    '14Iq7Gnl4RFo355ffakkGqf3i8k7isN4z5p1o3CU': 'weekend-recovery-club/alone-front.webp',
+    'V6eWvUCToVTfA9np2ScHf2f9RGbnGzeksSjLRN9C': 'weekend-recovery-club/alone-back.webp',
+    'RNmwnJDxPxBk6ZIdIeJ1of5amEEZfI2HIXeOwK0I': 'weekend-recovery-club/man-back.webp',
+    'TPnkxL7FJh5KWz922P4tTL5weceUp1mA0vIObiBy': 'weekend-recovery-club/man-front.webp',
+    '70TvDw6fb9oPn4oH4eUHQnMci49YKXWVBkNEPxgK': 'weekend-recovery-club/man-side.webp',
+    'bJdRD0WOxR9qegLtQ4Duj29dPzsp012HUcSG2MTF': 'weekend-recovery-club/woman-back.webp',
+    'QT8qtRv6ubu8oLiGiQx7KM8pCjlA1fMykHZYBz7x': 'weekend-recovery-club/woman-front.webp',
+    'wBYBPzxY8P6zxtfcr99LmA4AeYQk7yBDOVttwX8T': 'weekend-recovery-club/woman-side.webp',
+    'Jg046sGqSiKqmiJ58WfoGqWCiAo0aUi03ArtXdVu': 'records/alone-front.webp',
+    'j6zeeAW6Sob7M7hIP2ljmJE89gMANdPWTlvrx47w': 'records/alone-back.webp',
+    'WxmB3FQL8BtoJHl3aIPTwQjLvz1inApeTED4ISx8': 'records/man-back.webp',
+    'TFhzgrrxilHqN6NhoGwFx12Jh7cMwzVdHRCOCe81': 'records/man-front.webp',
+    '1N25vqQzMnirMfRx5mVH47EF8klJfLgFEmEU06qu': 'records/man-side.webp',
+    'WMfNGNHbFhru08ctrrwAuX5SxyOhAGnLYgD8ZbyD': 'records/woman-back.webp',
+    'G1kcki2PgMmeQhA0GIbMdOPuMf3Z7xZfCYenbDS5': 'records/woman-front.webp',
+    'DvAIP2DsCDTiOmjFqX6gOpCdFdwhJ5UoR2b8xKBN': 'records/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -997,7 +1022,7 @@
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: \u00ab\u062d\u062a\u064a \u0645\u0646 \u0627\u0644\u062f\u0627\u062e\u0644 \u062a\u0643\u0648\u0646 \u0627\u0644\u062e\u0644\u0641\u064a\u0647 \u0646\u0641\u0633 \u0644\u0648\u0646 \u0627\u0644\u0645\u0648\u0642\u0639\u00bb)
   var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496',
-    '226109447', '1987585855', '157439951', '540602239', '752858337', '955844389', '1319907686', '285102373', '1629114231', '2058090175'];
+    '226109447', '1987585855', '157439951', '540602239', '752858337', '955844389', '1319907686', '285102373', '1629114231', '2058090175', '620531049', '1358578306', '1722444392'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
