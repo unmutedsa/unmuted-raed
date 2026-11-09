@@ -767,3 +767,6 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
   .um-home .um-tl__end { align-self: end; }
 }
 @media (min-width: 900px) { .um-home .um-tl { --um-tl-row: 36px; --um-tl-in: 12px; } }
+
+/* home tee list: no «VOLUME 01» label above its title (owner 2026-11-09) */
+.um-home .um-tracks .um-kicker { display: none; }
