@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '1b9a6565cf791341bea2ab0fd53cfdbbde21713d';
+  var CDN_REF = '8b08549beb5460e338e1b0941eb53e4ff25f8147';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8', 'بيج': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -284,12 +284,13 @@
     '1223062065': 'dates-season/', '696581406': 'desert-club/', '2123593358': 'love-pop/',
     '299362976': 'carnival/', '372176867': 'good-mood/', '1602505860': 'cherry-market/',
     '17985496': 'play-unmuted/', '226109447': 'vending/', '1987585855': 'call-me/', '157439951': 'kashta/',
-    '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/' };
+    '540602239': 'the-original/', '752858337': 'megaphone/', '955844389': 'ice-cream/',
+    '1319907686': 'tape-green/', '285102373': 'speakers/', '1629114231': 'skateboard/', '2058090175': 'coffee-on-my-mind/' };
   // tees whose print is on the back: every list shows them from behind first (the tracklist, the product cards, the free
   // tee window), while the product page keeps Salla's photo order (owner, 2026-11-07: «من الخارج بس، اللي من جوه نفس الترتيب»)
   // الرياض، Just Padel، Who Said Kashta? (2026-11-07), then every tee with a back print: The Love Pop Club، Carnival،
   // Good Mood Fast Food، Vending Machine، Play UNMUTED (owner: «اي شي في رسم من الظهر»)
-  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496'];
+  var BACK_FIRST = ['862344853', '1501040588', '157439951', '2123593358', '299362976', '372176867', '226109447', '17985496', '285102373', '2058090175'];
   var backFirst = function (id) { return BACK_FIRST.indexOf(String(id)) > -1 && !!ALONE[String(id)]; };
   var backPhoto = function (id, size) { return PHOTOS + ALONE[String(id)] + (size || 'sm') + '/alone-back.webp'; };
   var showBack = function (img, id) {
@@ -764,7 +765,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@1b9a6565cf791341bea2ab0fd53cfdbbde21713d/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@8b08549beb5460e338e1b0941eb53e4ff25f8147/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -901,7 +902,39 @@
     tEeeF5QsPxa0ReM7OizCbCylHEF59QU3yoiJCIcA: 'megaphone/alone-front.webp',
     uWWXA9gx5OuiJfWl1ItEo4RsUhAY0JXdHKBopF1z: 'megaphone/alone-back.webp',
     iZ8m9YdntMvoISTbJOj5iYqeBFty0cfk0J81Cx4G: 'ice-cream/alone-front.webp',
-    Etz5XE1PB7xIaJIRqCGxGSoYWMW5tJFjou301Uzy: 'ice-cream/alone-back.webp'
+    Etz5XE1PB7xIaJIRqCGxGSoYWMW5tJFjou301Uzy: 'ice-cream/alone-back.webp',
+    '8WGW4Dy6d10faG1HRXHJaB48JDBOjscV6P4Ewt2g': 'tape-green/alone-front.webp',
+    'av8gfy99s0CnD62bdG0tSfxTFK9P5v8AVjP8buGR': 'tape-green/alone-back.webp',
+    'nvgWzApZbDueyIL2zqC5vZnhqV4ic5Z7u9KirSg9': 'tape-green/man-back.webp',
+    'HztNPRsf9TTtGkNnUFbKywV1DTS7LK2iLMaADQi2': 'tape-green/man-front.webp',
+    'iyFVIvKI0XAdh2n65RRvoIhBfpfR7QXiXOSvtcx2': 'tape-green/man-side.webp',
+    'VAyMJWGf0CSVLQ7nixJ9OYBRIZ2nJ0KvZW1z2TKP': 'tape-green/woman-back.webp',
+    'zdCyGbo1M6gQmhTTZha5tY8w0NHRrd7vbozMjzAT': 'tape-green/woman-front.webp',
+    'AOqhVPYe4j3Kd7lv5qIc1EBgoMtEIFZP8v7Wzq8P': 'tape-green/woman-side.webp',
+    'yQmiwwJ40oJsFxPFDaLFv9WglnPs8CKdUDNWGeKQ': 'speakers/alone-front.webp',
+    'Ve9iUHWH1ewAZRZGo0JwZKxotrn8Bu3ayR0qFccf': 'speakers/alone-back.webp',
+    'ZHLjprPuvwiONY3BKJzsyrsazemU4cyWY2Dlxc0j': 'speakers/man-back.webp',
+    'pUT6KKZbGinvJufjyBhIiJi4V1QKnHuoS20fDGwW': 'speakers/man-front.webp',
+    'oKiS8YOvgMRA2fmZs50YvQoi13fa3sHcMlKJQfmV': 'speakers/man-side.webp',
+    'ayfHZBqZiSNBvGmRuT1t87dVEkTyGa9YQQLPynqj': 'speakers/woman-back.webp',
+    'F0IKFNvA63dE1hNYJSt64OkZanEShWe5kwGa552X': 'speakers/woman-front.webp',
+    'VNB0Xnwxev6uBtViP9cgDbtKIX2t5wpz6pMqTMpk': 'speakers/woman-side.webp',
+    '7VAyxsmc7NxxrKBqwB4XoYOP8MegypRS51o1mmi4': 'skateboard/alone-front.webp',
+    '4QMfZeYNLWf56LK0JSy1bDbP95dnrnlO6OR9FSUU': 'skateboard/alone-back.webp',
+    'ucfx0gCHSAqZR6dMXRvUutte8xTXA0VBdBd0VHEf': 'skateboard/man-back.webp',
+    'C7EdpVkB0njTv2aFOLojOx2RgjbYIuge7iBALx9u': 'skateboard/man-front.webp',
+    'Mc1OBcGtHkkrWYRkUEd5ad1Az01UfmxPdxClQ2xV': 'skateboard/man-side.webp',
+    'u2y4PlofbG9wCS5whCrJWs7k7FG8UXPrxfmuev6G': 'skateboard/woman-back.webp',
+    'FzxkDx4MCY66PYgqvRJRM2YJDSmdRkSSdqgh1qmT': 'skateboard/woman-front.webp',
+    'sSWDC8H8pkuGjiNtwp6IHm1n28t2stXgOcEu3lKO': 'skateboard/woman-side.webp',
+    'SH62c76n9mQdk61sBH0vST43IpGQtYGP6Q0rhJGj': 'coffee-on-my-mind/alone-front.webp',
+    'wdwfJoMvmlxGD8ymBGZ57BPYaOVsbhxEZDppt2Ej': 'coffee-on-my-mind/alone-back.webp',
+    'dca8pGSOKCzI7B6RgGy92IE4QAjzCsaMX4X9C2Pt': 'coffee-on-my-mind/man-back.webp',
+    'tfvHIM8nxyiCelw1zmA0rrMElBgYEgbh6MCw1ayE': 'coffee-on-my-mind/man-front.webp',
+    '7qqcfEBYkl8IVeE3ObKX3LnenPyTGbrT1aN3fZLe': 'coffee-on-my-mind/man-side.webp',
+    'zqYXz49lz7UB2qpsvwtRMWL1ehN0ZDsWOJussKqg': 'coffee-on-my-mind/woman-back.webp',
+    '3oBaYi3t33FZ8XoVJGqJyNqT7P5G4aPO339lbjkP': 'coffee-on-my-mind/woman-front.webp',
+    '07r2yPR839sYkGcULULHNNmIfeBHpNNN5m8XDBZ8': 'coffee-on-my-mind/woman-side.webp'
   };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
@@ -950,7 +983,7 @@
   // products whose photos are on the page colour (paperbg.py): their gallery frame takes it too, so no white shows
   // around a photo (owner, 2026-11-02: «حتي من الداخل تكون الخلفيه نفس لون الموقع»)
   var PAPER = ['217344331', '1197022782', '862344853', '1501040588', '1223062065', '696581406', '2123593358', '299362976', '372176867', '1602505860', '17985496',
-    '226109447', '1987585855', '157439951', '540602239', '752858337', '955844389'];
+    '226109447', '1987585855', '157439951', '540602239', '752858337', '955844389', '1319907686', '285102373', '1629114231', '2058090175'];
   function paperPage() {
     var m = location.pathname.match(/\/p(\d+)(?:[/?#]|$)/);
     document.documentElement.classList.toggle('um-paper', !!(m && PAPER.indexOf(m[1]) > -1));
