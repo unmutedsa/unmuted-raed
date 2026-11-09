@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '905c86efc143230d3b315a877381143f554871ec';
+  var CDN_REF = '578f1d65be52b0e11b1db0025eece206c2ace96e';
   var COLOURS = { 'أسود': '#1C1A20', 'أوف وايت': '#E6E2D9', 'أبيض': '#F4F2EE', 'أزرق ملكي': '#1F4EA6', 'رمادي': '#A4A5A0', 'موكا': '#62433D', 'شوكولاتة': '#50372F', 'رملي': '#D6BFA4', 'حجري': '#C6BAA8', 'بيج': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -780,7 +780,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@905c86efc143230d3b315a877381143f554871ec/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@578f1d65be52b0e11b1db0025eece206c2ace96e/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -888,7 +888,7 @@
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
     'm2UmsXGzR4S7BjTFCdZbYAGWnwbr6bU2FWAUkIKY': 'desert-club/alone-front.webp',
     '0QyH9Js5fLACjl20EWOl7xy2DoBDTcSlsCKjAN5L': 'desert-club/alone-back.webp',
-    'uAy6YqR5lsXhKXDlUC0NpyMjIKS5QONyuRcnmbG7': 'riyadh/alone-front.webp',
+    'c7LZUyOo7StMOnNbR4NmSRKt9DVRyrFNdwFE4tZe': 'riyadh/alone-front.webp',
     'qskU2ehlhPTdA634KCHzMbtzaZwCevjPv2nTE41p': 'riyadh/alone-back.webp',
     'sELIOvyCKiSuW9g2BwnHre346IoXd5RAc5qNzNcq': 'unmuted-sticker/alone-front.webp',
     'Ub59s2TOYdUouYEY9bGHyYCcaClT2bfW9PSfmkLl': 'unmuted-sticker/alone-back.webp',
@@ -900,7 +900,7 @@
     'sPCoLWXbYoeA4UqtpqQVjHKtcElkGF53vLoejLfj': 'love-pop/alone-back.webp',
     'wjGjXBz3wBKKjg5L57HUju8KoSlfe490OZu0Tp1I': 'carnival/alone-front.webp',
     '0QQtx7QDEUdBaRcdZdfP4l1qiluOzz2cwb0baLfX': 'carnival/alone-back.webp',
-    'fPC0jG7BzOxlFjdomJXotbBNZwUQaN30nifnSgJ6': 'good-mood/alone-front.webp',
+    'U5Pmt3lhPWzXY7riGUj4OtgNco2yE6JnbxOwBn1k': 'good-mood/alone-front.webp',
     'hirYTKBy1PRCgrwLfFDYlt23HORSohR97kAsqoeP': 'good-mood/alone-back.webp',
     'aG6bfHFeFf53Wd3pxtviLLHWg9EIm77ADSgsEEzf': 'cherry-market/alone-front.webp',
     '4Gto8X9ToONiyQFMM4zM0CFFNb8rx1FgUzgoaf6o': 'cherry-market/alone-back.webp',
@@ -910,7 +910,7 @@
     'aDFFeOpa9IPgXR1Q9uK4HvckyUXGkrLqUo9I5fUk': 'vending/alone-back.webp',
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
-    'KYcipnhIkJvy4jgccNR1xjkDYCJThV6hlBT0xFRe': 'kashta/alone-front.webp',
+    'IJpofrxyWv1oZiEDsqB7vbti7V6OXP6AAOx4Fbjd': 'kashta/alone-front.webp',
     '4xQYZ57Uvv3U762fGDy6dFkkoMQo0Gnv5SklNiV4': 'kashta/alone-back.webp',
     'z3cgsk0gooVId5Duu8WwEz2L6dsaAkeNgh35N5QL': 'the-original/alone-front.webp',
     'VnO3gf8gpK0KCr6UndJEftcXzkL9dJK9gMKbDFoe': 'the-original/alone-back.webp',
@@ -950,24 +950,24 @@
     'zqYXz49lz7UB2qpsvwtRMWL1ehN0ZDsWOJussKqg': 'coffee-on-my-mind/woman-back.webp',
     '3oBaYi3t33FZ8XoVJGqJyNqT7P5G4aPO339lbjkP': 'coffee-on-my-mind/woman-front.webp',
     '07r2yPR839sYkGcULULHNNmIfeBHpNNN5m8XDBZ8': 'coffee-on-my-mind/woman-side.webp',
-    'kO1IfeDET3IbryBxU6mumoE10CgulHzYtCisucwe': 'tape-yellow/alone-front.webp',
-    'p89UPdqlnLVuK2g7tuHzOxNKJ3bgneFFyfRssVI9': 'tape-yellow/alone-back.webp',
+    'Vwjs9FHV5Z31b5Iho5r5KZN4dQemYVjjwYMkfGXp': 'tape-yellow/alone-front.webp',
+    'q76luxU4N6Oh8d7qh4sMaDtjPfdstmkmz5iVr1d5': 'tape-yellow/alone-back.webp',
     'Z2rgrOUqGuDRdgvhuCBEsuQF6uX9GVVOn1VHYvl1': 'tape-yellow/man-back.webp',
     'n9w8fgSU0qN2b0Xnz6MOeOnNOvcvakNMTw2MbCnf': 'tape-yellow/man-front.webp',
     'u90fz5FvY4Lq1k4Ig0uVLKVwbCUpkz0iwVamRSwp': 'tape-yellow/man-side.webp',
     '7J4NuG2xi7KouQPBu7t3oohYxJKeAUQyouda5zle': 'tape-yellow/woman-back.webp',
     'oamDrl553Eb0xW3M90BbVXKXUeKPyfEJLLZSjJfx': 'tape-yellow/woman-front.webp',
     'LdTYSAk45KMGpLCWkCwzCNWnI0aNKSja67lcrIDi': 'tape-yellow/woman-side.webp',
-    '14Iq7Gnl4RFo355ffakkGqf3i8k7isN4z5p1o3CU': 'weekend-recovery-club/alone-front.webp',
-    'V6eWvUCToVTfA9np2ScHf2f9RGbnGzeksSjLRN9C': 'weekend-recovery-club/alone-back.webp',
+    '3uEZmee5K4O08sL3zsq2ZnTYSSPsDFwepiQPrPOv': 'weekend-recovery-club/alone-front.webp',
+    'i2iYCMSp2DaBuwsSYqN2dsAq46Fv4rKgn4a1I8DM': 'weekend-recovery-club/alone-back.webp',
     'RNmwnJDxPxBk6ZIdIeJ1of5amEEZfI2HIXeOwK0I': 'weekend-recovery-club/man-back.webp',
     'TPnkxL7FJh5KWz922P4tTL5weceUp1mA0vIObiBy': 'weekend-recovery-club/man-front.webp',
     '70TvDw6fb9oPn4oH4eUHQnMci49YKXWVBkNEPxgK': 'weekend-recovery-club/man-side.webp',
     'bJdRD0WOxR9qegLtQ4Duj29dPzsp012HUcSG2MTF': 'weekend-recovery-club/woman-back.webp',
     'QT8qtRv6ubu8oLiGiQx7KM8pCjlA1fMykHZYBz7x': 'weekend-recovery-club/woman-front.webp',
     'wBYBPzxY8P6zxtfcr99LmA4AeYQk7yBDOVttwX8T': 'weekend-recovery-club/woman-side.webp',
-    'Jg046sGqSiKqmiJ58WfoGqWCiAo0aUi03ArtXdVu': 'records/alone-front.webp',
-    'j6zeeAW6Sob7M7hIP2ljmJE89gMANdPWTlvrx47w': 'records/alone-back.webp',
+    'WD5BWyxmDj2TsH9nHje5CGUTtSkpBnJ6wTgXzQ89': 'records/alone-front.webp',
+    'Y1eK1oIRN676i4oTAvRHdDP7nGW5L6cn2nztsjW2': 'records/alone-back.webp',
     'WxmB3FQL8BtoJHl3aIPTwQjLvz1inApeTED4ISx8': 'records/man-back.webp',
     'TFhzgrrxilHqN6NhoGwFx12Jh7cMwzVdHRCOCe81': 'records/man-front.webp',
     '1N25vqQzMnirMfRx5mVH47EF8klJfLgFEmEU06qu': 'records/man-side.webp',
