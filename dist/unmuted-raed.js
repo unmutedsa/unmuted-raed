@@ -133,7 +133,8 @@
     }).then(function (res) {
       var box = res[0];
       // this copy leaves out the hero's top line (\u00ab\u0647\u0630\u064a \u0625\u0634\u0627\u0631\u062a\u0643 \u0639\u0634\u0627\u0646 \u062a\u0631\u0641\u0639 \u0635\u0648\u062a\u0643.\u00bb) and the squiggle under it, and the rail's count line
-      $$('.um-hero__eyebrow, .um-hero .um-fl.is-w, .um-rail .um-rls__sub', box).forEach(function (n) { n.remove(); });
+      // and the rail's button to every tee (owner, 2026-11-09: hide it; the list below has its own)
+      $$('.um-hero__eyebrow, .um-hero .um-fl.is-w, .um-rail .um-rls__sub, .um-rail .um-rls__more', box).forEach(function (n) { n.remove(); });
       // each section takes its words, photos, tees or questions from the store; if that fails it keeps what it was built with
       [function () { bindHero(box); }, function () { heroBanner(box); }, function () { bindRail(box, res[1], res[3]); },
         function () { bindTracks(box, res[1], res[3]); }, function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { trackTwelve(box); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
