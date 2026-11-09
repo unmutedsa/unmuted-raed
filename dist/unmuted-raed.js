@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = '7dd39913dfa8707118cc8e753ac60ade9b477639';
+  var CDN_REF = 'fbcb0e7328313ddeb9fb72f313ab0348daa55dc8';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8', '\u0628\u064a\u062c': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7dd39913dfa8707118cc8e753ac60ade9b477639/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@fbcb0e7328313ddeb9fb72f313ab0348daa55dc8/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
@@ -778,12 +778,12 @@
     'Gkk5W5hzJi5X109cOHFYS1mrINJq7ZfnjamU2VJE': 'love-pop/woman-back.webp',
     'CgzdwygtH3NQfREVXRARYtZh5DTTtFfXrTkUZ47M': 'love-pop/woman-front.webp',
     'ZvfynuDg8xxLdrQWpWMqG6G12XChb2HyYnhVF5iS': 'love-pop/woman-side.webp',
-    'X1b1d1CBqNS72pnT64fDNWxNEVmsHOUAjgErhuRY': 'good-mood/man-back.webp',
-    'IdmdygcJR2dYOAXbr9wp5tbrNj8xTSF9MEIfkm8J': 'good-mood/man-front.webp',
-    '9VSfhIsxIieXVUqS9CMO87AC4YEzS7wxcEKHWtI6': 'good-mood/man-side.webp',
-    'QPTH5jthGdTaukF4lAOK6ncoRV95OCh39OLSgcOz': 'good-mood/woman-back.webp',
-    'YDBrh1CiO2eo6iAyPELnCUs5aH6kmbVRPS9sWteI': 'good-mood/woman-front.webp',
-    'plVq35aDHXwD2BG6tQCWA1rb58zCERLcxyrNgwEo': 'good-mood/woman-side.webp',
+    'xSJTCzKpwZnEZO3Pu27WCllZ7vsyHy77ZFNmmEeV': 'good-mood/man-back.webp',
+    'e9q9TKCGeykiMsOtOtvE9j6StLYMfykUGo4HKkZZ': 'good-mood/man-front.webp',
+    'vunOzUwHeDomu7AeDenzIXHVWttHNr9WGQ9VeAcE': 'good-mood/man-side.webp',
+    's1hgKcVgehyfnLcztE9ibK8b8WIU3JoYXIv2aGCm': 'good-mood/woman-back.webp',
+    'WK8GSt5uoYXKGqTr8wuwfZ3yyElGKC0Qli3pHf5M': 'good-mood/woman-front.webp',
+    'cPG3bbLuI4SySw5rUDTJ27y2TOeoZSpiuTmR3qmh': 'good-mood/woman-side.webp',
     'fBs25oGldzsHpfzi6twXEvFxCAyI4MzGynBIFeQV': 'cherry-market/man-back.webp',
     '8huaRooSs9RgxLaP04HwzPvv5bFP4zSLnYaROyu4': 'cherry-market/man-front.webp',
     'rqhtyI6TB5dwV6qJWJFoD1kcInYEm7ZgFVddblg3': 'cherry-market/man-side.webp',
@@ -814,12 +814,12 @@
     htVip9wTpzTdD0Ky4fRX1BFLVaYWeN5WCiPb9Kvs: 'call-me/woman-back.webp',
     SC9lADMT2f1QUc3q6gbxjo8oPKFmDnUxg6uOY2cA: 'call-me/woman-front.webp',
     UqlgDBwCZUqyb6USFGAy2ZEiFm7QCQXNUrZMTmZb: 'call-me/woman-side.webp',
-    'LIxLWH3jMyfigjehR7YQQ4PtNg2zqGFsbbC4Adrh': 'kashta/man-back.webp',
-    'h0WjylAbwIH9LJ79eFNbc3WaMTjakMjUvnEaCsRF': 'kashta/man-front.webp',
-    '5ua75q7ZHFwLkbur4yoGyJKC9qlkNXjQySdbvqvv': 'kashta/man-side.webp',
-    'bd788XtEd0piv6VyOirqqEDuBMudKmUMHa2UvlVB': 'kashta/woman-back.webp',
-    'L5Mz513QGM0c86CdcFgAJ9Tf23dGXr8S7vRp5RzM': 'kashta/woman-front.webp',
-    'nGe3eKGnfXQ8YA7k8of2iC6J0MKjWzSg7Oj1Jc39': 'kashta/woman-side.webp',
+    'BQX1EHq4DL1rNOMP2xUT6ExHX8L4OFwAw3DVMKe8': 'kashta/man-back.webp',
+    'hqaYVjghtevgJcoUHD8Q2MkEHNZl6qXaXgW1VgeW': 'kashta/man-front.webp',
+    'Oka5MQuVIsjAM6q4IdbFc6BvKPZH0YZHGHg7o7ee': 'kashta/man-side.webp',
+    'zCNdtYJQEipF59g8SSq2TAWoM4iHkCBAXBhMMdVU': 'kashta/woman-back.webp',
+    '6MLS3g7dqlJTVvR7Kje93XjOD7kdl1BZd9v0ardw': 'kashta/woman-front.webp',
+    '3UNeRTgrtTEFzCjW4UgFanJDtEFjv1eDhpJNEpjR': 'kashta/woman-side.webp',
     'AeVZZyDq098irDqZmWPNd98bpJzitwuIHgYtek2V': 'the-original/man-back.webp',
     'P2XkQ197KlonbRAcGL19qi0pVbHIU4D7BVMGT6tj': 'the-original/man-front.webp',
     'i2M1Ljf2IiAg5vdpRtHXvUUvqperxFmg38Lik5WY': 'the-original/man-side.webp',
@@ -844,12 +844,12 @@
     'quU3UynY1FQp1EUPNza3faaY6Jff7DP2wvNAcmbi': 'unmuted-sticker/woman-back.webp',
     '5DHlPIkwpYcnlrtyBaKzLsZTrssYJRQAQLLsGWAj': 'unmuted-sticker/woman-front.webp',
     'JhI5jBfUqa459qGYvYlypQE27crNCul55vNX42EZ': 'unmuted-sticker/woman-side.webp',
-    'utDh83gpuxy6XcLLwzXiGnNOTnYZAN4Lsk2sHwhJ': 'riyadh/man-back.webp',
-    's7R71w70jq5HDrTzRkVEyYehuneo3UOZiAv4cL0H': 'riyadh/man-front.webp',
-    'v6itdoY8dCbS248EXx2R9fR6LmozMKFExBe1Y1s4': 'riyadh/man-side.webp',
-    'fDnnFGT6DIC1Eufrd7MnJCy1jyix7KP4MZsFGeiG': 'riyadh/woman-back.webp',
-    'Nf1F50wpTy8qMRWJluQVEbNiptpwZXprOdJDRjI5': 'riyadh/woman-front.webp',
-    'Qe9VAAlFII0elUEC50adkaz6SAIKAyn3IF6WcSob': 'riyadh/woman-side.webp',
+    'gqesC3p7rjAXFOX4Mm6COng6eVzn7OiShYATZOV1': 'riyadh/man-back.webp',
+    '0r1ARVFwMg7lTOUX12hlDhrVunEddWDA3vNIkpDX': 'riyadh/man-front.webp',
+    '2GS0bN4bonux87J3Gj8MnN6Ef1iPp8AnqN1anczW': 'riyadh/man-side.webp',
+    'a2DgYHIVfD9k4zOxgtA0xK5NsMRuknAT1DUoqMdi': 'riyadh/woman-back.webp',
+    'xtJGXVgoBilA8TvXYAl5pnniKsbYqguxjww1EnpH': 'riyadh/woman-front.webp',
+    'GpsHVHO9ikbho7J93GWA8ImV2eeX6DmV6Kl9AJKI': 'riyadh/woman-side.webp',
     'UYmjcc1Wtut9lX6l06UfOSPFHZS7l2hGeWpH461L': 'dates-season/man-back.webp',
     'GkSmBkiPKDBDJhim43xNFF5xfNSG6UvLd01sPP9R': 'dates-season/man-front.webp',
     'OHrMVfcvl9ccRavdRihPQ0ni5H5icKyZXd8SXFj8': 'dates-season/man-side.webp',
@@ -872,8 +872,8 @@
     '0Q2B8NZxRa6XN28DmUbwNsbuREvAtoylJipQ777J': 'caution/alone-back.webp',
     'm2UmsXGzR4S7BjTFCdZbYAGWnwbr6bU2FWAUkIKY': 'desert-club/alone-front.webp',
     '0QyH9Js5fLACjl20EWOl7xy2DoBDTcSlsCKjAN5L': 'desert-club/alone-back.webp',
-    '6UTlIxxOK449tF8PROtn0jxC6Pe9eldsAqLkckSo': 'riyadh/alone-front.webp',
-    'FZC7yUEXHwn2cpPzKrK1JFWrXwX3Cll8QH3xaCvv': 'riyadh/alone-back.webp',
+    'rZ5zP97bzLnHEX5wcZ381jU2y2WI8WodXEDUbItY': 'riyadh/alone-front.webp',
+    'QdWr4FQPVHPWnVDSYxPPaYzdVlMQjMmiSsp8xVrM': 'riyadh/alone-back.webp',
     'sELIOvyCKiSuW9g2BwnHre346IoXd5RAc5qNzNcq': 'unmuted-sticker/alone-front.webp',
     'Ub59s2TOYdUouYEY9bGHyYCcaClT2bfW9PSfmkLl': 'unmuted-sticker/alone-back.webp',
     'KtyNvRrRasc5RsE9QOczVIELCfkBDlg9UJuS1NpK': 'dates-season/alone-front.webp',
@@ -884,8 +884,8 @@
     'sPCoLWXbYoeA4UqtpqQVjHKtcElkGF53vLoejLfj': 'love-pop/alone-back.webp',
     'wjGjXBz3wBKKjg5L57HUju8KoSlfe490OZu0Tp1I': 'carnival/alone-front.webp',
     '0QQtx7QDEUdBaRcdZdfP4l1qiluOzz2cwb0baLfX': 'carnival/alone-back.webp',
-    'jTgCLeWo15ZMmz7g68Nk4chzV9IrUSVPo6MT8d3Q': 'good-mood/alone-front.webp',
-    'paa7iX89JHEYKG06YRMvZXO6YBK2DESSQ2HnS3ns': 'good-mood/alone-back.webp',
+    'fdfskMt2MytPwux8GzN2BJMOUgduTmY30DYhbDiu': 'good-mood/alone-front.webp',
+    'H2Uh6bxUfKWsZI9TCfG5vTlmYcWxiPxIgU0bN14w': 'good-mood/alone-back.webp',
     'aG6bfHFeFf53Wd3pxtviLLHWg9EIm77ADSgsEEzf': 'cherry-market/alone-front.webp',
     '4Gto8X9ToONiyQFMM4zM0CFFNb8rx1FgUzgoaf6o': 'cherry-market/alone-back.webp',
     ygua2Tt1pynUhVktVXwgaw15RrKmoDsS12vjS1dN: 'play-unmuted/alone-front.webp',
@@ -894,8 +894,8 @@
     'aDFFeOpa9IPgXR1Q9uK4HvckyUXGkrLqUo9I5fUk': 'vending/alone-back.webp',
     rgD2B9BIYT5JQScLKQ43Y6zCoa7Pr7vQuyJkZ5z7: 'call-me/alone-front.webp',
     jpsdRYhAFiJpZOqy7VuQYa7knDtJdKunjsCySIxw: 'call-me/alone-back.webp',
-    'xIJ6mmWigs0cRgfwqXDrxKM0Y1mQWy0oUgJw8m44': 'kashta/alone-front.webp',
-    '5JjACysdoVvEdcto3QUrrwuxpa5e64YLJbw9BfKf': 'kashta/alone-back.webp',
+    'm3Fnb8eAS0RdTcgdTvI8iNU7P1ph9d1aImARUMFL': 'kashta/alone-front.webp',
+    '4xQYZ57Uvv3U762fGDy6dFkkoMQo0Gnv5SklNiV4': 'kashta/alone-back.webp',
     'z3cgsk0gooVId5Duu8WwEz2L6dsaAkeNgh35N5QL': 'the-original/alone-front.webp',
     'VnO3gf8gpK0KCr6UndJEftcXzkL9dJK9gMKbDFoe': 'the-original/alone-back.webp',
     tEeeF5QsPxa0ReM7OizCbCylHEF59QU3yoiJCIcA: 'megaphone/alone-front.webp',
