@@ -12,7 +12,7 @@
   var el = function (tag, cls, html) { var n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   // the commit of unmutedsa/unmuted-raed whose cdn/ the home page loads (jsDelivr caches a pinned commit for good)
-  var CDN_REF = 'f1eb50e517a232fd40de99a88c67e04bd471c54f';
+  var CDN_REF = '7dd39913dfa8707118cc8e753ac60ade9b477639';
   var COLOURS = { '\u0623\u0633\u0648\u062f': '#1C1A20', '\u0623\u0648\u0641 \u0648\u0627\u064a\u062a': '#E6E2D9', '\u0623\u0628\u064a\u0636': '#F4F2EE', '\u0623\u0632\u0631\u0642 \u0645\u0644\u0643\u064a': '#1F4EA6', '\u0631\u0645\u0627\u062f\u064a': '#A4A5A0', '\u0645\u0648\u0643\u0627': '#62433D', '\u0634\u0648\u0643\u0648\u0644\u0627\u062a\u0629': '#50372F', '\u0631\u0645\u0644\u064a': '#D6BFA4', '\u062d\u062c\u0631\u064a': '#C6BAA8', '\u0628\u064a\u062c': '#F9EBD9' };
   // the size chart: the maker's spec in inches (owner, 2026-11-03): size, chest width, sleeve length, total length
   var SPEC = [['S', 23, 8.5, 26.5], ['M', 24, 8.75, 27], ['L', 25, 9, 27.5], ['XL', 26, 9.25, 28]];
@@ -764,7 +764,7 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@f1eb50e517a232fd40de99a88c67e04bd471c54f/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@7dd39913dfa8707118cc8e753ac60ade9b477639/cdn/photos/';
   var HD = {
     'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
     '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
