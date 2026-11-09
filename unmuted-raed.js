@@ -802,14 +802,14 @@
      (cdn/photos/, WebP, at a pinned commit) shows that copy in the gallery and the full-screen view; the thumbnails stay
      Salla's. The key is the name Salla gave the uploaded file (the last part of its address). A gallery photo turns 4K
      once its copy has loaded, the one showing and its neighbours first, so a slow or missing copy changes nothing. */
-  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@b83716c5062ed4b423224edaabc578c2638febcf/cdn/photos/';
+  var PHOTOS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-raed@c78acd963ae055e869c86616eff9139451e87e0b/cdn/photos/';
   var HD = {
-    'w9WpDjqKG5HXaOdfwPRLHwjMuzNRsLAd1xYmViGu': 'carnival/man-back.webp',
-    '1sFEHCPNnGGFYWwLffWB1qw3Yng7FqPRAApkxt9V': 'carnival/man-front.webp',
-    '5bwC1l6xlHQY0TEUdEycuCsKfRDaBgBJvZz0o8fM': 'carnival/man-side.webp',
-    'jvflEoyI4G6478ZqjFXYFmLslkO5GrXSeYoXh1Su': 'carnival/woman-back.webp',
-    'GDdH56uD3rqQ4VUvKEu2Kihgc3IfwVe9Xt2zcT4E': 'carnival/woman-front.webp',
-    'AEiLetenLetZYnBeHh6atxvzn4CrrWvmK0CwQrRt': 'carnival/woman-side.webp',
+    'KCxVydtTSY0sxjibvNIK6TV9abolDW1qFBs5SUQe': 'carnival/man-back.webp',
+    'mnVpym2DlRAv3SdlP4Wk8hv0I1LxFSrOt3tchbOD': 'carnival/man-front.webp',
+    'VtcyHU0lRCLLx6Mudha0s9Buy9548bbV1nxi6vzu': 'carnival/man-side.webp',
+    'yNFjOqv11kDABEIURxhgADQo95mLqKux5An3AEpf': 'carnival/woman-back.webp',
+    'sbYGoXLxYzRLpiAq1yQ757J8Bm87aiiGuUfwPhov': 'carnival/woman-front.webp',
+    'sx6YILleOPJ5wgYZ9Zjki6TNOFLPRt92LSsMI4ck': 'carnival/woman-side.webp',
     'YRVDDZey35yv7LVYTdiGqk1xqkGmwINKBFRTJedy': 'love-pop/man-back.webp',
     'bOZroOxZRn3HEqtxEywWj58tEVRa9A7mepqJzri6': 'love-pop/man-front.webp',
     'Lg4G32SJfG62CbP4qZGAa9wbo9ofiLF1Dtrs5UgX': 'love-pop/man-side.webp',
@@ -920,8 +920,8 @@
     'x9vnhTRqTWrK3s7xNayNXeH3AZY0LZWXDJLDK5Ee': 'just-padel/alone-back.webp',
     'jOX2EgsdodR4YmYEQtm25DaD8dw6hzXy6ME2kyFM': 'love-pop/alone-front.webp',
     'sPCoLWXbYoeA4UqtpqQVjHKtcElkGF53vLoejLfj': 'love-pop/alone-back.webp',
-    'wjGjXBz3wBKKjg5L57HUju8KoSlfe490OZu0Tp1I': 'carnival/alone-front.webp',
-    '0QQtx7QDEUdBaRcdZdfP4l1qiluOzz2cwb0baLfX': 'carnival/alone-back.webp',
+    'jQ8Al1VzwyehEC7jp33AlzvqsmPayhtqWLmzQf1L': 'carnival/alone-front.webp',
+    'mKkt7TYkoYEzWKklUNoQhUuejpJjEsYbP7KYa8Eg': 'carnival/alone-back.webp',
     'U5Pmt3lhPWzXY7riGUj4OtgNco2yE6JnbxOwBn1k': 'good-mood/alone-front.webp',
     'hirYTKBy1PRCgrwLfFDYlt23HORSohR97kAsqoeP': 'good-mood/alone-back.webp',
     'aG6bfHFeFf53Wd3pxtviLLHWg9EIm77ADSgsEEzf': 'cherry-market/alone-front.webp',
