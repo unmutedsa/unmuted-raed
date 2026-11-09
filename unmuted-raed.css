@@ -770,3 +770,17 @@ salla-add-product-button[aria-busy="true"] { opacity: .6; cursor: progress; }
 
 /* home tee list: no «VOLUME 01» label above its title (owner 2026-11-09) */
 .um-home .um-tracks .um-kicker { display: none; }
+
+/* the cart's discount-code box (couponBox in unmuted-raed.js), above Salla's order summary (owner 2026-11-09) */
+.um-coupon { margin: 0 0 16px; padding: 14px 16px; border: 2px solid var(--um-ink); border-radius: 18px; background: #fff; }
+.um-coupon__label { display: block; margin: 0 0 8px; font-size: 15px; font-weight: 800; }
+.um-coupon__row { display: flex; gap: 8px; }
+.um-coupon__in { flex: 1 1 auto; min-width: 0; height: 44px; padding: 0 14px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-paper); color: var(--um-ink); font: 700 16px/1 var(--um-font); text-transform: uppercase; letter-spacing: .04em; }
+.um-coupon__in::placeholder { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.um-coupon__in:focus-visible, .um-coupon__go:focus-visible, .um-coupon__del:focus-visible { outline: 3px solid var(--um-blue); outline-offset: 2px; }
+.um-coupon__go, .um-coupon__del { flex: none; height: 44px; padding: 0 20px; border: 2px solid var(--um-ink); border-radius: 999px; background: var(--um-orange); color: var(--um-ink); font: 800 15px/1 var(--um-font); box-shadow: 2px 3px 0 var(--um-ink); cursor: pointer; }
+.um-coupon__go:disabled, .um-coupon__del:disabled { opacity: .6; cursor: progress; }
+.um-coupon__err { margin: 8px 0 0; font-size: 13px; font-weight: 700; color: #C0392B; }
+.um-coupon__on { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0; font-size: 15px; font-weight: 700; }
+.um-coupon__on b { font-weight: 800; text-transform: uppercase; }
+.um-coupon__del { height: 36px; padding: 0 14px; background: var(--um-paper); font-size: 13px; box-shadow: none; }

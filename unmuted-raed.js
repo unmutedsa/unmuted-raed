@@ -1487,6 +1487,54 @@
   var cartCount = function () {
     return $$('form[id^="item-"] salla-quantity-input').reduce(function (n, q) { return n + rowQty(q); }, 0);
   };
+  // a box for a discount code on the cart page (owner, 2026-11-09): Raed's cart has none, Salla only asks at checkout.
+  // The code comes on top of the bundles («باقات UNMUTED» allows coupons); after it applies or goes, the page reloads so
+  // every row, the offer bar and the totals show Salla's new numbers
+  function couponBox() {
+    if (!/\/cart(\/|$|\?)/.test(location.pathname) || !window.salla || !salla.cart || !salla.cart.api) return;
+    var card = $('salla-cart-summary-card'), ship = $('#free-shipping');
+    // on phones Salla moves its summary to the end of the page (a fixed bar), so the box goes in the summary's column:
+    // before the summary on a computer, under the free-shipping card on a phone
+    var col = (card && card.parentNode !== document.body && card.parentNode) || (ship && ship.parentNode);
+    if (!col || !cartCount() || $('.um-coupon')) return;
+    var box = el('section', 'um-coupon');
+    col.insertBefore(box, card && card.parentNode === col ? card : ship && ship.parentNode === col ? ship.nextSibling : col.firstChild);
+    var reload = function () { location.reload(); };
+    var draw = function (code) {
+      box.innerHTML = code
+        ? '<p class="um-coupon__on"><span>' + t('كود الخصم', 'Discount code') + ' <b dir="ltr">' + esc(code) + '</b> ' + t('مفعّل', 'applied') + '</span>' +
+          '<button type="button" class="um-coupon__del">' + t('إزالة', 'Remove') + '</button></p>'
+        : '<label class="um-coupon__label" for="um-coupon-in">' + t('عندك كود خصم؟', 'Got a discount code?') + '</label>' +
+          '<div class="um-coupon__row"><input id="um-coupon-in" class="um-coupon__in" type="text" dir="ltr" autocomplete="off" spellcheck="false" placeholder="' + t('اكتب الكود', 'Enter the code') + '">' +
+          '<button type="button" class="um-coupon__go">' + t('تطبيق', 'Apply') + '</button></div>' +
+          '<p class="um-coupon__err" role="alert" hidden></p>';
+    };
+    var fail = function (e) {
+      var m = e && e.response && e.response.data && e.response.data.error && e.response.data.error.message;
+      var p = $('.um-coupon__err', box), go = $('.um-coupon__go', box);
+      if (go) { go.disabled = false; go.textContent = t('تطبيق', 'Apply'); }
+      if (p) { p.textContent = m || t('الكود غير صحيح أو انتهى.', 'This code is not valid.'); p.hidden = false; }
+    };
+    var apply = function () {
+      var inp = $('.um-coupon__in', box), go = $('.um-coupon__go', box), code = inp ? inp.value.trim() : '';
+      if (!code) { if (inp) inp.focus(); return; }
+      go.disabled = true;
+      go.textContent = '…';
+      $('.um-coupon__err', box).hidden = true;
+      salla.cart.api.addCoupon(code).then(reload, fail);
+    };
+    box.addEventListener('click', function (e) {
+      if (e.target.closest('.um-coupon__go')) apply();
+      var del = e.target.closest('.um-coupon__del');
+      if (del) { del.disabled = true; salla.cart.api.deleteCoupon().then(reload, reload); }
+    });
+    box.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.classList.contains('um-coupon__in')) { e.preventDefault(); apply(); } });
+    draw('');
+    salla.cart.api.details().then(function (r) {
+      var c = r && r.data && r.data.cart && r.data.cart.coupon, code = c && (typeof c === 'string' ? c : c.code);
+      if (code) draw(code);
+    }, function () { /* keeps the empty box */ });
+  }
   function offerBar() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
     var n = cartCount(), box = $('.um-offer');
@@ -1974,11 +2022,11 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); homeLink(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); duoPage(); toastText(); }
+  function run() { previewLinks(); fonts(); header(); homeLink(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); couponBox(); duoPage(); toastText(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); offerZero(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); offerZero(); couponBox(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
