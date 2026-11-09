@@ -176,7 +176,14 @@
         var value = list.getAttribute('source-value'), head = $('.s-block__title h2', list.closest('section'));
         try { value = JSON.parse(value); } catch (e) { /* one id */ }
         salla.product.fetch({ source: list.getAttribute('source'), source_value: value, limit: Number(list.getAttribute('limit')) || 20 })
-          .then(function (r) { done({ title: head ? head.textContent.trim() : '', items: (r && r.data) || [] }); }, fail);
+          .then(function (r) {
+            var items = (r && r.data) || [];
+            // the section's category can come back empty (VOLUME 01 did, 2026-11-09): every tee is on ALL_CAT too
+            if (items.length) return items;
+            return salla.product.fetch({ source: 'categories', source_value: [ALL_CAT], limit: 30 })
+              .then(function (r2) { return (r2 && r2.data) || []; });
+          })
+          .then(function (items) { done({ title: head ? head.textContent.trim() : '', items: homeOrder(items) }); }, fail);
       })();
     });
   }
@@ -271,15 +278,30 @@
   }
   // the rail hangs the first ten tees of the list (the section's «كل الأصوات» button leads to the rest), and its bar counts them
   var RAIL_MAX = 10;
-  // the home page lists twelve tees (owner, 2026-11-09); all of them are on «اختر صوتك», which the button under the list opens
+  // the home page shows every tee again (owner, 2026-11-09, later): the first twelve, then «عرض المزيد» opens the rest in place
   var TRACK_MAX = 12;
+  // …and opens on these six, in this order (owner's screenshots): الرياض، Dates Season، Caution، UNMUTED Sticker، Desert Club،
+  // Just Padel; the rest follow in Salla's order. The rail takes the same order (its first ten with a cut-out)
+  var TRACK_FIRST = ['862344853', '1223062065', '217344331', '1197022782', '696581406', '1501040588'];
+  function homeOrder(items) {
+    var rank = function (p, i) { var k = TRACK_FIRST.indexOf(String(p.id)); return k > -1 ? k : TRACK_FIRST.length + i; };
+    return items.map(function (p, i) { return { p: p, r: rank(p, i) }; }).sort(function (a, b) { return a.r - b.r; })
+      .map(function (x) { return x.p; });
+  }
   function trackTwelve(box) {
     var list = $('.um-tracks ol.um-tl', box);
     if (!list) return;
-    $$('li', list).slice(TRACK_MAX).forEach(function (li) { li.remove(); });
-    if ($('.um-tl__more', box)) return;
-    var p = el('p', 'um-tl__more', '<a class="um-btn um-btn--ink" href="' + allUrl() + '">' + t('كل الأصوات', 'Every voice') + '</a>');
+    $$('.um-tl__more', box).forEach(function (n) { n.parentNode.removeChild(n); });
+    // hidden inline: the list's own CSS sets every row to display:grid
+    var later = $$('li', list).slice(TRACK_MAX);
+    later.forEach(function (li) { li.style.display = 'none'; });
+    if (!later.length) return;
+    var p = el('p', 'um-tl__more', '<button type="button" class="um-btn um-btn--ink">' + t('عرض المزيد', 'Show more') + '</button>');
     p.style.cssText = 'display:flex;justify-content:center;margin:32px 0 0';
+    $('button', p).addEventListener('click', function () {
+      later.forEach(function (li) { li.style.display = ''; });
+      p.parentNode.removeChild(p);
+    });
     list.parentNode.insertBefore(p, list.nextSibling);
   }
   function railTen(box) {
