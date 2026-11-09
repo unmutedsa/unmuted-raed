@@ -124,7 +124,10 @@
       // the tees the rail has no cut-out for bring their \u00ab\u0634\u0645\u0627\u0639\u0629\u00bb photos from their product pages
       var cut = {};
       $$('.um-rail [data-um-qv]', box).forEach(function (a) { cut[(a.getAttribute('data-name') || '').toLowerCase()] = 1; });
-      var news = res[1] ? res[1].items.filter(function (p) { return !cut[String(p.name).toLowerCase()]; }) : [];
+      // only the tees the rail already hangs (owner, 2026-11-09: the new tees stay off the rail and the tracklist,
+      // \u00ablike before, the old ones only\u00bb); a tee added to the store later shows in its categories, not up here
+      if (res[1]) res[1].items = res[1].items.filter(function (p) { return cut[String(p.name).toLowerCase()]; });
+      var news = [];
       return settle(Promise.all(news.map(function (p) { return hangerOf(p).catch(function () { return null; }); })), 2000).then(function (found) {
         var photos = {};
         (found || []).forEach(function (h) { if (h) photos[h.id] = h; });
