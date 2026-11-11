@@ -26,6 +26,11 @@
     return { voice: ((d.match(/«([^»]+)»/) || [])[1] || '').trim(), vol: latin((d.match(/رقم\s+([0-9٠-٩]{1,3})/) || d.match(/VOL\.?\s*([0-9]{1,3})/i) || [])[1] || '') };
   };
   var pad = function (n) { return ('0' + n).slice(-2); };
+  // the owner wants invoices to read 'VOL.05 Dates Season' (2026-11-11), so each Salla name starts with its VOL number.
+  // The site keeps the bare name (the product page has its own VOL line): names read from Salla go through bare(),
+  // and volNames() takes the prefix off names Salla prints on the page
+  var VOL_RE = /^(\s*)VOL\.?\s?\d{1,3}\s+(?=[A-Za-z\u0600-\u06FF])/i;
+  var bare = function (n) { return String(n == null ? '' : n).replace(VOL_RE, '$1'); };
   // a product's photos (url, alt, main) from Salla, asked for once per page
   var photoLists = {};
   var photosOf = function (id) {
@@ -183,7 +188,10 @@
             return salla.product.fetch({ source: 'categories', source_value: [ALL_CAT], limit: 30 })
               .then(function (r2) { return (r2 && r2.data) || []; });
           })
-          .then(function (items) { done({ title: head ? head.textContent.trim() : '', items: homeOrder(items) }); }, fail);
+          .then(function (items) {
+            items.forEach(function (p) { p.name = bare(p.name); });
+            done({ title: head ? head.textContent.trim() : '', items: homeOrder(items) });
+          }, fail);
       })();
     });
   }
@@ -518,7 +526,7 @@
     (function products() {
       var map = {};
       $$('custom-salla-product-card').forEach(function (c) {
-        var a = $('.s-product-card-content-title a', c), name = a && a.textContent.trim();
+        var a = $('.s-product-card-content-title a', c), name = a && bare(a.textContent.trim());
         var id = a && (a.href.match(/\/p(\d+)/) || [])[1];
         if (name && id) map[name.toLowerCase()] = { url: a.href, id: id };
       });
@@ -1211,7 +1219,7 @@
     s.g = s.g || 'm'; s.h = s.h || (s.g === 'w' ? 163 : 175); s.w = s.w || (s.g === 'w' ? 60 : 75);
     s.hu = s.hu || 'cm'; s.wu = s.wu || 'kg'; s.cu = s.cu || 'cm';
     var step = 1;
-    var name = ($('[data-testid="store-product-title"]') || {}).textContent || '';
+    var name = bare(($('[data-testid="store-product-title"]') || {}).textContent || '');
     // the price as shown (Salla keeps a hidden sale block beside it), with its riyal icon
     var priceEl = $('[data-testid="store-product-price"]');
     if (priceEl) priceEl = $$('p, span', priceEl).filter(function (n) { return n.offsetParent && $('i[class^="sicon-"]', n); })[0] || priceEl;
@@ -1709,7 +1717,7 @@
   // and the tee goes in only with the size chosen. A product with no required option, or more than one, opens its page
   var OPTS = {};
   var detailsOf = function (id) {
-    return OPTS[id] || (OPTS[id] = salla.api.product.getDetails(id, ['options']).then(function (r) { return r.data; }, function (e) { delete OPTS[id]; throw e; }));
+    return OPTS[id] || (OPTS[id] = salla.api.product.getDetails(id, ['options']).then(function (r) { if (r.data) r.data.name = bare(r.data.name); return r.data; }, function (e) { delete OPTS[id]; throw e; }));
   };
   function sizePick(btn) {
     var id = btn.getAttribute('product-id');
@@ -1791,7 +1799,8 @@
   var TEES = null;
   var teesAll = function () {
     return TEES || (TEES = salla.product.fetch({ source: 'categories', source_value: [ALL_CAT], limit: 30 }).then(function (r) {
-      return ((r && r.data) || []).filter(function (p) { return p.status === 'sale' && p.is_available !== false && (p.type || 'product') === 'product'; });
+      return ((r && r.data) || []).filter(function (p) { return p.status === 'sale' && p.is_available !== false && (p.type || 'product') === 'product'; })
+        .map(function (p) { p.name = bare(p.name); return p; });
     }, function (e) { TEES = null; throw e; }));
   };
   function freePick() {
@@ -2022,11 +2031,20 @@
     setTimeout(function () { input.focus(); }, 60);
   }
 
-  function run() { previewLinks(); fonts(); header(); homeLink(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); couponBox(); duoPage(); toastText(); }
+  // Salla's own markup (cards, product title, cart rows, search) prints the name with its VOL number: show it bare
+  function volNames() {
+    if (!document.body) return;
+    var walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null), n, hit = [];
+    while ((n = walk.nextNode())) {
+      if (n.nodeValue.length > 7 && VOL_RE.test(n.nodeValue) && !(n.parentNode && n.parentNode.closest && n.parentNode.closest('script, style, textarea, .um-pvol'))) hit.push(n);
+    }
+    hit.forEach(function (x) { x.nodeValue = bare(x.nodeValue); });
+  }
+  function run() { volNames(); previewLinks(); fonts(); header(); homeLink(); sections(); listing(); cards(); modelCards(); flips(); info(); product(); paperPage(); hdPhotos(); hdThumbs(); hangers(); related(); reviews(); dock(); quickBuy(); tiles(); fitHelper(); addLabel(); cart(); footer(); waOffer(); packs(); offerBar(); offerZero(); couponBox(); duoPage(); toastText(); }
   keepPlace();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
   // Salla's components render after load (the size dropdown, the cart): look again while they settle
   var n = 0, iv = setInterval(function () { run(); if (++n > 40) clearInterval(iv); }, 250);
   addEventListener('resize', dock);
-  new MutationObserver(function () { tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); offerZero(); couponBox(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  new MutationObserver(function () { volNames(); tiles(); fitHelper(); addLabel(); cards(); modelCards(); flips(); hdPhotos(); hdThumbs(); reviews(); quickBuy(); packs(); offerBar(); offerZero(); couponBox(); toastText(); }).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
