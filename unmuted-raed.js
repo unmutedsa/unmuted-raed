@@ -1948,15 +1948,21 @@
   // Salla's «شحن مجاني» card in the cart only follows the store's 400 SAR rule; the hoodie + tee rule (min 300, hoodies or
   // tees) is applied at checkout, after the address (owner checked: free, 2026-11-22). While the offer is on, the card
   // says so instead of «add X for free shipping»; Salla's own lines come back when it isn't
-  function offerShipCard(on) {
+  // The free-shipping rule for the offer is «300 SAR and up of hoodies or tees» (Salla → الشحن المجاني, rule 1), so it also
+  // holds with a discount code in the bag, when the offer itself steps aside (owner, 2026-11-22: «واما يضيف خصم pr يكون
+  // لسا شحن مجاني»): hoodie + tee with the 10% code is 341.10
+  var FREE_FROM = 300;
+  var bagTotal = function () { var b = $('salla-cart-summary-card .s-cart-summary-card-bar-total'); return b ? amount(b.textContent) : NaN; };
+  function offerShipCard(on, words) {
     var card = $('#free-shipping');
     if (!card) return;
     var parts = [$('#free-shipping-msg', card), $('#free-shipping-applied', card), $('#free-shipping-bar', card)].filter(Boolean);
     var mine = $('.um-ship-offer', card);
     if (on && !mine && parts[0]) {
-      mine = el('span', 'um-ship-offer', esc(t('تستاهل شحن مجاني مع العرض', 'Free shipping with the offer')) + ' 🎉');
+      mine = el('span', 'um-ship-offer');
       parts[0].parentNode.insertBefore(mine, parts[0]);
     }
+    if (mine && on && mine.getAttribute('data-w') !== words) { mine.setAttribute('data-w', words); mine.textContent = words + ' 🎉'; }
     if (mine) mine.style.display = on ? '' : 'none';
     parts.forEach(function (n) { n.style.display = on ? 'none' : ''; });
   }
@@ -1981,12 +1987,13 @@
     });
     var coupon = !!$('.um-coupon__on');
     var blocked = on && !applied && coupon;
-    offerShipCard(applied);
+    var total = bagTotal(), free = applied || (isFinite(total) && total >= FREE_FROM - 0.005);
+    offerShipCard(free, applied ? t('تستاهل شحن مجاني مع العرض', 'Free shipping with the offer') : t('تستاهل شحن مجاني', 'You get free shipping'));
     on = on && !blocked;
-    var key = [h, s, ar, go, applied, coupon].join('|');
+    var key = [h, s, ar, go, applied, coupon, free].join('|');
     if (box.getAttribute('data-k') === key) return;
     box.setAttribute('data-k', key);
-    var msg = blocked ? t('العرض ما يجتمع مع كود الخصم: أزل الكود ويصير التيشيرت بنص السعر والشحن مجاني', 'The offer does not combine with a discount code: remove the code and the tee is half price, with free shipping')
+    var msg = blocked ? t('العرض ما يجتمع مع كود الخصم، فالخصم هنا من الكود', 'The offer does not combine with a discount code, so the discount here is the code’s')
       : on && !applied ? t('هودي + تيشيرت: التيشيرت بنص السعر والشحن مجاني', 'Hoodie + tee: the tee is half price and shipping is free')
       : on ? t('تم تفعيل العرض: التيشيرت بنص السعر والشحن مجاني', 'Offer on: the tee is half price and shipping is free')
       : s ? t('أضف هودي، والتيشيرت بنص السعر والشحن مجاني', 'Add a hoodie: the tee is then half price and shipping is free')
@@ -1996,7 +2003,7 @@
     }).join('');
     box.innerHTML = '<div class="um-offer__steps" aria-hidden="true">' + steps + '</div>' +
       '<p class="um-offer__msg">' + msg + '</p>' +
-      '<p class="um-offer__sum">' + (on ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>'
+      '<p class="um-offer__sum">' + (on || free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>'
         : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني مع هودي + تيشيرت', ', free with a hoodie + a tee')) + '</p>' +
       (on || blocked ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('اختر هودي', 'Pick a hoodie') : t('اختر تيشيرت', 'Pick a tee')) + '</a>');
     $('.um-offer__steps', box).style.gridTemplateColumns = 'repeat(2, 1fr)';   // the CSS has room for four steps
