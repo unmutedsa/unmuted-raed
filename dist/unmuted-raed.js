@@ -152,7 +152,8 @@
     css.rel = 'stylesheet';
     css.href = CDN + '/sections.css';
     document.head.appendChild(css);
-    var tees = settle(attempt(homeTees), 4000), faq = settle(attempt(homeFaq), 2500), winter = settle(attempt(homeHoodies), 4500);
+    var winterRaw = attempt(homeHoodies);
+    var tees = settle(attempt(homeTees), 4000), faq = settle(attempt(homeFaq), 2500), winter = settle(winterRaw, 4500);
     Promise.all([fetch(CDN + '/sections.html').then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); }), tees, faq, winter]).then(function (res) {
       var box = el('div', 'um-home', res[0].split('__BASE__').join(CDN));
       // the tees the rail has no cut-out for bring their \u00ab\u0634\u0645\u0627\u0639\u0629\u00bb photos from their product pages
@@ -176,6 +177,13 @@
         function () { bindTracks(box, res[1], res[4]); }, function () { bindPromises(box); }, function () { bindFaq(box, res[2]); }, function () { railTen(box); }, function () { trackTwelve(box); },
         function () { winterTracks(box, res[3], winterSec); }, function () { railShowcase(box); }].forEach(function (f) { try { f(); } catch (e) { /* keeps its own */ } });
       main.insertBefore(box, main.firstChild);
+      // a slow phone: the hoodies came after the wait, so their list goes in when they come (shown at once, as the
+      // page's in-animation only knows the rows that were there at the start)
+      if (!res[3] && winterRaw && winterRaw.then) winterRaw.then(function (items) {
+        if (!items || !items.length || $('.um-winter', box)) return;
+        try { winterTracks(box, items, winterSec); } catch (e) { return; }
+        $$('.um-winter [data-um-in]', box).forEach(function (n) { n.classList.add('is-in'); });
+      });
       railTouch(box);
       links(box);
       homeReady(box);
@@ -238,8 +246,12 @@
           var items = ((r && r.data) || []).filter(function (p) { return isHoodie(p.name); });
           items.forEach(function (p) { p.name = bare(p.name); });
           items.sort(function (a, b) { return (+voiceOf(a).vol || 999) - (+voiceOf(b).vol || 999); });
-          return Promise.all(items.map(function (p) { return photosOf(p.id); })).then(function (lists) {
-            items.forEach(function (p, i) { p.umPhotos = lists[i] || []; });
+          // the hoodies in WINTER_SLUG have their photos on our CDN already: no asking Salla for each one (12 calls took
+          // ~4 s, and on a phone the list missed the home page's wait, owner 2026-11-22: \u00ab\u0627\u0644\u0642\u0633\u0645 \u0627\u0644\u0634\u062a\u0648\u064a \u0645\u0634 \u0628\u0627\u064a\u0646 \u0641\u064a \u0627\u0644\u062c\u0648\u0627\u0644\u00bb);
+          // only a hoodie added later brings its photo list
+          var later = items.filter(function (p) { return !WINTER_SLUG[String(p.id)]; });
+          return Promise.all(later.map(function (p) { return photosOf(p.id); })).then(function (lists) {
+            later.forEach(function (p, i) { p.umPhotos = lists[i] || []; });
             done(items);
           });
         }).catch(function () { done(null); });
@@ -256,7 +268,23 @@
     return (imgs || []).filter(function (x) { return x.url && /\u0647\u0648\u062f\u064a/.test(x.alt || '') && !/\u0645\u0648\u062f\u0644/.test(x.alt || '') && BACKSIDE.test(x.alt || '') !== front; })[0]
       || (imgs || []).filter(function (x) { return x.url && x.main; })[0];
   };
+  // the winter hoodies' photo folders in unmutedsa/unmuted-winter, by Salla product id (girls-only ones have no man photos)
+  var WINTER_SLUG = { '144385882': 'after-hours', '901379307': 'keep-calm', '892545089': 'queen', '1841802309': 'drummers',
+    '443162745': 'porsche', '1392419965': 'sandboard', '1701726066': 'camping', '1075166325': 'defender', '1984470388': 'cards',
+    '785584488': 'typewriter', '827110509': 'matcha', '232789214': 'riyadh' };
+  var WINTER_GIRLS = { typewriter: 1, matcha: 1 };
   var winterPics = function (p, i) {
+    var slug = WINTER_SLUG[String(p.id)];
+    if (slug) {
+      var fr = /defender/i.test(p.name), who = (WINTER_GIRLS[slug] || i % 2) ? 'woman' : 'man';
+      var u = function (pose) { return WINTER_PICS + slug + '/' + pose + '.webp'; };
+      var printSide = fr ? 'front' : 'back', otherSide = fr ? 'back' : 'front';
+      var people = WINTER_GIRLS[slug] ? ['woman'] : who === 'man' ? ['man', 'woman'] : ['woman', 'man'];
+      var all = [];
+      people.forEach(function (h) { [printSide, otherSide, 'side'].forEach(function (s) { all.push(u(h + '-' + s)); }); });
+      all.push(u('flat-' + printSide), u('flat-' + otherSide));
+      return { first: u(who + '-' + printSide), other: u(who + '-' + otherSide), flat: u('flat-' + printSide), all: all };
+    }
     var model = (p.umPhotos || []).filter(function (x) { return /\u0645\u0648\u062f\u0644/.test(x.alt || '') && x.url; });
     var pick = function (re) {
       var l = model.filter(function (x) { return re.test(x.alt || ''); });
@@ -297,7 +325,7 @@
         var imgs = p.umPhotos || [], models = imgs.filter(function (x) { return /\u0645\u0648\u062f\u0644/.test(x.alt || '') && x.url; }).map(function (x) { return x.url; });
         var flats = imgs.filter(function (x) { return x.url && /\u0647\u0648\u062f\u064a/.test(x.alt || '') && !/\u0645\u0648\u062f\u0644/.test(x.alt || ''); }).map(function (x) { return x.url; });
         flats.sort(function (a, b) { return (b === m.flat) - (a === m.flat); });
-        var urls = (m.first ? [m.first] : []).concat(models.filter(function (u) { return u !== m.first; }), flats);
+        var urls = m.all || (m.first ? [m.first] : []).concat(models.filter(function (u) { return u !== m.first; }), flats);
         pic.classList.add('um-model');
         pic.style.position = 'relative';
         face.src = smOf(urls[0] || imageOf(p)) || urls[0] || imageOf(p);
@@ -870,7 +898,7 @@
       photosOf(c.product.id).then(function (imgs) {
         // a back-first tee shows its back on the card, so the hover brings its main photo, the front
         // a hoodie's card shows its model photo (hoodieCard), so the hover turns that model round (owner, 2026-11-22)
-        var hm = isHoodie(c.product.name) && winterPics({ name: c.product.name, umPhotos: imgs }, +c.getAttribute('data-um-hoodie') || 0);
+        var hm = isHoodie(c.product.name) && winterPics({ id: c.product.id, name: c.product.name, umPhotos: imgs }, +c.getAttribute('data-um-hoodie') || 0);
         var other = hm ? (hm.other ? { url: hm.other } : null)
           : backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
           : imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
@@ -1339,6 +1367,7 @@
     '570aee1f-0abf-441c-8dec-cfb4e1a5c848': 'riyadh/woman-side.webp'
   };
   var hdOf = function (url) {
+    if (String(url || '').indexOf(WINTER_PICS) === 0 && !/\/(md|sm)\/[^/]+$/.test(url)) return String(url);   // already one of ours
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
     if (m && HD[m[1]]) return PHOTOS + HD[m[1]];
     // (Salla serves \u00ab\u2026-standard.webp\u00bb on the product page and \u00ab\u2026-thumbnail.webp\u00bb on the cards)
@@ -1417,8 +1446,10 @@
     if (!face || c.hasAttribute('data-um-hoodie')) return;
     var k = hoodieN++;
     c.setAttribute('data-um-hoodie', String(k));
+    var known = winterPics({ id: c.product.id, name: c.product.name }, k);
+    if (known.all) return sharpen(face, known.first);   // its photos are on our CDN: no waiting
     photosOf(c.product.id).then(function (imgs) {
-      var m = winterPics({ name: c.product.name, umPhotos: imgs }, k), img = $('a img:not(.um-cback)', box);
+      var m = winterPics({ id: c.product.id, name: c.product.name, umPhotos: imgs }, k), img = $('a img:not(.um-cback)', box);
       if (m.first && img) sharpen(img, m.first);
     });
   }
