@@ -1957,10 +1957,22 @@
       anchor.parentNode.insertBefore(box, anchor.nextSibling);
     }
     var on = h && s, go = on ? '' : s ? hoodiesUrl() : teesUrl();
-    var key = [h, s, ar, go].join('|');
+    // \u00abon\u00bb only says what Salla did: a tee row at about half its price. A discount code in the bag keeps the offer off
+    // (it doesn't combine with codes), and the bar says so (owner's screenshots, 2026-11-22: the bar said \u00ab\u062a\u0645 \u062a\u0641\u0639\u064a\u0644
+    // \u0627\u0644\u0639\u0631\u0636\u00bb over a 10% code)
+    var applied = on && $$('form[id^="item-"]').some(function (f) {
+      var name = ($('.cart-item h1', f) || $('h1', f) || f).textContent, was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f);
+      return !isHoodie(name) && was && now && amount(now.textContent) <= amount(was.textContent) * 0.6;
+    });
+    var coupon = !!$('.um-coupon__on');
+    var blocked = on && !applied && coupon;
+    on = on && !blocked;
+    var key = [h, s, ar, go, applied, coupon].join('|');
     if (box.getAttribute('data-k') === key) return;
     box.setAttribute('data-k', key);
-    var msg = on ? t('\u062a\u0645 \u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u0639\u0631\u0636: \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Offer on: the tee is half price and shipping is free')
+    var msg = blocked ? t('\u0627\u0644\u0639\u0631\u0636 \u0645\u0627 \u064a\u062c\u062a\u0645\u0639 \u0645\u0639 \u0643\u0648\u062f \u0627\u0644\u062e\u0635\u0645: \u0623\u0632\u0644 \u0627\u0644\u0643\u0648\u062f \u0648\u064a\u0635\u064a\u0631 \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'The offer does not combine with a discount code: remove the code and the tee is half price, with free shipping')
+      : on && !applied ? t('\u0647\u0648\u062f\u064a + \u062a\u064a\u0634\u064a\u0631\u062a: \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Hoodie + tee: the tee is half price and shipping is free')
+      : on ? t('\u062a\u0645 \u062a\u0641\u0639\u064a\u0644 \u0627\u0644\u0639\u0631\u0636: \u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Offer on: the tee is half price and shipping is free')
       : s ? t('\u0623\u0636\u0641 \u0647\u0648\u062f\u064a\u060c \u0648\u0627\u0644\u062a\u064a\u0634\u064a\u0631\u062a \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Add a hoodie: the tee is then half price and shipping is free')
       : t('\u0623\u0636\u0641 \u062a\u064a\u0634\u064a\u0631\u062a\u060c \u0648\u062a\u0627\u062e\u0630\u0647 \u0628\u0646\u0635 \u0627\u0644\u0633\u0639\u0631 \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Add a tee: you get it at half price, with free shipping');
     var steps = [[h, t('\u0647\u0648\u062f\u064a', 'Hoodie')], [s, t('\u062a\u064a\u0634\u064a\u0631\u062a', 'Tee')]].map(function (k) {
@@ -1970,7 +1982,7 @@
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (on ? '<b>' + t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') + '</b>'
         : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship) + t('\u060c \u0648\u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0647\u0648\u062f\u064a + \u062a\u064a\u0634\u064a\u0631\u062a', ', free with a hoodie + a tee')) + '</p>' +
-      (on ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('\u0627\u062e\u062a\u0631 \u0647\u0648\u062f\u064a', 'Pick a hoodie') : t('\u0627\u062e\u062a\u0631 \u062a\u064a\u0634\u064a\u0631\u062a', 'Pick a tee')) + '</a>');
+      (on || blocked ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('\u0627\u062e\u062a\u0631 \u0647\u0648\u062f\u064a', 'Pick a hoodie') : t('\u0627\u062e\u062a\u0631 \u062a\u064a\u0634\u064a\u0631\u062a', 'Pick a tee')) + '</a>');
     $('.um-offer__steps', box).style.gridTemplateColumns = 'repeat(2, 1fr)';   // the CSS has room for four steps
   }
   // amounts as Salla writes them (Arabic digits, \u00ab\u066b\u00bb, thousands commas), as numbers

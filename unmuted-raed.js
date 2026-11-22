@@ -1957,10 +1957,22 @@
       anchor.parentNode.insertBefore(box, anchor.nextSibling);
     }
     var on = h && s, go = on ? '' : s ? hoodiesUrl() : teesUrl();
-    var key = [h, s, ar, go].join('|');
+    // «on» only says what Salla did: a tee row at about half its price. A discount code in the bag keeps the offer off
+    // (it doesn't combine with codes), and the bar says so (owner's screenshots, 2026-11-22: the bar said «تم تفعيل
+    // العرض» over a 10% code)
+    var applied = on && $$('form[id^="item-"]').some(function (f) {
+      var name = ($('.cart-item h1', f) || $('h1', f) || f).textContent, was = $('.item-regular-price', f), now = $('[data-testid="store-cart-item-price"]', f);
+      return !isHoodie(name) && was && now && amount(now.textContent) <= amount(was.textContent) * 0.6;
+    });
+    var coupon = !!$('.um-coupon__on');
+    var blocked = on && !applied && coupon;
+    on = on && !blocked;
+    var key = [h, s, ar, go, applied, coupon].join('|');
     if (box.getAttribute('data-k') === key) return;
     box.setAttribute('data-k', key);
-    var msg = on ? t('تم تفعيل العرض: التيشيرت بنص السعر والشحن مجاني', 'Offer on: the tee is half price and shipping is free')
+    var msg = blocked ? t('العرض ما يجتمع مع كود الخصم: أزل الكود ويصير التيشيرت بنص السعر والشحن مجاني', 'The offer does not combine with a discount code: remove the code and the tee is half price, with free shipping')
+      : on && !applied ? t('هودي + تيشيرت: التيشيرت بنص السعر والشحن مجاني', 'Hoodie + tee: the tee is half price and shipping is free')
+      : on ? t('تم تفعيل العرض: التيشيرت بنص السعر والشحن مجاني', 'Offer on: the tee is half price and shipping is free')
       : s ? t('أضف هودي، والتيشيرت بنص السعر والشحن مجاني', 'Add a hoodie: the tee is then half price and shipping is free')
       : t('أضف تيشيرت، وتاخذه بنص السعر والشحن مجاني', 'Add a tee: you get it at half price, with free shipping');
     var steps = [[h, t('هودي', 'Hoodie')], [s, t('تيشيرت', 'Tee')]].map(function (k) {
@@ -1970,7 +1982,7 @@
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (on ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>'
         : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني مع هودي + تيشيرت', ', free with a hoodie + a tee')) + '</p>' +
-      (on ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('اختر هودي', 'Pick a hoodie') : t('اختر تيشيرت', 'Pick a tee')) + '</a>');
+      (on || blocked ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('اختر هودي', 'Pick a hoodie') : t('اختر تيشيرت', 'Pick a tee')) + '</a>');
     $('.um-offer__steps', box).style.gridTemplateColumns = 'repeat(2, 1fr)';   // the CSS has room for four steps
   }
   // amounts as Salla writes them (Arabic digits, «٫», thousands commas), as numbers
