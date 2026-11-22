@@ -1945,6 +1945,21 @@
   }
   // the bar under \u00ab\u0633\u0644\u062a\u0643\u00bb: two steps (a hoodie, a tee), lit for what is in the bag; what to add, with a button to the
   // hoodies or the tees; and the shipping, free once both are in
+  // Salla's \u00ab\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a\u00bb card in the cart only follows the store's 400 SAR rule; the hoodie + tee rule (min 300, hoodies or
+  // tees) is applied at checkout, after the address (owner checked: free, 2026-11-22). While the offer is on, the card
+  // says so instead of \u00abadd X for free shipping\u00bb; Salla's own lines come back when it isn't
+  function offerShipCard(on) {
+    var card = $('#free-shipping');
+    if (!card) return;
+    var parts = [$('#free-shipping-msg', card), $('#free-shipping-applied', card), $('#free-shipping-bar', card)].filter(Boolean);
+    var mine = $('.um-ship-offer', card);
+    if (on && !mine && parts[0]) {
+      mine = el('span', 'um-ship-offer', esc(t('\u062a\u0633\u062a\u0627\u0647\u0644 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0627\u0644\u0639\u0631\u0636', 'Free shipping with the offer')) + ' \ud83c\udf89');
+      parts[0].parentNode.insertBefore(mine, parts[0]);
+    }
+    if (mine) mine.style.display = on ? '' : 'none';
+    parts.forEach(function (n) { n.style.display = on ? 'none' : ''; });
+  }
   function offerBar() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
     var mix = bagMix(), h = mix.hoodie > 0, s = mix.tee > 0, box = $('.um-offer');
@@ -1966,6 +1981,7 @@
     });
     var coupon = !!$('.um-coupon__on');
     var blocked = on && !applied && coupon;
+    offerShipCard(applied);
     on = on && !blocked;
     var key = [h, s, ar, go, applied, coupon].join('|');
     if (box.getAttribute('data-k') === key) return;
