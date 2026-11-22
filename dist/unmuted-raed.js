@@ -263,7 +263,10 @@
       return l.length ? (i % 2 ? l[l.length - 1] : l[0]).url : '';
     };
     var flat = flatPrint(p.umPhotos, p.name);
-    return { first: pick(/defender/i.test(p.name) ? /\u0623\u0645\u0627\u0645/ : /\u062e\u0644\u0641/), flat: flat ? flat.url : '' };
+    // on a computer the hover turns the same model round (owner, 2026-11-22: \u00ab\u0627\u0645\u0627 \u0627\u0639\u0645\u0644 hover \u2026 \u064a\u0638\u0647\u0631 \u0627\u0644\u0645\u0648\u062f\u0644 \u0645\u0646 \u0642\u062f\u0627\u0645 \u0648\u0644\u0648 \u0645\u0646
+    // \u0642\u062f\u0627\u0645 \u064a\u0643\u0648\u0646 \u0645\u0646 \u0648\u0631\u0647\u00bb); the hoodie by itself comes last in a phone's swipe
+    var front = /defender/i.test(p.name);
+    return { first: pick(front ? /\u0623\u0645\u0627\u0645/ : /\u062e\u0644\u0641/), other: pick(front ? /\u062e\u0644\u0641/ : /\u0623\u0645\u0627\u0645/), flat: flat ? flat.url : '' };
   };
   // the winter list (owner, 2026-11-22): above the tees, on the page's own colour, each hoodie on its model photo
   // (\u00ab\u0644\u0644\u0634\u062a\u0648\u064a \u0641\u0642\u0637 \u0628\u062a\u0643\u0648\u0646 \u0627\u0644\u0635\u0648\u0631\u0647 \u0645\u0646 \u0628\u0631\u0647 \u0628\u0627\u0644\u0645\u0648\u062f\u0644\u00bb), the summer list under it as before
@@ -288,15 +291,45 @@
       $('.um-tl__name bdi', li).textContent = p.name;
       $('.um-tl__name small', li).textContent = v.voice;
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
-      if (face) {
+      if (face && !hoverable) {
+        // phones (owner, 2026-11-22: \u00ab\u0645\u062b\u0644 \u0627\u0644\u0635\u064a\u0641\u064a \u0641\u064a \u0627\u0644\u062c\u0648\u0627\u0644 \u2026 \u0627\u0639\u0645\u0644 swap \u0644\u0644\u0645\u0646\u062a\u062c\u0627\u062a \u0627\u0634\u0648\u0641 \u0635\u0648\u0631\u0647\u0645\u00bb): a finger drags through the
+        // hoodie's photos like the tees', every model photo first (the one shown leads) and the hoodie by itself last
+        var imgs = p.umPhotos || [], models = imgs.filter(function (x) { return /\u0645\u0648\u062f\u0644/.test(x.alt || '') && x.url; }).map(function (x) { return x.url; });
+        var flats = imgs.filter(function (x) { return x.url && /\u0647\u0648\u062f\u064a/.test(x.alt || '') && !/\u0645\u0648\u062f\u0644/.test(x.alt || ''); }).map(function (x) { return x.url; });
+        flats.sort(function (a, b) { return (b === m.flat) - (a === m.flat); });
+        var urls = (m.first ? [m.first] : []).concat(models.filter(function (u) { return u !== m.first; }), flats);
+        pic.classList.add('um-model');
+        pic.style.position = 'relative';
+        face.src = smOf(urls[0] || imageOf(p)) || urls[0] || imageOf(p);
+        face.alt = '';
+        if (urls.length > 1) {
+          var strip = el('span', 'um-swipe'), dots = el('span', 'um-swipe__dots');
+          strip.appendChild(face);
+          urls.slice(1).forEach(function (u) {
+            var im = el('img');
+            im.alt = '';
+            im.loading = 'lazy';
+            im.decoding = 'async';
+            im.src = smOf(u) || u;
+            strip.appendChild(im);
+          });
+          $$('img', strip).forEach(function (im, k) { dots.appendChild(el('i', k ? '' : 'is-on')); });
+          pic.appendChild(strip);
+          pic.appendChild(dots);
+          strip.addEventListener('scroll', function () {
+            var k = Math.round(Math.abs(strip.scrollLeft) / (strip.clientWidth || 1));
+            $$('i', dots).forEach(function (d, j) { d.classList.toggle('is-on', j === k); });
+          }, { passive: true });
+        }
+      } else if (face) {
         face.src = mdOf(m.first) || m.first || imageOf(p);
         face.alt = '';
         pic.classList.add('um-model');
-        if (m.flat) {
+        if (m.other) {
           var img = el('img', 'um-tl__back um-face-back');
           img.alt = '';
           img.loading = 'lazy';
-          img.src = mdOf(m.flat) || m.flat;
+          img.src = mdOf(m.other) || m.other;
           face.classList.add('um-face');
           pic.appendChild(img);
           pic.classList.add('um-turn');
@@ -836,8 +869,9 @@
       if (!c.product || !front || en.boundingClientRect.width < 60) return;
       photosOf(c.product.id).then(function (imgs) {
         // a back-first tee shows its back on the card, so the hover brings its main photo, the front
-        // a hoodie's card shows its model photo (hoodieCard), so the hover brings the hoodie by itself, the print side
-        var other = isHoodie(c.product.name) ? flatPrint(imgs, c.product.name)
+        // a hoodie's card shows its model photo (hoodieCard), so the hover turns that model round (owner, 2026-11-22)
+        var hm = isHoodie(c.product.name) && winterPics({ name: c.product.name, umPhotos: imgs }, +c.getAttribute('data-um-hoodie') || 0);
+        var other = hm ? (hm.other ? { url: hm.other } : null)
           : backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
           : imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
         if (!other || $('.um-cback', pic)) return;

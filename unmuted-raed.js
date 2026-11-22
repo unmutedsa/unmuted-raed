@@ -263,7 +263,10 @@
       return l.length ? (i % 2 ? l[l.length - 1] : l[0]).url : '';
     };
     var flat = flatPrint(p.umPhotos, p.name);
-    return { first: pick(/defender/i.test(p.name) ? /أمام/ : /خلف/), flat: flat ? flat.url : '' };
+    // on a computer the hover turns the same model round (owner, 2026-11-22: «اما اعمل hover … يظهر المودل من قدام ولو من
+    // قدام يكون من وره»); the hoodie by itself comes last in a phone's swipe
+    var front = /defender/i.test(p.name);
+    return { first: pick(front ? /أمام/ : /خلف/), other: pick(front ? /خلف/ : /أمام/), flat: flat ? flat.url : '' };
   };
   // the winter list (owner, 2026-11-22): above the tees, on the page's own colour, each hoodie on its model photo
   // («للشتوي فقط بتكون الصوره من بره بالمودل»), the summer list under it as before
@@ -288,15 +291,45 @@
       $('.um-tl__name bdi', li).textContent = p.name;
       $('.um-tl__name small', li).textContent = v.voice;
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
-      if (face) {
+      if (face && !hoverable) {
+        // phones (owner, 2026-11-22: «مثل الصيفي في الجوال … اعمل swap للمنتجات اشوف صورهم»): a finger drags through the
+        // hoodie's photos like the tees', every model photo first (the one shown leads) and the hoodie by itself last
+        var imgs = p.umPhotos || [], models = imgs.filter(function (x) { return /مودل/.test(x.alt || '') && x.url; }).map(function (x) { return x.url; });
+        var flats = imgs.filter(function (x) { return x.url && /هودي/.test(x.alt || '') && !/مودل/.test(x.alt || ''); }).map(function (x) { return x.url; });
+        flats.sort(function (a, b) { return (b === m.flat) - (a === m.flat); });
+        var urls = (m.first ? [m.first] : []).concat(models.filter(function (u) { return u !== m.first; }), flats);
+        pic.classList.add('um-model');
+        pic.style.position = 'relative';
+        face.src = smOf(urls[0] || imageOf(p)) || urls[0] || imageOf(p);
+        face.alt = '';
+        if (urls.length > 1) {
+          var strip = el('span', 'um-swipe'), dots = el('span', 'um-swipe__dots');
+          strip.appendChild(face);
+          urls.slice(1).forEach(function (u) {
+            var im = el('img');
+            im.alt = '';
+            im.loading = 'lazy';
+            im.decoding = 'async';
+            im.src = smOf(u) || u;
+            strip.appendChild(im);
+          });
+          $$('img', strip).forEach(function (im, k) { dots.appendChild(el('i', k ? '' : 'is-on')); });
+          pic.appendChild(strip);
+          pic.appendChild(dots);
+          strip.addEventListener('scroll', function () {
+            var k = Math.round(Math.abs(strip.scrollLeft) / (strip.clientWidth || 1));
+            $$('i', dots).forEach(function (d, j) { d.classList.toggle('is-on', j === k); });
+          }, { passive: true });
+        }
+      } else if (face) {
         face.src = mdOf(m.first) || m.first || imageOf(p);
         face.alt = '';
         pic.classList.add('um-model');
-        if (m.flat) {
+        if (m.other) {
           var img = el('img', 'um-tl__back um-face-back');
           img.alt = '';
           img.loading = 'lazy';
-          img.src = mdOf(m.flat) || m.flat;
+          img.src = mdOf(m.other) || m.other;
           face.classList.add('um-face');
           pic.appendChild(img);
           pic.classList.add('um-turn');
@@ -836,8 +869,9 @@
       if (!c.product || !front || en.boundingClientRect.width < 60) return;
       photosOf(c.product.id).then(function (imgs) {
         // a back-first tee shows its back on the card, so the hover brings its main photo, the front
-        // a hoodie's card shows its model photo (hoodieCard), so the hover brings the hoodie by itself, the print side
-        var other = isHoodie(c.product.name) ? flatPrint(imgs, c.product.name)
+        // a hoodie's card shows its model photo (hoodieCard), so the hover turns that model round (owner, 2026-11-22)
+        var hm = isHoodie(c.product.name) && winterPics({ name: c.product.name, umPhotos: imgs }, +c.getAttribute('data-um-hoodie') || 0);
+        var other = hm ? (hm.other ? { url: hm.other } : null)
           : backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
           : imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
         if (!other || $('.um-cback', pic)) return;
