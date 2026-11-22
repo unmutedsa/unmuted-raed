@@ -1962,14 +1962,14 @@
       mine = el('span', 'um-ship-offer');
       parts[0].parentNode.insertBefore(mine, parts[0]);
     }
-    if (mine && on && mine.getAttribute('data-w') !== words) { mine.setAttribute('data-w', words); mine.textContent = words + ' \ud83c\udf89'; }
+    if (mine && on && mine.getAttribute('data-w') !== words) { mine.setAttribute('data-w', words); mine.textContent = words; }
     if (mine) mine.style.display = on ? '' : 'none';
     parts.forEach(function (n) { n.style.display = on ? 'none' : ''; });
   }
   function offerBar() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
     var mix = bagMix(), h = mix.hoodie > 0, s = mix.tee > 0, box = $('.um-offer');
-    if (!h && !s) { if (box) box.remove(); return; }
+    if (!h && !s) { if (box) box.remove(); offerShipCard(false, ''); return; }
     if (!box) {
       var anchor = $('.um-cart-title');
       if (!anchor) return;
@@ -1988,7 +1988,12 @@
     var coupon = !!$('.um-coupon__on');
     var blocked = on && !applied && coupon;
     var total = bagTotal(), free = applied || (isFinite(total) && total >= FREE_FROM - 0.005);
-    offerShipCard(free, applied ? t('\u062a\u0633\u062a\u0627\u0647\u0644 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0627\u0644\u0639\u0631\u0636', 'Free shipping with the offer') : t('\u062a\u0633\u062a\u0627\u0647\u0644 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'You get free shipping'));
+    // the card speaks like the offer, with no amounts (owner, 2026-11-22: \u00ab\u0644\u0627 \u062a\u0636\u064a\u0641 \u0627\u0631\u0642\u0627\u0645 \u062e\u0644\u064a \u0627\u0644\u0643\u0644\u0627\u0645 \u0645\u062b\u0644 \u0627\u0644\u0639\u0631\u0636\u00bb: with a
+    // hoodie alone it said \u00abadd 170 for free shipping\u00bb, though a 149 tee gives it)
+    offerShipCard(true, free ? (applied ? t('\u062a\u0633\u062a\u0627\u0647\u0644 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0627\u0644\u0639\u0631\u0636', 'Free shipping with the offer') : t('\u062a\u0633\u062a\u0627\u0647\u0644 \u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'You get free shipping')) + ' \ud83c\udf89'
+      : h && !s ? t('\u0623\u0636\u0641 \u062a\u064a\u0634\u064a\u0631\u062a\u060c \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Add a tee and shipping is free')
+      : s && !h ? t('\u0623\u0636\u0641 \u0647\u0648\u062f\u064a\u060c \u0648\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Add a hoodie and shipping is free')
+      : t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0647\u0648\u062f\u064a + \u062a\u064a\u0634\u064a\u0631\u062a', 'Free shipping with a hoodie + a tee'));
     on = on && !blocked;
     var key = [h, s, ar, go, applied, coupon, free].join('|');
     if (box.getAttribute('data-k') === key) return;
@@ -2004,7 +2009,7 @@
     box.innerHTML = '<div class="um-offer__steps" aria-hidden="true">' + steps + '</div>' +
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (on || free ? '<b>' + t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a', 'Free shipping') + '</b>'
-        : t('\u0627\u0644\u0634\u062d\u0646 ', 'Shipping ') + money(PACK.ship) + t('\u060c \u0648\u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0647\u0648\u062f\u064a + \u062a\u064a\u0634\u064a\u0631\u062a', ', free with a hoodie + a tee')) + '</p>' +
+        : t('\u0627\u0644\u0634\u062d\u0646 \u0645\u062c\u0627\u0646\u064a \u0645\u0639 \u0647\u0648\u062f\u064a + \u062a\u064a\u0634\u064a\u0631\u062a', 'Free shipping with a hoodie + a tee')) + '</p>' +
       (on || blocked ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('\u0627\u062e\u062a\u0631 \u0647\u0648\u062f\u064a', 'Pick a hoodie') : t('\u0627\u062e\u062a\u0631 \u062a\u064a\u0634\u064a\u0631\u062a', 'Pick a tee')) + '</a>');
     $('.um-offer__steps', box).style.gridTemplateColumns = 'repeat(2, 1fr)';   // the CSS has room for four steps
   }

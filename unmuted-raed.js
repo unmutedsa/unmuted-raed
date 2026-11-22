@@ -1962,14 +1962,14 @@
       mine = el('span', 'um-ship-offer');
       parts[0].parentNode.insertBefore(mine, parts[0]);
     }
-    if (mine && on && mine.getAttribute('data-w') !== words) { mine.setAttribute('data-w', words); mine.textContent = words + ' 🎉'; }
+    if (mine && on && mine.getAttribute('data-w') !== words) { mine.setAttribute('data-w', words); mine.textContent = words; }
     if (mine) mine.style.display = on ? '' : 'none';
     parts.forEach(function (n) { n.style.display = on ? 'none' : ''; });
   }
   function offerBar() {
     if (!/\/cart(\/|$|\?)/.test(location.pathname)) return;
     var mix = bagMix(), h = mix.hoodie > 0, s = mix.tee > 0, box = $('.um-offer');
-    if (!h && !s) { if (box) box.remove(); return; }
+    if (!h && !s) { if (box) box.remove(); offerShipCard(false, ''); return; }
     if (!box) {
       var anchor = $('.um-cart-title');
       if (!anchor) return;
@@ -1988,7 +1988,12 @@
     var coupon = !!$('.um-coupon__on');
     var blocked = on && !applied && coupon;
     var total = bagTotal(), free = applied || (isFinite(total) && total >= FREE_FROM - 0.005);
-    offerShipCard(free, applied ? t('تستاهل شحن مجاني مع العرض', 'Free shipping with the offer') : t('تستاهل شحن مجاني', 'You get free shipping'));
+    // the card speaks like the offer, with no amounts (owner, 2026-11-22: «لا تضيف ارقام خلي الكلام مثل العرض»: with a
+    // hoodie alone it said «add 170 for free shipping», though a 149 tee gives it)
+    offerShipCard(true, free ? (applied ? t('تستاهل شحن مجاني مع العرض', 'Free shipping with the offer') : t('تستاهل شحن مجاني', 'You get free shipping')) + ' 🎉'
+      : h && !s ? t('أضف تيشيرت، والشحن مجاني', 'Add a tee and shipping is free')
+      : s && !h ? t('أضف هودي، والشحن مجاني', 'Add a hoodie and shipping is free')
+      : t('الشحن مجاني مع هودي + تيشيرت', 'Free shipping with a hoodie + a tee'));
     on = on && !blocked;
     var key = [h, s, ar, go, applied, coupon, free].join('|');
     if (box.getAttribute('data-k') === key) return;
@@ -2004,7 +2009,7 @@
     box.innerHTML = '<div class="um-offer__steps" aria-hidden="true">' + steps + '</div>' +
       '<p class="um-offer__msg">' + msg + '</p>' +
       '<p class="um-offer__sum">' + (on || free ? '<b>' + t('الشحن مجاني', 'Free shipping') + '</b>'
-        : t('الشحن ', 'Shipping ') + money(PACK.ship) + t('، ومجاني مع هودي + تيشيرت', ', free with a hoodie + a tee')) + '</p>' +
+        : t('الشحن مجاني مع هودي + تيشيرت', 'Free shipping with a hoodie + a tee')) + '</p>' +
       (on || blocked ? '' : '<a class="um-offer__go" href="' + esc(go) + '">' + (s ? t('اختر هودي', 'Pick a hoodie') : t('اختر تيشيرت', 'Pick a tee')) + '</a>');
     $('.um-offer__steps', box).style.gridTemplateColumns = 'repeat(2, 1fr)';   // the CSS has room for four steps
   }
