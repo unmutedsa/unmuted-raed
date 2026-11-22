@@ -246,17 +246,24 @@
       })();
     });
   }
-  // a hoodie's model photos for the winter list: the side with the print first (Defender's is on its front, the rest on
-  // the back), the other side on hover; rows take turns between the man's photos and the woman's (the girls-only designs
-  // have the woman's only)
+  // a hoodie seen from outside (the home list and every product card; owner, 2026-11-22: «في الشتوي فقط يكون الصور الاولي
+  // موديل و في الاخر المنتج بدون شي»): its model photo first, on the side with the print (Defender's is on its front, the
+  // rest on the back), and on hover the hoodie by itself on that side; inside, the product page keeps Salla's order (the
+  // hoodie first, then the model, like the tees). Rows and cards take turns between the man's photos and the woman's (the
+  // girls-only designs have the woman's only)
+  var flatPrint = function (imgs, name) {
+    var front = /defender/i.test(name || '');
+    return (imgs || []).filter(function (x) { return x.url && /هودي/.test(x.alt || '') && !/مودل/.test(x.alt || '') && BACKSIDE.test(x.alt || '') !== front; })[0]
+      || (imgs || []).filter(function (x) { return x.url && x.main; })[0];
+  };
   var winterPics = function (p, i) {
     var model = (p.umPhotos || []).filter(function (x) { return /مودل/.test(x.alt || '') && x.url; });
     var pick = function (re) {
       var l = model.filter(function (x) { return re.test(x.alt || ''); });
       return l.length ? (i % 2 ? l[l.length - 1] : l[0]).url : '';
     };
-    var front = /defender/i.test(p.name);
-    return { first: pick(front ? /أمام/ : /خلف/), other: pick(front ? /خلف/ : /أمام/) };
+    var flat = flatPrint(p.umPhotos, p.name);
+    return { first: pick(/defender/i.test(p.name) ? /أمام/ : /خلف/), flat: flat ? flat.url : '' };
   };
   // the winter list (owner, 2026-11-22): above the tees, on the page's own colour, each hoodie on its model photo
   // («للشتوي فقط بتكون الصوره من بره بالمودل»), the summer list under it as before
@@ -282,14 +289,14 @@
       $('.um-tl__name small', li).textContent = v.voice;
       copyText($('.um-tl__end > b', li), money(priceOf(p)));
       if (face) {
-        face.src = m.first || imageOf(p);
+        face.src = mdOf(m.first) || m.first || imageOf(p);
         face.alt = '';
         pic.classList.add('um-model');
-        if (m.other) {
+        if (m.flat) {
           var img = el('img', 'um-tl__back um-face-back');
           img.alt = '';
           img.loading = 'lazy';
-          img.src = m.other;
+          img.src = mdOf(m.flat) || m.flat;
           face.classList.add('um-face');
           pic.appendChild(img);
           pic.classList.add('um-turn');
@@ -466,7 +473,7 @@
     track.textContent = '';
     out.forEach(function (li) { track.appendChild(li); });
   }
-  // the rail hangs the eight winter hoodies, then the first ten tees of the list, and its bar counts them
+  // the rail hangs the eight winter hoodies (the tees came off it, 2026-11-22), and its bar counts them
   var RAIL_MAX = 18;
   // the home page shows every tee again (owner, 2026-11-09, later): the first twelve, then «عرض المزيد» opens the rest in place
   var TRACK_MAX = 12;
@@ -497,6 +504,13 @@
   function railTen(box) {
     var rail = $('.um-rail', box), items = rail ? $$('[data-um-rail-track] > .um-rls__item', rail) : [];
     if (!items.length) return;
+    // since the winter launch only the hoodies hang (owner, 2026-11-22: «وشيل التيشرتات من rail»); the tees leave after
+    // the tracklist has taken their back photos
+    var hung = items.filter(function (li) { return li.classList.contains('is-hoodie'); });
+    if (hung.length) {
+      items.forEach(function (li) { if (hung.indexOf(li) < 0 && li.parentNode) li.parentNode.removeChild(li); });
+      items = hung;
+    }
     items.slice(RAIL_MAX).forEach(function (li) { li.remove(); });
     var n = Math.min(items.length, RAIL_MAX), ends = $$('.um-rls__progress > span', rail), bar = $('[data-um-rail-bar]', rail);
     if (ends[1]) ends[1].textContent = pad(n);
@@ -822,7 +836,9 @@
       if (!c.product || !front || en.boundingClientRect.width < 60) return;
       photosOf(c.product.id).then(function (imgs) {
         // a back-first tee shows its back on the card, so the hover brings its main photo, the front
-        var other = backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
+        // a hoodie's card shows its model photo (hoodieCard), so the hover brings the hoodie by itself, the print side
+        var other = isHoodie(c.product.name) ? flatPrint(imgs, c.product.name)
+          : backFirst(c.product.id) ? imgs.filter(function (i) { return i.url && i.main; })[0]
           : imgs.filter(function (i) { return i.url && !i.main && !i.video_url && !HANGER.test(i.alt || ''); })[0];
         if (!other || $('.um-cback', pic)) return;
         var back = el('img', 'um-cback um-face-back');
@@ -1191,9 +1207,109 @@
     'DAJMWCXP9H9nEkKI1KY81q1rq7TJZGSLngNwYx5C': 'records/woman-front.webp',
     'wHgr2KPW34vUswdq2MWs6WxFkioBQeHG90vViwAq': 'records/woman-side.webp'
   };
+  // the winter hoodies' photos the same way (owner, 2026-11-22: «i want the quality very high like the t-shirts»): Salla
+  // keeps them at 720x900 and names them by a UUID; our copies are in the public repo unmutedsa/unmuted-winter
+  // (photos/<hoodie>/<pose>.webp 3200x4000, md/ 1600x2000, sm/ 800x1000, on the page colour), apart from this repo,
+  // which is near jsDelivr's 50 MB
+  var WINTER_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-winter@4e39f647e337dbb648540b40526c2e4011b49b33/photos/';
+  var WINTER_HD = {
+    'c6d892ba-594f-4ac9-b167-5d114a96ebd4': 'after-hours/flat-back.webp',
+    '66dc6a0c-2522-4189-9886-405149b4cf71': 'after-hours/flat-front.webp',
+    '908e0ef7-339d-46e2-927f-570077775869': 'after-hours/man-back.webp',
+    'b1b5d6ee-be0e-4367-9c59-d7ec99c63b00': 'after-hours/man-front.webp',
+    '1b61ab70-c0e9-4c83-a666-07077eb831ec': 'after-hours/man-side.webp',
+    '82dfa0ef-62c2-4a23-9daf-72e57678f7d0': 'after-hours/woman-back.webp',
+    '5eb04790-6b7b-4531-9a67-62901765349b': 'after-hours/woman-front.webp',
+    'ebcbed09-7515-4160-938c-7961ccccebf2': 'after-hours/woman-side.webp',
+    'f7d222cc-88f5-4582-b791-1329bd21b853': 'keep-calm/flat-back.webp',
+    '84d697da-3db4-45dc-aa89-c6d69f618177': 'keep-calm/flat-front.webp',
+    '05e271a4-da37-47ee-a792-4257e2a8cd2d': 'keep-calm/man-back.webp',
+    'ef087ab2-5dd9-4e57-a7c9-fd72f628043c': 'keep-calm/man-front.webp',
+    '7e57e80b-2098-4d1d-b500-a0a22f039e18': 'keep-calm/man-side.webp',
+    'c8115d29-4ba1-495d-9385-9ab53ef3b5df': 'keep-calm/woman-back.webp',
+    '78a337a5-b761-4415-9c52-ce834331e93c': 'keep-calm/woman-front.webp',
+    '77bc2784-73ab-4ece-8684-e3594b888c6b': 'keep-calm/woman-side.webp',
+    '28c230fd-1247-403a-85b1-9b38f42c37cd': 'queen/flat-back.webp',
+    'c42ceda3-c69a-401c-bf27-a3b3255af038': 'queen/flat-front.webp',
+    '6727739b-a3d8-426f-8bbf-4bf82b05c5f5': 'queen/man-back.webp',
+    '557c78ef-de85-458c-9994-356792442c4e': 'queen/man-front.webp',
+    'c1a2cb0c-df7d-40dc-baa6-6f7b74066f81': 'queen/man-side.webp',
+    '9daa49c1-acb7-42f1-b35b-caa7abe990bd': 'queen/woman-back.webp',
+    '76339de6-e675-45b5-aaea-d1ceef45b2fc': 'queen/woman-front.webp',
+    'bbd0431d-f1f3-42f8-a09e-57a097ae39dd': 'queen/woman-side.webp',
+    '92c1984e-6e06-4783-8bd0-a77658e57266': 'drummers/flat-back.webp',
+    'ec388d53-09f5-4ea4-9f52-257044ea4ffe': 'drummers/flat-front.webp',
+    'a01200d1-2e97-42b5-a00a-5a9c74f2a8c7': 'drummers/man-back.webp',
+    'ca1e83fb-a9d7-4d8e-b5a9-beb4db6897ad': 'drummers/man-front.webp',
+    'd06e63d1-02b0-494c-8cf8-faa880e0cc48': 'drummers/man-side.webp',
+    'f500f91a-b517-4702-8fdd-18e80735d6b5': 'drummers/woman-back.webp',
+    '18f321d7-6628-4a28-80d1-a81d6284b886': 'drummers/woman-front.webp',
+    '883e994f-6d97-481b-b84e-5b566446c18b': 'drummers/woman-side.webp',
+    '1ec16b9c-fd1d-4ea1-bceb-e484fbaafa94': 'porsche/flat-back.webp',
+    'c0ded08e-76a3-4084-968c-5d7a41ed870e': 'porsche/flat-front.webp',
+    '14e653a5-b091-4487-9842-878d575cf84c': 'porsche/man-back.webp',
+    '35bfc59d-6b11-408b-8138-ab232e6d330b': 'porsche/man-front.webp',
+    'c5b1c0d9-1646-4dae-8f4f-1f01465ab10d': 'porsche/man-side.webp',
+    '40c5fda2-3dab-46a0-8f45-28a7810e4f5d': 'porsche/woman-back.webp',
+    'f3c323f6-de21-46df-bd28-0ff2dcff0766': 'porsche/woman-front.webp',
+    'bd5732a1-614b-4fd3-8956-d62b502a7b7e': 'porsche/woman-side.webp',
+    '5ae463eb-d1ab-4bf3-9734-a9211a976bbd': 'sandboard/flat-back.webp',
+    'efff8972-6391-49a1-9afd-f8c98125eb90': 'sandboard/flat-front.webp',
+    '33362a53-cebb-4949-b9c0-89f6aac2c169': 'sandboard/man-back.webp',
+    '244c7a7a-b70b-4fd1-b3b8-c4234f7d7130': 'sandboard/man-front.webp',
+    '06185ffb-f808-4264-8a7f-93a8cf412822': 'sandboard/man-side.webp',
+    '99dd8150-cfe1-4c7b-b0c1-8d55dbd858e7': 'sandboard/woman-back.webp',
+    '132ed40b-ae61-43e3-9aa3-917214dd6ad8': 'sandboard/woman-front.webp',
+    '9a9156bf-a651-4368-9ad3-55bbff22bec7': 'sandboard/woman-side.webp',
+    '04a6488f-7af4-4294-87d2-b4039175b676': 'camping/flat-back.webp',
+    'af860437-814b-466a-a72f-a1a82cdb05f2': 'camping/flat-front.webp',
+    'e0ed35dd-f28b-4002-822c-6af6cea07f12': 'camping/man-back.webp',
+    '9e962c0e-8027-4e07-bd58-ec556498b3bb': 'camping/man-front.webp',
+    'e03227a2-fc66-4a9b-912b-ff9970e3939d': 'camping/man-side.webp',
+    '6425c646-2265-452a-a29f-9db7af23da16': 'camping/woman-back.webp',
+    '5be70a36-d6fc-4157-a6cb-5581b977b6a1': 'camping/woman-front.webp',
+    '693e8086-eca1-4516-8e3e-23e7e16160f7': 'camping/woman-side.webp',
+    '243c872b-3db5-42ec-9004-9d2c8b572c56': 'defender/flat-back.webp',
+    '2c7fa034-337f-4f68-940d-be2f6c9a72b9': 'defender/flat-front.webp',
+    'a9f42b3f-b5e1-4c9a-9b38-a6567176dc85': 'defender/man-back.webp',
+    'b23b946c-d283-4cbc-8560-9ec9dfd7dd8a': 'defender/man-front.webp',
+    '60e1421c-8d44-4c0c-b6c8-be82ac90b50e': 'defender/man-side.webp',
+    'ec7558e9-2941-474d-892d-2aea156e403d': 'defender/woman-back.webp',
+    'a61cd795-62de-4a66-a398-fc49e38d2a95': 'defender/woman-front.webp',
+    'f12ce3ce-cb8f-4528-96ca-c05a76cd8526': 'defender/woman-side.webp',
+    '90d802c2-892c-4690-a232-fa17fb622935': 'cards/flat-back.webp',
+    '40c2a68b-1331-4e13-a147-19aa2060a206': 'cards/flat-front.webp',
+    'b48e7644-4b38-4510-8fb6-272714855b48': 'cards/man-back.webp',
+    '0c49cf11-94a8-46b4-ad6f-5e1d76e18ae0': 'cards/man-front.webp',
+    '1bf220e1-af2a-412c-8dfe-195c77b17828': 'cards/man-side.webp',
+    'e480c66e-8150-4f54-8243-09a83bc41c5d': 'cards/woman-back.webp',
+    'f31d30cb-5099-4d8e-abed-9ce908ffba85': 'cards/woman-front.webp',
+    '698b869a-55fe-4ce8-b369-b63dfb23c876': 'cards/woman-side.webp',
+    '391c6741-b6e3-4b2a-9a11-a2b7bcbc5248': 'typewriter/flat-back.webp',
+    '17d10752-d85f-487e-93c4-e2a438eee670': 'typewriter/flat-front.webp',
+    '3d5468fa-2644-4391-abd4-0dc41e7b236a': 'typewriter/woman-back.webp',
+    'd44b56a7-b97c-47ee-9872-8d1fd6c74e64': 'typewriter/woman-front.webp',
+    'd899009f-1ce1-4e41-8a3e-42249bd52ede': 'typewriter/woman-side.webp',
+    'b4efc8a9-2509-42fd-9b21-f4f9a46dd581': 'matcha/flat-back.webp',
+    'bc622a22-8bcc-42d8-80ea-7e3ca11f3a03': 'matcha/flat-front.webp',
+    '6ae2cb49-34cf-4012-b027-a2837ee76082': 'matcha/woman-back.webp',
+    '2dbd243a-40d1-4f65-a1f2-7a4476533075': 'matcha/woman-front.webp',
+    '18f1dd0c-4353-4519-a874-4d220003f78c': 'matcha/woman-side.webp',
+    'c3e4e09c-bc03-46f6-90d0-6650574ab4a9': 'riyadh/flat-back.webp',
+    'c04b4ede-1387-43c2-86be-687120993d82': 'riyadh/flat-front.webp',
+    'd46a2948-188e-4b7d-82a7-4eb3529dd4e2': 'riyadh/man-back.webp',
+    '8bd5677b-53db-408c-a93d-bca1e627ade6': 'riyadh/man-front.webp',
+    '3fb3276b-3076-4133-8e64-082f9f714904': 'riyadh/man-side.webp',
+    '89ab0dc6-74fb-4749-97f5-e8f1619a66f8': 'riyadh/woman-back.webp',
+    '5f1cec32-30d7-4ae5-8980-5945a23c80f0': 'riyadh/woman-front.webp',
+    '570aee1f-0abf-441c-8dec-cfb4e1a5c848': 'riyadh/woman-side.webp'
+  };
   var hdOf = function (url) {
     var m = String(url || '').match(/([A-Za-z0-9]{40})\.(?:jpe?g|png|webp)(?:[?#]|$)/);
-    return m && HD[m[1]] ? PHOTOS + HD[m[1]] : '';
+    if (m && HD[m[1]]) return PHOTOS + HD[m[1]];
+    // (Salla serves «…-standard.webp» on the product page and «…-thumbnail.webp» on the cards)
+    var u = String(url || '').match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})-[\w-]*\.(?:webp|jpe?g|png)/);
+    return u && WINTER_HD[u[1]] ? WINTER_PICS + WINTER_HD[u[1]] : '';
   };
   // the same photo at 1600x2000 (cdn/photos/<tee>/md/, WebP), sharp enough for a card and light enough for the home page
   var mdOf = function (url) { var hd = hdOf(url); return hd ? hd.replace(/([^/]+)$/, 'md/$1') : ''; };
@@ -1252,10 +1368,24 @@
       var box = $('.s-product-card-image', c);
       if (!box || !c.product || !c.product.image || !hdOf(c.product.image.url)) return;
       box.classList.add('um-model');
-      if (backFirst(c.product.id)) showBack($('a img:not(.um-cback)', box), c.product.id);
+      if (isHoodie(c.product.name)) hoodieCard(c, box);
+      else if (backFirst(c.product.id)) showBack($('a img:not(.um-cback)', box), c.product.id);
       else sharpen($('a img:not(.um-cback)', box), c.product.image.url);
       var back = $('img.um-cback', box);
       if (back && back.getAttribute('data-um-url')) sharpen(back, back.getAttribute('data-um-url'));
+    });
+  }
+  // a hoodie's card opens on its model photo (winterPics: the print side, man and woman by turns), on the page's colour;
+  // the hover (flips) brings the hoodie by itself
+  var hoodieN = 0;
+  function hoodieCard(c, box) {
+    var face = $('a img:not(.um-cback)', box);
+    if (!face || c.hasAttribute('data-um-hoodie')) return;
+    var k = hoodieN++;
+    c.setAttribute('data-um-hoodie', String(k));
+    photosOf(c.product.id).then(function (imgs) {
+      var m = winterPics({ name: c.product.name, umPhotos: imgs }, k), img = $('a img:not(.um-cback)', box);
+      if (m.first && img) sharpen(img, m.first);
     });
   }
 

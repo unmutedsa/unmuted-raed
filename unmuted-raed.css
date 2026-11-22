@@ -228,7 +228,18 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .um-home .um-hero__dots button[aria-current="true"]::after { width: 26px; background: var(--um-paper); }
 /* the words and button that come up on scroll are «City Frequency»'s: over the winter banner (it has its own) they stay away */
 .um-home .um-hero.is-winter-on .um-hero__cap { visibility: hidden; }
+/* over «City Frequency» only «البس صوتك» and its button (owner, 2026-11-22: «خلي البس صوتك والزر فقط») */
+.um-home .um-hero.has-banner .um-hero__sub { display: none; }
+/* the winter list shows no VOL number on its photos (owner, 2026-11-22: «شيل الارقام») */
+.um-home .um-winter .um-tl__no { display: none; }
 @media (prefers-reduced-motion: reduce) { .um-home .um-hero__track { transition: none; } }
+/* both slides the same size (owner, 2026-11-22: «not same size … the first one and the new»): on computers the winter
+   banner (16:9) shows in «City Frequency»'s frame (1983×793), from just above the heads down to the knees, so the faces,
+   the words and «Shop Now» stay whole; on phones both banners are 941×1672 already */
+@media (min-width: 600px) {
+  .um-home .um-hero__slide.is-winter .um-hero__photo { aspect-ratio: 1983 / 793; object-fit: cover; object-position: 50% 41%; }
+  .um-home .um-hero__slide.is-winter .um-hero__shop { top: 57%; height: 11.5%; }
+}
 /* computers: the tracklist after the rail is three tees a row, each a big photo (phones already show two a row) */
 @media (min-width: 900px) {
   .um-home .um-tl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 28px; padding-top: 28px; }
