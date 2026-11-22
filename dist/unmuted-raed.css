@@ -212,6 +212,23 @@ html.um-restoring #main-content, html.um-restoring .store-footer { opacity: 0; t
 .um-home .um-hero.has-banner .um-hero__sticky { position: relative; top: auto; height: auto; }
 .um-home .um-hero.has-banner .um-hero__pic { display: block; }
 .um-home .um-hero.has-banner .um-hero__photo { position: relative; inset: auto; display: block; width: 100%; height: auto; }
+/* the winter launch (2026-11-22): the hero is a slider of two banners, the winter one first (unmuted-raed.js heroSlider).
+   Each slide is its banner whole; the slider takes the height of the one in view. \0000ABShop Now\0000BB on the winter banner is a
+   link to the hoodies, laid over the button drawn in the banner (its place on the wide and on the tall banner) */
+.um-home .um-hero__slider { position: relative; }
+.um-home .um-hero__track { display: flex; align-items: flex-start; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; transition: height .45s ease; }
+.um-home .um-hero__track::-webkit-scrollbar { display: none; }
+.um-home .um-hero__slide { position: relative; flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; }
+.um-home .um-hero__shop { position: absolute; z-index: 4; left: 79%; top: 51.5%; width: 17.5%; height: 9.5%; border-radius: 14px; }
+@media (max-width: 599px) { .um-home .um-hero__shop { left: 24%; top: 43.5%; width: 52%; height: 8.5%; } }
+.um-home .um-hero__shop:focus-visible { outline: 3px solid var(--um-orange); outline-offset: 3px; }
+.um-home .um-hero__dots { position: absolute; z-index: 5; inset-inline: 0; bottom: 8px; display: flex; justify-content: center; gap: 2px; pointer-events: none; }
+.um-home .um-hero__dots button { pointer-events: auto; display: grid; place-items: center; width: 34px; height: 28px; padding: 0; border: 0; background: none; cursor: pointer; }
+.um-home .um-hero__dots button::after { content: ""; width: 9px; height: 9px; border-radius: 999px; background: rgba(250, 245, 239, .5); box-shadow: 0 1px 4px rgba(0, 0, 0, .3); transition: width .25s, background .25s; }
+.um-home .um-hero__dots button[aria-current="true"]::after { width: 26px; background: var(--um-paper); }
+/* the words and button that come up on scroll are \0000ABCity Frequency\0000BB's: over the winter banner (it has its own) they stay away */
+.um-home .um-hero.is-winter-on .um-hero__cap { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .um-home .um-hero__track { transition: none; } }
 /* computers: the tracklist after the rail is three tees a row, each a big photo (phones already show two a row) */
 @media (min-width: 900px) {
   .um-home .um-tl { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 28px; padding-top: 28px; }
