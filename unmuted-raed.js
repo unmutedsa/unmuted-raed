@@ -36,6 +36,9 @@
   };
   // winter (2026-11-22): a hoodie is told by its name («VOL.25 After Hours Hoodie»)
   var isHoodie = function (name) { return /hoodie/i.test(String(name || '')); };
+  // hoodies whose print is on the FRONT (their model photo and flat photo open on the front side): Defender, and
+  // GTA Riyadh Sunset (VOL.35, 2026-11-23)
+  var FRONT_PRINT = /defender|riyadh sunset/i;
   // designs made for girls only (owner, 2026-11-22: «this design is not for boys»): no «unisex» on them
   var GIRLS = /you.?re my type|matcha pilates/i;
   var pageTitle = function () { return (($('[data-testid="store-product-title"]') || {}).textContent || '').trim(); };
@@ -264,19 +267,20 @@
   // hoodie first, then the model, like the tees). Rows and cards take turns between the man's photos and the woman's (the
   // girls-only designs have the woman's only)
   var flatPrint = function (imgs, name) {
-    var front = /defender/i.test(name || '');
+    var front = FRONT_PRINT.test(name || '');
     return (imgs || []).filter(function (x) { return x.url && /هودي/.test(x.alt || '') && !/مودل/.test(x.alt || '') && BACKSIDE.test(x.alt || '') !== front; })[0]
       || (imgs || []).filter(function (x) { return x.url && x.main; })[0];
   };
   // the winter hoodies' photo folders in unmutedsa/unmuted-winter, by Salla product id (girls-only ones have no man photos)
   var WINTER_SLUG = { '144385882': 'after-hours', '901379307': 'keep-calm', '892545089': 'queen', '1841802309': 'drummers',
     '443162745': 'porsche', '1392419965': 'sandboard', '1701726066': 'camping', '1075166325': 'defender', '1984470388': 'cards',
-    '785584488': 'typewriter', '827110509': 'matcha', '232789214': 'riyadh' };
+    '785584488': 'typewriter', '827110509': 'matcha', '232789214': 'riyadh',
+    '827331665': 'gta-crew', '1947042403': 'gta-vi', '1641705357': 'gta-riyadh' };
   var WINTER_GIRLS = { typewriter: 1, matcha: 1 };
   var winterPics = function (p, i) {
     var slug = WINTER_SLUG[String(p.id)];
     if (slug) {
-      var fr = /defender/i.test(p.name), who = (WINTER_GIRLS[slug] || i % 2) ? 'woman' : 'man';
+      var fr = FRONT_PRINT.test(p.name), who = (WINTER_GIRLS[slug] || i % 2) ? 'woman' : 'man';
       var u = function (pose) { return WINTER_PICS + slug + '/' + pose + '.webp'; };
       var printSide = fr ? 'front' : 'back', otherSide = fr ? 'back' : 'front';
       var people = WINTER_GIRLS[slug] ? ['woman'] : who === 'man' ? ['man', 'woman'] : ['woman', 'man'];
@@ -293,7 +297,7 @@
     var flat = flatPrint(p.umPhotos, p.name);
     // on a computer the hover turns the same model round (owner, 2026-11-22: «اما اعمل hover … يظهر المودل من قدام ولو من
     // قدام يكون من وره»); the hoodie by itself comes last in a phone's swipe
-    var front = /defender/i.test(p.name);
+    var front = FRONT_PRINT.test(p.name);
     return { first: pick(front ? /أمام/ : /خلف/), other: pick(front ? /خلف/ : /أمام/), flat: flat ? flat.url : '' };
   };
   // the winter list (owner, 2026-11-22): above the tees, on the page's own colour, each hoodie on its model photo
@@ -1273,7 +1277,7 @@
   // keeps them at 720x900 and names them by a UUID; our copies are in the public repo unmutedsa/unmuted-winter
   // (photos/<hoodie>/<pose>.webp 3200x4000, md/ 1600x2000, sm/ 800x1000, on the page colour), apart from this repo,
   // which is near jsDelivr's 50 MB
-  var WINTER_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-winter@4e39f647e337dbb648540b40526c2e4011b49b33/photos/';
+  var WINTER_PICS = 'https://cdn.jsdelivr.net/gh/unmutedsa/unmuted-winter@54e22eab09664836d48eb14b4fd834841de03639/photos/';
   var WINTER_HD = {
     'c6d892ba-594f-4ac9-b167-5d114a96ebd4': 'after-hours/flat-back.webp',
     '66dc6a0c-2522-4189-9886-405149b4cf71': 'after-hours/flat-front.webp',
@@ -1364,7 +1368,31 @@
     '3fb3276b-3076-4133-8e64-082f9f714904': 'riyadh/man-side.webp',
     '89ab0dc6-74fb-4749-97f5-e8f1619a66f8': 'riyadh/woman-back.webp',
     '5f1cec32-30d7-4ae5-8980-5945a23c80f0': 'riyadh/woman-front.webp',
-    '570aee1f-0abf-441c-8dec-cfb4e1a5c848': 'riyadh/woman-side.webp'
+    '570aee1f-0abf-441c-8dec-cfb4e1a5c848': 'riyadh/woman-side.webp',
+    'da561e51-c38f-499f-9fac-cf9456ef3204': 'gta-crew/flat-back.webp',
+    '1f17fd7f-b6cb-42be-b6ca-b6617ce9b56e': 'gta-crew/flat-front.webp',
+    '67705a9d-f52b-45e3-9e02-fdcaedc1f21a': 'gta-crew/man-back.webp',
+    '848f58ab-bcc4-4e70-9658-20d35a96f67b': 'gta-crew/man-front.webp',
+    '34c17167-ca99-449a-a4fd-69d386151eeb': 'gta-crew/man-side.webp',
+    'c5b63e39-b980-409d-831c-2d95a2e67588': 'gta-crew/woman-back.webp',
+    '705ab7d3-151d-46b0-9153-c150d8ac89a3': 'gta-crew/woman-front.webp',
+    '8ff82f1e-1b91-4d51-883f-c402c44c730e': 'gta-crew/woman-side.webp',
+    'feb40200-4073-4ad1-99cc-8637ba016e32': 'gta-vi/flat-back.webp',
+    '3298af3f-37ce-46a6-b914-e6d819b78478': 'gta-vi/flat-front.webp',
+    '45f7519e-f54a-42a4-a7d7-7fa0012ed9d4': 'gta-vi/man-back.webp',
+    'a5d699ad-6a46-4af9-bafd-b7a7099a2a62': 'gta-vi/man-front.webp',
+    '5a7b379f-ea9b-49d7-af1b-2fab7bc78ef3': 'gta-vi/man-side.webp',
+    '5adb861d-9c7e-44f3-b1e7-b4d42dbf9dda': 'gta-vi/woman-back.webp',
+    'c2d26ba8-f01a-4a1f-9766-c57fc2b9d107': 'gta-vi/woman-front.webp',
+    '7aa7596d-5636-4837-8a11-662027e49d39': 'gta-vi/woman-side.webp',
+    '6efcda16-e4a1-4e7a-be3a-8cf6397c97b1': 'gta-riyadh/flat-back.webp',
+    'fafb068c-bae6-4e54-903e-6c7e8b2317eb': 'gta-riyadh/flat-front.webp',
+    '4ddb1289-c14f-42af-ad0c-1123689a60ad': 'gta-riyadh/man-back.webp',
+    '3ece7ffc-2f3a-4b3b-a878-32bbd55972b0': 'gta-riyadh/man-front.webp',
+    '9d0ef5ce-f87b-4151-bd24-2209a261fdfe': 'gta-riyadh/man-side.webp',
+    'e1d0cbed-b7ad-41bc-bc82-8d064b840077': 'gta-riyadh/woman-back.webp',
+    'a54d3ca8-edc2-46b6-9623-e92986034bb6': 'gta-riyadh/woman-front.webp',
+    '8820c49f-b650-4beb-b556-4e719ca7f3c3': 'gta-riyadh/woman-side.webp'
   };
   var hdOf = function (url) {
     if (String(url || '').indexOf(WINTER_PICS) === 0 && !/\/(md|sm)\/[^/]+$/.test(url)) return String(url);   // already one of ours
