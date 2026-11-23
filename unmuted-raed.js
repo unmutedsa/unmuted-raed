@@ -248,7 +248,11 @@
         salla.product.fetch({ source: 'categories', source_value: [HOODIE_CAT], limit: 20 }).then(function (r) {
           var items = ((r && r.data) || []).filter(function (p) { return isHoodie(p.name); });
           items.forEach(function (p) { p.name = bare(p.name); });
-          items.sort(function (a, b) { return (+voiceOf(a).vol || 999) - (+voiceOf(b).vol || 999); });
+          // the newest drop leads the home list (owner, 2026-11-23: the three GTA hoodies first, not on the rail),
+          // then the rest in VOL order
+          var HOME_FIRST = ['827331665', '1947042403', '1641705357'];
+          var rank = function (p) { var k = HOME_FIRST.indexOf(String(p.id)); return k >= 0 ? k - 100 : (+voiceOf(p).vol || 999); };
+          items.sort(function (a, b) { return rank(a) - rank(b); });
           // the hoodies in WINTER_SLUG have their photos on our CDN already: no asking Salla for each one (12 calls took
           // ~4 s, and on a phone the list missed the home page's wait, owner 2026-11-22: «القسم الشتوي مش باين في الجوال»);
           // only a hoodie added later brings its photo list
